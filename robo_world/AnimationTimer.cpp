@@ -60,7 +60,6 @@ float AnimationTimer::TimeLapseFromLastSampleNanos()
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - this->SamplePoint).count();
 }
 
-
 void AnimationTimer::SetSpeed(float new_Speed)
 {
 	//all this hassle so that the animation will be at the same point when the speed changes, instead of going to the current precentage 

@@ -1,10 +1,18 @@
 #pragma once
 #include "stdafx.h"
-
-#include "AnimationTimer.h"
+#include "DrawableObject.h"
 #include "SceneObjects.h"
 
-//The main func to run my beautiful scene
-void RunScene(int argc, char** argv);
+class Scene
+{
+private:
+	std::vector<DrawableObject*> SceneObjects;
 
+public:
+	void AddDrawableObject(DrawableObject* obj);
+	void DrawScene();
+	std::vector<DrawableObject*> GetChildren();
+};
 
+Scene* GetTestScene();
+void DrawObjTree(DrawableObject* a);

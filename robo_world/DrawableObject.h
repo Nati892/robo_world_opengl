@@ -1,20 +1,25 @@
 #pragma once
 #include "stdafx.h"
 
-class SpacialObject {
+class DrawableObject {
 private:
-	GLfloat Position[3]; // x, y, z location
-	GLfloat Rotation[3]; // rotation around x, y, z axis
-	GLfloat Scale[3];
-	GLfloat AmbientColor[4]; // Ambient color (RGBA)
-	GLfloat DiffuseColor[4]; // Diffuse color (RGBA)
-	GLfloat SpecularColor[4]; // Specular color (RGBA)
-	GLfloat Shininess; // Shininess factor
-	std::vector<SpacialObject*> children; // Vector to hold pointers to child objects
+	GLfloat Position[3] = { 0,0,0 }; // x, y, z location
+	GLfloat Rotation[3] = { 0,0,0 }; // rotation around x, y, z axis
+	GLfloat Scale[3] = { 1,1,1 };
+	GLfloat AmbientColor[4] = { 0,0,0,1 }; // Ambient color (RGBA)
+	GLfloat DiffuseColor[4] = { 0,0,0,1 }; // Diffuse color (RGBA)
+	GLfloat SpecularColor[4] = { 0,0,0,1 }; // Specular color (RGBA)
+	GLfloat Shininess[1] = { 0 }; // Shininess factor
+	std::vector<DrawableObject*> children; // Vector to hold pointers to child objects
 
 public:
-	SpacialObject();
+	DrawableObject();
+	virtual ~DrawableObject(); // Declare the destructor
 
+	virtual void DrawObject();
+	void PushObjectTransformMatrix();
+	void PopObjectTransformMatrix();
+	void SetObjectMaterial();
 	// Setters and getters for Position, Rotation, Scale
 	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 	void setRotation(GLfloat x, GLfloat y, GLfloat z);
@@ -37,10 +42,8 @@ public:
 
 	//push and pop operations
 
-
-
-	void addChildObject(SpacialObject* child);
+	void addChildObject(DrawableObject* child);
 
 	// Method to get the vector of children objects
-	std::vector<SpacialObject*>& getChildren();
+	std::vector<DrawableObject*>& getChildren();
 };
