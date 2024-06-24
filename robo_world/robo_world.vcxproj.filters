@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\GOComponents_h">
+      <UniqueIdentifier>{832ca7d2-f4c7-40e4-af93-7db6e3181821}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GOComponents_cpp">
+      <UniqueIdentifier>{109515ab-751b-454b-a2a2-0b69958dee1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -24,24 +30,33 @@
     <ClCompile Include="AnimationTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DrawableObject.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawableObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SceneObjects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GOScript.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\GOComponents_cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GODrawable.cpp">
+      <Filter>Source Files\GOComponents_cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GoTransform.cpp">
+      <Filter>Source Files\GOComponents_cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GOScript.cpp">
+      <Filter>Source Files\GOComponents_cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GODrawable.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glut.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Main.h">
@@ -57,6 +72,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GOTransform.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

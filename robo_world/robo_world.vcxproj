@@ -128,16 +128,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GOScript.cpp" />
+    <ClCompile Include="GOScript.h" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GoTransform.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneObjects.cpp" />
     <ClCompile Include="SceneRunner.cpp" />
     <ClCompile Include="AnimationTimer.cpp" />
-    <ClCompile Include="DrawableObject.h" />
-    <ClCompile Include="DrawableObject.cpp" />
+    <ClCompile Include="GODrawable.h" />
+    <ClCompile Include="GODrawable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GOTransform.h" />
     <ClInclude Include="glut.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObjects.h" />
     <ClInclude Include="stdafx.h" />

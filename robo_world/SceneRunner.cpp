@@ -70,7 +70,7 @@ void FixAspectRatio()
 	WindowRectBounds_height = finalH;
 }
 
-CubeObject* obj;
+//CubeObject* obj;
 //Draws the scene
 void LoopScene()
 {
@@ -114,16 +114,20 @@ void LoopScene()
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
 
 	auto val = timer->GetCurrentAnimationValue();
-	auto sceneChildren = PlayScene->GetChildren();
 
-	auto first_child = sceneChildren.at(0);
-	first_child->setRotation(0,val,0);
+	////first_child->setRotation(0,val,0);
 
-	auto second_child = first_child->getChildren().at(0);
-	second_child->setRotation(0,0, val);
+	////auto second_child = first_child->getChildren().at(0);
+	////second_child->setRotation(0,0, val);
 
 	if (PlayScene != nullptr)
 	{
+		//run scripts
+		//set trasform
+		//draw objects
+		auto sceneChildren = PlayScene->GetChildren();
+		auto first_child = sceneChildren.at(0);
+
 		PlayScene->DrawScene();
 	}
 }
@@ -213,7 +217,8 @@ void MyInit(int argc, char** argv)
 	glutInitWindowSize(CurrentSceneWidth, CurrentSceneHeight);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(MY_HEADER);
-	PlayScene = GetTestScene();
+	//PlayScene = GetTestScene();
+	//run startup scripts
 
 	timer = new AnimationTimer(10, 0, 360);
 	timer->StartTimer();

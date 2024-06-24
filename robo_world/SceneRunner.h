@@ -2,7 +2,7 @@
 #include "stdafx.h"
 
 #include "AnimationTimer.h"
-#include "SceneObjects.h"
+//#include "SceneObjects.h"
 #include "Scene.h"
 
 //The main func to run my beautiful scene

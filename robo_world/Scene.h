@@ -1,18 +1,18 @@
 #pragma once
 #include "stdafx.h"
-#include "DrawableObject.h"
-#include "SceneObjects.h"
+#include "GameObject.h"
+#include "GODrawable.h"
 
 class Scene
 {
 private:
-	std::vector<DrawableObject*> SceneObjects;
+	std::vector<GameObject*> SceneObjects;
 
 public:
-	void AddDrawableObject(DrawableObject* obj);
+	void AddGameObject(GameObject* obj);
 	void DrawScene();
-	std::vector<DrawableObject*> GetChildren();
+	std::vector<GameObject*> GetChildren();
 };
 
-Scene* GetTestScene();
-void DrawObjTree(DrawableObject* a);
+//Scene* GetTestScene();
+void DrawObjTree(GameObject* a);
