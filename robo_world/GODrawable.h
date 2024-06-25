@@ -1,12 +1,12 @@
 #pragma once
 #include "stdafx.h"
-
-class GameObject;
+#include "GameObject.h"
 
 class GODrawable {
 private:
-GameObject* _GameObject = nullptr;
+	GameObject* _GameObject = nullptr;
 
+protected:
 	GLfloat AmbientColor[4] = { 0,0,0,1 }; // Ambient color (RGBA)
 	GLfloat DiffuseColor[4] = { 0,0,0,1 }; // Diffuse color (RGBA)
 	GLfloat SpecularColor[4] = { 0,0,0,1 }; // Specular color (RGBA)
@@ -14,10 +14,13 @@ GameObject* _GameObject = nullptr;
 
 public:
 	GODrawable();
-	virtual ~GODrawable(); // Declare the destructor
+	~GODrawable(); // Declare the destructor
 
 	virtual void DrawObject();
-	void SetActiveMat();
+	void SetActiveMat() const;
+
+	GameObject* GetGameObject();
+	void SetGameObjectOnce(GameObject*);
 
 	// Setters and getters for lighting properties
 	void setAmbientColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
@@ -28,6 +31,4 @@ public:
 	GLfloat* getDiffuseColor();
 	GLfloat* getSpecularColor();
 	GLfloat getShininess();
-
-	
 };

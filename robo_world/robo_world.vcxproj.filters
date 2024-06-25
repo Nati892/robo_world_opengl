@@ -30,9 +30,6 @@
     <ClCompile Include="AnimationTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SceneObjects.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,6 +51,12 @@
     <ClCompile Include="GODrawable.h">
       <Filter>Header Files\GOComponents_h</Filter>
     </ClCompile>
+    <ClCompile Include="Drawables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScripts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glut.h">
@@ -68,9 +71,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneObjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -81,6 +81,12 @@
       <Filter>Header Files\GOComponents_h</Filter>
     </ClInclude>
     <ClInclude Include="SceneRunner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScripts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

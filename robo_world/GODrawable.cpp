@@ -1,9 +1,6 @@
 #include "GODrawable.h"
 
 GODrawable::GODrawable() {
-	// Initialize AmbientColor, DiffuseColor, SpecularColor to default values
-	// Initialize Shininess to default value
-	// Initialize TextureID to 0 (no texture)
 }
 
 GODrawable::~GODrawable()
@@ -15,13 +12,25 @@ void GODrawable::DrawObject()
 	printf("DrawableObject called from papa,does nothing");
 }
 
-void GODrawable::SetActiveMat()
+void GODrawable::SetActiveMat() const
 {
+
 	glMaterialfv(GL_FRONT, GL_AMBIENT, this->AmbientColor);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, this->DiffuseColor);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, this->SpecularColor);
 	glMaterialfv(GL_FRONT, GL_SHININESS, this->Shininess);
+}
 
+GameObject* GODrawable::GetGameObject()
+{
+
+	return this->_GameObject;
+}
+
+void GODrawable::SetGameObjectOnce(GameObject* go_head)
+{
+	if (this->_GameObject == nullptr)
+		this->_GameObject = go_head;
 }
 
 void GODrawable::setAmbientColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {

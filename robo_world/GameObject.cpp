@@ -15,13 +15,11 @@ GameObject::~GameObject()
 {
 }
 
-template <typename T>
-void GameObject::SetGOScript()
+void GameObject::SetGOScript(GOScript* scripty)
 {
-	static_assert(std::is_base_of<GOScript, T>::value, "T must inherit from GOscript!");
-	GOScript* scripty = nullptr;
+	if (scripty == nullptr)
+		return;
 
-	scripty = new T();
 	this->_script = scripty;
 }
 
@@ -35,6 +33,11 @@ GOTransform* GameObject::GetTransform()
 	return this->_transoform;
 }
 
+void GameObject::SetTransform(GOTransform* set_trans)
+{
+	this->_transoform = set_trans;
+}
+
 GODrawable* GameObject::GetDrawableObject()
 {
 	return this->_DrawableObject;
@@ -44,6 +47,11 @@ std::vector<GameObject*>& GameObject::getChildren()
 {
 	// TODO: insert return statement here
 	return this->children;
+}
+
+void GameObject::SetDrawableObject(GODrawable* new_draw)
+{
+	this->_DrawableObject = new_draw;
 }
 
 void GameObject::addChildObject(GameObject* child)

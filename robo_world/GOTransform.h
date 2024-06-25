@@ -9,7 +9,11 @@ private:
 	GLfloat Rotation[3] = { 0,0,0 }; // rotation around x, y, z axis
 	GLfloat Scale[3] = { 1,1,1 };
 public:
+	GOTransform();
+	GOTransform(GameObject* parent);
+
 	GameObject* GetGameObject();
+	void SetGameObjectOnce(GameObject*);
 
 	void PushObjectTransformMatrix();
 	void PopObjectTransformMatrix();

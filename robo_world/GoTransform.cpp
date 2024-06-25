@@ -1,6 +1,35 @@
 #include "GOTransform.h"
 
+GOTransform::GOTransform()
+{
+	Position[0] = 0;
+	Position[1] = 0;
+	Position[2] = 0;
 
+	Rotation[0] = 0;
+	Rotation[1] = 0;
+	Rotation[2] = 0;
+
+	Scale[0] = 1;
+	Scale[1] = 1;
+	Scale[2] = 1;
+}
+
+GOTransform::GOTransform(GameObject* parent)
+{
+	this->_GameObject = parent;
+	Position[0] = 0;
+	Position[1] = 0;
+	Position[2] = 0;
+
+	Rotation[0] = 0;
+	Rotation[1] = 0;
+	Rotation[2] = 0;
+
+	Scale[0] = 1;
+	Scale[1] = 1;
+	Scale[2] = 1;
+}
 
 void GOTransform::setPosition(GLfloat x, GLfloat y, GLfloat z) {
 	Position[0] = x;
@@ -35,6 +64,12 @@ GLfloat* GOTransform::getScale() {
 GameObject* GOTransform::GetGameObject()
 {
 	return this->_GameObject;
+}
+
+void GOTransform::SetGameObjectOnce(GameObject* go_head)
+{
+	if (this->_GameObject == nullptr)
+		this->_GameObject = go_head;
 }
 
 void GOTransform::PushObjectTransformMatrix()

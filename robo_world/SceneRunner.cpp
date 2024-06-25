@@ -77,14 +77,12 @@ void LoopScene()
 	glMatrixMode(GL_MODELVIEW | GL_PROJECTION);
 	glLoadIdentity();
 
-
 	glFrustum(-FRUSTUM_X / 2, FRUSTUM_X / 2, -FRUSTUM_Y / 2, FRUSTUM_Y / 2, 0.4, 200.0);
-
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(
-		0, 0, 3,
+		0, 0, 5,
 		0, 0, 0,
 		0, 1, 0);
 
@@ -92,42 +90,44 @@ void LoopScene()
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	glEnable(GL_LIGHT2);
+	glEnable(GL_LIGHT3);
 
-	GLfloat light_position1[] = { -10.0, 15.0, -10.0, 0.0 };  // Light position
-	GLfloat light_position2[] = { 0.0, 15.0, 0.0, 0.0 };  // Light position
-	GLfloat light_position3[] = { 10.0, 15.0, 10.0, 0.0 };  // Light position
-	GLfloat light_ambient[] = { 0.8, 0.8, 0.8, 1.0 };  // Ambient light
+	GLfloat light_position0[] = { -20, 0, 0, 0.0 };  // Light position
+	GLfloat light_position1[] = { 20.0, 0, 0, 0.0 };  // Light position
+	GLfloat light_position2[] = { 0, 20, 10, 0.0 };  // Light position
+	GLfloat light_position3[] = { 0, -20, 10, 0.0 };  // Light position
+	GLfloat light_ambient[] = { 0.4, 0.4, 0.4, 1.0 };  // Ambient light
 	GLfloat light_diffuse[] = { 0.8, 0.8, 0.8, 1.0 };  // Diffuse light
 	GLfloat light_zeros[] = { 0, 0, 0, 1.0 };  // Diffuse light
 
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position1);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light_zeros);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_zeros);
 
-	glLightfv(GL_LIGHT1, GL_POSITION, light_position2);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light_zeros);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light_zeros);
 
-	glLightfv(GL_LIGHT1, GL_POSITION, light_position3);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT2, GL_POSITION, light_position2);
+	glLightfv(GL_LIGHT2, GL_AMBIENT, light_zeros);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, light_zeros);
+
+	glLightfv(GL_LIGHT3, GL_POSITION, light_position3);
+	glLightfv(GL_LIGHT3, GL_AMBIENT, light_zeros);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT3, GL_SPECULAR, light_zeros);
 
 	auto val = timer->GetCurrentAnimationValue();
-
-	////first_child->setRotation(0,val,0);
-
-	////auto second_child = first_child->getChildren().at(0);
-	////second_child->setRotation(0,0, val);
 
 	if (PlayScene != nullptr)
 	{
 		//run scripts
-		//set trasform
-		//draw objects
-		auto sceneChildren = PlayScene->GetChildren();
-		auto first_child = sceneChildren.at(0);
+		PlayScene->RunSceneScripts();
 
+		//draw scene
 		PlayScene->DrawScene();
 	}
 }
@@ -217,7 +217,12 @@ void MyInit(int argc, char** argv)
 	glutInitWindowSize(CurrentSceneWidth, CurrentSceneHeight);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(MY_HEADER);
-	//PlayScene = GetTestScene();
+	PlayScene = GetSampleScene();
+	if (PlayScene != nullptr)
+	{
+		PlayScene->StartScene();
+
+	}
 	//run startup scripts
 
 	timer = new AnimationTimer(10, 0, 360);
