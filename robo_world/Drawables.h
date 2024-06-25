@@ -3,10 +3,21 @@
 #include "GODrawable.h"
 
 
-class DrCube :public GODrawable
+class DrawCube :public GODrawable
 {
 
 public:
 	void DrawObject();
-	DrCube();
+	DrawCube();
+};
+
+
+
+
+class DrawSphere :public GODrawable
+{
+
+public:
+	void DrawObject();
+	DrawSphere();
 };

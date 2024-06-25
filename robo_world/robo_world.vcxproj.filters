@@ -19,6 +19,12 @@
     <Filter Include="Source Files\GOComponents_cpp">
       <UniqueIdentifier>{109515ab-751b-454b-a2a2-0b69958dee1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Templates">
+      <UniqueIdentifier>{6e4ee704-e304-4dfa-937b-2494b69233ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Templates">
+      <UniqueIdentifier>{9613ab98-3220-4122-8ca0-c02f610c72ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,9 +39,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GOScript.h">
-      <Filter>Header Files\GOComponents_h</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files\GOComponents_cpp</Filter>
     </ClCompile>
@@ -48,14 +51,14 @@
     <ClCompile Include="GOScript.cpp">
       <Filter>Source Files\GOComponents_cpp</Filter>
     </ClCompile>
-    <ClCompile Include="GODrawable.h">
-      <Filter>Header Files\GOComponents_h</Filter>
-    </ClCompile>
     <ClCompile Include="Drawables.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Templates</Filter>
     </ClCompile>
     <ClCompile Include="GameScripts.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Templates</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefabs.cpp">
+      <Filter>Source Files\Templates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,11 +86,20 @@
     <ClInclude Include="SceneRunner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GODrawable.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClInclude>
+    <ClInclude Include="GOScript.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClInclude>
     <ClInclude Include="Drawables.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Templates</Filter>
     </ClInclude>
     <ClInclude Include="GameScripts.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Prefabs.h">
+      <Filter>Header Files\Templates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

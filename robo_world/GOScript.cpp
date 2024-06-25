@@ -2,6 +2,37 @@
 
 void GOScript::SSetup()
 {
+	//empty, to be overriden
+}
+
+GOScript::~GOScript()
+{
+	//clear script from the game object
+	GameObject* this_go = this->GetGameObject();
+	if (this_go != nullptr)
+	{
+		GOScript* curr_script = this_go->GetRunningScript();
+		if (this == curr_script)
+		{
+			this_go->SetGOScript(nullptr);
+		}
+	}
+}
+
+void GOScript::CleanUp()
+{
+	this->SCleanUp();
+	delete this;
+}
+
+void GOScript::SCleanUp()
+{
+	//empty, to be overriden
+}
+
+void GOScript::SLoop()
+{
+	//empty, to be overriden
 }
 
 void GOScript::SetupOnce()
@@ -13,9 +44,6 @@ void GOScript::SetupOnce()
 	_started = true;
 }
 
-void GOScript::SLoop()
-{
-}
 
 GameObject* GOScript::GetGameObject()
 {

@@ -132,14 +132,15 @@
     <ClCompile Include="Drawables.cpp" />
     <ClCompile Include="GameScripts.cpp" />
     <ClCompile Include="GOScript.cpp" />
-    <ClCompile Include="GOScript.h" />
+    <ClInclude Include="GOScript.h" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GoTransform.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Prefabs.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneRunner.cpp" />
     <ClCompile Include="AnimationTimer.cpp" />
-    <ClCompile Include="GODrawable.h" />
+    <ClInclude Include="GODrawable.h" />
     <ClCompile Include="GODrawable.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="GOTransform.h" />
     <ClInclude Include="glut.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Prefabs.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Main.h" />

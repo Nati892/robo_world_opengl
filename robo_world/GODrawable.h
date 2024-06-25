@@ -16,6 +16,7 @@ public:
 	GODrawable();
 	~GODrawable(); // Declare the destructor
 
+	void CleanUp();
 	virtual void DrawObject();
 	void SetActiveMat() const;
 

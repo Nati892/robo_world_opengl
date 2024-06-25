@@ -7,6 +7,21 @@ GODrawable::~GODrawable()
 {
 }
 
+void GODrawable::CleanUp()
+{
+	//clear script from the game object
+	GameObject* this_go = this->GetGameObject();
+	if (this_go != nullptr)
+	{
+		GODrawable* go_atrib = this_go->GetDrawableObject();
+		if (this == go_atrib)
+		{
+			this_go->SetDrawableObject(nullptr);
+		}
+	}
+	delete this;
+}
+
 void GODrawable::DrawObject()
 {
 	printf("DrawableObject called from papa,does nothing");

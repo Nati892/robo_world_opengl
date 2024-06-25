@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "GameObject.h"
 class GameObject;
 
 class GOTransform {
@@ -11,7 +12,7 @@ private:
 public:
 	GOTransform();
 	GOTransform(GameObject* parent);
-
+	void CleanUp();
 	GameObject* GetGameObject();
 	void SetGameObjectOnce(GameObject*);
 

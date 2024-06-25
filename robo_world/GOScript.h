@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "GameObject.h"
 class GameObject;
 
 class GOScript
@@ -10,10 +11,15 @@ private:
 
 	virtual void SSetup();
 public:
-	void SetupOnce();
+	~GOScript();
+	void CleanUp();
+	virtual void SCleanUp();
 	virtual void SLoop();
-	//TODO: add cleanup func
+
+	void SetupOnce();//called by script object creator
+
 	GameObject* GetGameObject();
 	void SetGameObjectOnce(GameObject*);
+
 
 };

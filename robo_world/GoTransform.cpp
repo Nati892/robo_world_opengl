@@ -31,6 +31,21 @@ GOTransform::GOTransform(GameObject* parent)
 	Scale[2] = 1;
 }
 
+void GOTransform::CleanUp()
+{
+	//clear script from the game object
+	GameObject* this_go = this->GetGameObject();
+	if (this_go != nullptr)
+	{
+		GOTransform* go_tr = this_go->GetTransform();
+		if (this == go_tr)
+		{
+			this_go->SetTransform(nullptr);
+		}
+	}
+	delete this;
+}
+
 void GOTransform::setPosition(GLfloat x, GLfloat y, GLfloat z) {
 	Position[0] = x;
 	Position[1] = y;

@@ -1,56 +1,34 @@
 #include "Scene.h"
-#include "GameScripts.h"
 Scene* GetSampleScene()
 {
 	//create scene
 	Scene* ret = new Scene();
 
-	//create 
-	GameObject* Base = new GameObject(nullptr, "head", nullptr);
+	GameObject* Base = Prefabs::GetNewRotatingCube("Papa1");
+	Base->GetTransform()->setPosition(2, 0, 0);
+	dynamic_cast<BasicAxisRotateScript*>(Base->GetRunningScript())->SetRotationAxis(axis_z);
+
+	GameObject* child1 = Prefabs::GetNewRotatingSphere("child1");
+	child1->GetTransform()->setPosition(1, 1, 1);
+
+	Base->addChildObject(child1);
+
+	GameObject* Base2 = Prefabs::GetNewRotatingSphere("Papa2");
+	Base2->GetTransform()->setPosition(-2, 0, 0);
+
+	GameObject* child2 = Prefabs::GetNewRotatingCube("child2");
+	child2->GetTransform()->setPosition(1, 1, -1);
+	Base2->addChildObject(child2);
+
 	ret->AddGameObjectTree(Base);
-
-	//create transform for game object
-	GOTransform* trans = new GOTransform(Base);
-	Base->SetTransform(trans);
-
-	//attach drawable
-	DrCube* cube = new DrCube();
-	auto asGODrawable = (static_cast<GODrawable*>(cube));
-
-	asGODrawable->SetGameObjectOnce(Base);
-	Base->SetDrawableObject(asGODrawable);
-
-	//attach script
-	auto scripty = new BasicXRotateScript();
-	scripty->SetGameObjectOnce(Base);
-	Base->SetGOScript(scripty);
-
-	//set son cube
-	GameObject* son = new GameObject(Base, "son", nullptr);
-	Base->addChildObject(son);
-
-	trans = new GOTransform(son);
-	son->SetTransform(trans);
-	trans->setPosition(1,1,1);
-
-	//attach drawable
-	cube = new DrCube();
-	asGODrawable = (static_cast<GODrawable*>(cube));
-
-	asGODrawable->SetGameObjectOnce(son);
-	son->SetDrawableObject(asGODrawable);
-
-	//attach script
-	scripty = new BasicXRotateScript();
-	scripty->SetGameObjectOnce(son);
-	son->SetGOScript(scripty);
+	ret->AddGameObjectTree(Base2);
 
 	return ret;
 }
 
 void Scene::AddGameObjectTree(GameObject* obj)
 {
-	
+
 	if (obj != nullptr)
 		this->SceneObjects.push_back(obj);
 }
@@ -67,6 +45,7 @@ void Scene::StartScene()
 
 void Scene::RunSceneScripts()
 {
+
 	GameObject* curr_GO;
 	for (int i = 0; i < this->SceneObjects.size(); i++)
 	{
@@ -77,7 +56,6 @@ void Scene::RunSceneScripts()
 
 void Scene::DrawScene()
 {
-
 	GameObject* curr_GO;
 	for (int i = 0; i < this->SceneObjects.size(); i++)
 	{
