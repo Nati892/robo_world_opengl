@@ -101,5 +101,8 @@
     <ClInclude Include="Prefabs.h">
       <Filter>Header Files\Templates</Filter>
     </ClInclude>
+    <ClInclude Include="GOLightSourceData.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

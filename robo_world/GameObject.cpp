@@ -17,7 +17,26 @@ GameObject::GameObject(GameObject* parent, std::string NewName, GOTransform* tra
 
 GameObject::~GameObject()
 {
+	if (this->_DrawableObject != nullptr)
+	{
+		this->_DrawableObject->CleanUp();
+	}
 
+	if (this->_transoform != nullptr)
+	{
+		this->_transoform->CleanUp();
+	}
+
+	if (this->_script != nullptr)
+	{
+		this->_script->CleanUp();
+		delete this->_script;
+	}
+
+	if (this->_light_source_data != nullptr)
+	{
+		delete this->_light_source_data;
+	}
 }
 
 void GameObject::SetGOScript(GOScript* scripty)
@@ -59,6 +78,38 @@ void GameObject::AttachTransform(GOTransform* new_attach)
 	new_attach->SetGameObjectOnce(this);
 }
 
+void GameObject::SetGOType(GOType new_type, int light_number)
+{
+	if (this->_GO_object_type == GOLightSource && new_type != GOLightSource)
+	{
+		if (this->_light_source_data != nullptr)
+		{
+			delete this->_light_source_data;
+		}
+	}
+
+	this->_GO_object_type = new_type;
+
+	if (!this->IsLightSource())
+	{
+		this->_GO_object_type = GOLightSource;
+		if (this->_light_source_data == nullptr)
+		{
+			this->_light_source_data = new GOLightSourceData();
+		}
+	}
+}//todo continue working on light etc
+
+GOLightSourceData* GameObject::GetLightSourceData()
+{
+	return this->_light_source_data;
+}
+
+bool GameObject::IsLightSource()
+{
+	return this->_GO_object_type == GOLightSource;
+}
+
 void GameObject::SetTransform(GOTransform* set_trans)
 {
 	this->_transoform = set_trans;
@@ -80,22 +131,6 @@ void GameObject::Destroy(bool deep)
 			GameObject* curr_child = children.at(i);
 			curr_child->Destroy(true);
 		}
-	}
-
-	if (this->_DrawableObject != nullptr)
-	{
-		this->_DrawableObject->CleanUp();
-	}
-
-	if (this->_transoform != nullptr)
-	{
-		this->_transoform->CleanUp();
-	}
-
-	if (this->_script != nullptr)
-	{
-		this->_script->CleanUp();
-		delete this->_script;
 	}
 	delete this;
 }

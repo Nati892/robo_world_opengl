@@ -1,9 +1,21 @@
 #pragma once
 #include "stdafx.h"
-
+#include "GOLightSourceData.h"
 class GODrawable;
 class GOScript;
 class GOTransform;
+
+//this enum - GOCamPoint, GOCamLookAtPoint, GOLightSource// todo add all of them
+//are helpers and basci opengl 1.1 doesnt allow to calculate my own matrices, only with some gltransform... or something like that
+//this attach to objects and then get their location calculated to set normally in the scene
+
+enum GOType
+{
+	regular,
+	GOCamPoint,
+	GOCamLookAt,
+	GOLightSource
+};
 
 class GameObject {
 
@@ -14,6 +26,8 @@ protected:
 	GOScript* _script;
 	GOTransform* _transoform;
 	std::vector<GameObject*> children; // Vector to hold pointers to child objects
+	GOType _GO_object_type = regular;
+	GOLightSourceData* _light_source_data = nullptr;
 
 public:
 	GameObject(GameObject* parent, std::string NewName, GOTransform* transform);
@@ -41,6 +55,11 @@ public:
 	void AttachDrawable(GODrawable* new_attach);
 	void AttachScript(GOScript* new_attach);
 	void AttachTransform(GOTransform* new_attach);
+
+	//light source data
+	void SetGOType(GOType, int light_number = 0);//sets 
+	GOLightSourceData* GetLightSourceData();//gives out pointer to light source data
+	bool IsLightSource();
 
 	// children get/add
 	std::vector<GameObject*>& getChildren();
