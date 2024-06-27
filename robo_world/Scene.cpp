@@ -163,21 +163,17 @@ void SetupScriptsForGameObjectHead(GameObject* GOHead)
 
 //another traversal func to get light distances where it goes for each light source up the parent tree and then calculates the trasforms
 
-std::vector<GameObject*> GetSpecialGameObjectsPosition()
-{
-	
-	return std::vector<GameObject*>();
-}
 
-void CaculateWorldPosition(GameObject* SpecialObject)
+/// <summary>
+/// calculates the world position for GameObject relative to the parents
+/// </summary>
+/// <param name="SpecialObject"></param>
+void CaculateWorldPosition(GameObject* GO_in)
 {
-	if (SpecialObject->GetGoType() != regular)
-		return;
-
 	// Set this to the identity matrix
 	glm::mat4 ResultMatrixTransformation = glm::mat4(1.0f);
 
-	GameObject* obj = SpecialObject;
+	GameObject* obj = GO_in;
 	while (obj->GetParent() != nullptr)
 	{
 		obj = obj->GetParent();
@@ -207,10 +203,10 @@ void CaculateWorldPosition(GameObject* SpecialObject)
 			// Multiply with the ResultMatrixTransformation and store in ResultMatrixTransformation
 			ResultMatrixTransformation = transformMatrix * ResultMatrixTransformation;
 		}
-		if (SpecialObject->GetTransform() != nullptr)
+		if (GO_in->GetTransform() != nullptr)
 		{
 			//finally calculate and update the world position
-			GOTransform* tempTransform = SpecialObject->GetTransform();
+			GOTransform* tempTransform = GO_in->GetTransform();
 			GOvec3 objPosition = tempTransform->GetPosition();
 			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
 			// Convert the local position to a 4D homogeneous coordinate
@@ -223,3 +219,46 @@ void CaculateWorldPosition(GameObject* SpecialObject)
 
 	// Use the ResultMatrixTransformation as needed, e.g., setting it to the SpecialObject's world transformation
 }
+
+/// <summary>
+/// returns a vector full of found gameobjects that are not regular
+/// </summary>
+/// <returns></returns>
+std::vector<GameObject*> Scene::GetSpecialGameObjects()
+{
+	std::vector<GameObject*> ret_vec = std::vector<GameObject*>();
+
+	for (int i = 0; i < this->GetChildren().size(); i++)
+	{
+		auto curr_child = this->GetChildren().at(i);
+		GetAllSpecialObjectsForObjTree(curr_child, &ret_vec);
+	}
+
+	//after got all special objects, get them to calculate position
+	for (int i = 0; i < ret_vec.size(); i++)
+	{
+		ret_vec.at(i)->CalculateWorldPosition();
+	}
+
+	return ret_vec;
+}
+
+/// <summary>
+/// recursive function that iterates over GOObject trees and find special objects and push them to the GOMem vector
+/// </summary>
+/// <param name="head">the haed GameObject</param>
+/// <param name="GOMem">holds all result objects</param>
+void GetAllSpecialObjectsForObjTree(GameObject* head, std::vector<GameObject*>* GOMem)
+{
+	if (head->GetGoType() != regular)
+	{
+		GOMem->push_back(head);
+	}
+	auto children = head->getChildren();
+	for (int i = 0; i < children.size(); i++)
+	{
+		GetAllSpecialObjectsForObjTree(children.at(i), GOMem);
+	}
+}
+
+

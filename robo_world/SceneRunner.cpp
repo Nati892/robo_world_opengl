@@ -74,17 +74,78 @@ void FixAspectRatio()
 //Draws the scene
 void LoopScene()
 {
+	GOvec3 CamPos = GOvec3();
+	GOvec3 LookAtCenter = GOvec3();
+	GOvec3 LookAtUp = GOvec3();
+
+	CamPos.x = 0;
+	CamPos.y = 0;
+	CamPos.z = 5;
+
+	LookAtCenter.x = 0;
+	LookAtCenter.y = 0;
+	LookAtCenter.z = 0;
+
+	LookAtUp.x = 0;
+	LookAtUp.y = 1;
+	LookAtUp.z = 0;
+
+	std::vector<GameObject*> SpecialObjects;
+
+	if (PlayScene != nullptr)
+	{
+		SpecialObjects = PlayScene->GetSpecialGameObjects();
+		for (int i = 0; i < SpecialObjects.size(); i++)
+		{
+			auto curr_special_obj = SpecialObjects.at(i);
+			switch (curr_special_obj->GetGoType())
+			{
+			case GOCamPoint:
+				auto pos = curr_special_obj->GetCalculatedLocation();
+				CamPos.x = pos.x;
+				CamPos.y = pos.y;
+				CamPos.z = pos.z;
+				break;
+
+			case GOCamLookAt:
+				auto pos = curr_special_obj->GetCalculatedLocation();
+				LookAtCenter.x = pos.x;
+				LookAtCenter.y = pos.y;
+				LookAtCenter.z = pos.z;
+				break;
+			}
+		}
+	}
+
 	glMatrixMode(GL_MODELVIEW | GL_PROJECTION);
 	glLoadIdentity();
 
-	glFrustum(-FRUSTUM_X / 2, FRUSTUM_X / 2, -FRUSTUM_Y / 2, FRUSTUM_Y / 2, 0.4, 200.0);
+	glFrustum(-FRUSTUM_X / 2, FRUSTUM_X / 2, -FRUSTUM_Y / 2, FRUSTUM_Y / 2, 0.4, 200.0);//todo: change to camera properties soon 
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(
-		0, 0, 5,
-		0, 0, 0,
-		0, 1, 0);
+		CamPos.x, CamPos.y, CamPos.z,
+		LookAtCenter.x, LookAtCenter.y, LookAtCenter.z,
+		LookAtUp.x, LookAtUp.y, LookAtUp.z
+	);
+
+	if (PlayScene != nullptr)
+	{
+		for (int i = 0; i < SpecialObjects.size(); i++)
+		{
+			auto curr_special_obj = SpecialObjects.at(i);
+			switch (curr_special_obj->GetGoType())
+			{
+
+			case GOLightSource:
+				//todo: run the lights
+
+				break;
+			}
+
+		}
+	}
 
 	//add lighting here
 	glEnable(GL_LIGHT0);
