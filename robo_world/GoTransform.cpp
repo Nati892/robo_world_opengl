@@ -2,33 +2,33 @@
 
 GOTransform::GOTransform()
 {
-	Position[0] = 0;
-	Position[1] = 0;
-	Position[2] = 0;
+	Position.x = 0;
+	Position.y = 0;
+	Position.z = 0;
 
-	Rotation[0] = 0;
-	Rotation[1] = 0;
-	Rotation[2] = 0;
+	Rotation.x = 0;
+	Rotation.y = 0;
+	Rotation.z = 0;
 
-	Scale[0] = 1;
-	Scale[1] = 1;
-	Scale[2] = 1;
+	Scale.x = 1;
+	Scale.y = 1;
+	Scale.z = 1;
 }
 
 GOTransform::GOTransform(GameObject* parent)
 {
 	this->_GameObject = parent;
-	Position[0] = 0;
-	Position[1] = 0;
-	Position[2] = 0;
+	Position.x = 0;
+	Position.y = 0;
+	Position.z = 0;
 
-	Rotation[0] = 0;
-	Rotation[1] = 0;
-	Rotation[2] = 0;
+	Rotation.x = 0;
+	Rotation.y = 0;
+	Rotation.z = 0;
 
-	Scale[0] = 1;
-	Scale[1] = 1;
-	Scale[2] = 1;
+	Scale.x = 1;
+	Scale.y = 1;
+	Scale.z = 1;
 }
 
 void GOTransform::CleanUp()
@@ -47,32 +47,31 @@ void GOTransform::CleanUp()
 }
 
 void GOTransform::setPosition(GLfloat x, GLfloat y, GLfloat z) {
-	Position[0] = x;
-	Position[1] = y;
-	Position[2] = z;
+	Position.x = x;
+	Position.y = y;
+	Position.z = z;
 }
 
 void GOTransform::setRotation(GLfloat x, GLfloat y, GLfloat z) {
-	Rotation[0] = x;
-	Rotation[1] = y;
-	Rotation[2] = z;
+	Rotation.x = x;
+	Rotation.y = y;
+	Rotation.z = z;
 }
 
 void GOTransform::setScale(GLfloat x, GLfloat y, GLfloat z) {
-	Scale[0] = x;
-	Scale[1] = y;
-	Scale[2] = z;
+	Scale.x = x;
+	Scale.y = y;
+	Scale.z = z;
 }
-
-GLfloat* GOTransform::getPosition() {
+GOvec3 GOTransform::GetPosition() {
 	return Position;
 }
 
-GLfloat* GOTransform::getRotation() {
+GOvec3 GOTransform::GetRotation() {
 	return Rotation;
 }
 
-GLfloat* GOTransform::getScale() {
+GOvec3 GOTransform::GetScale() {
 	return Scale;
 }
 
@@ -90,11 +89,11 @@ void GOTransform::SetGameObjectOnce(GameObject* go_head)
 void GOTransform::PushObjectTransformMatrix()
 {
 	glPushMatrix();
-	glTranslatef(this->Position[0], this->Position[1], this->Position[2]);
-	glRotatef(this->Rotation[0], 1, 0, 0);
-	glRotatef(this->Rotation[1], 0, 1, 0);
-	glRotatef(this->Rotation[2], 0, 0, 1);
-	glScalef(this->Scale[0], this->Scale[1], this->Scale[2]);
+	glTranslatef(this->Position.x, this->Position.y, this->Position.z);
+	glRotatef(this->Rotation.z, 0, 0, 1);
+	glRotatef(this->Rotation.y, 0, 1, 0);
+	glRotatef(this->Rotation.x, 1, 0, 0);
+	glScalef(this->Scale.x, this->Scale.y, this->Scale.z);
 }
 
 void GOTransform::PopObjectTransformMatrix()

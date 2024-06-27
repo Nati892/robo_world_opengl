@@ -8,7 +8,6 @@
 #include "GameScripts.h"
 #include "Prefabs.h"
 
-
 class Scene
 {
 private:
@@ -58,3 +57,10 @@ void SetupScriptsForGameObjectHead(GameObject* GOHead);
 //TODO: add functions to run from ambient light to parent, and get parent list, and then calculate the camera location.
 //	also to calculate the lookat, we do the same for a "lookat" object, where the object is relative to player, is where we look to.
 
+/// <summary>
+/// does tree traversels and retrieves the Special game objects of type :Cam,CamLookAt and lightsource with updated calculated world position
+/// </summary>
+/// <returns> a list of all the special game objects found in scene</returns>
+std::vector<GameObject*> GetSpecialGameObjectsPosition();
+
+void CaculateWorldPosition(GameObject* SpecialObject);

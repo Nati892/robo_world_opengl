@@ -90,7 +90,6 @@ void RunScripts(GameObject* GOHead)
 	}
 }
 
-
 //apply transforms, and drawables for all objects in the scene
 void RunGameObjectsForFrame(GameObject* GOHead)
 {
@@ -129,7 +128,6 @@ void RunGameObjectsForFrame(GameObject* GOHead)
 		_obj_trans->PopObjectTransformMatrix();
 }
 
-
 void SetupScriptForGameObject(GameObject* GO_in)
 {
 	if (GO_in == nullptr)
@@ -164,3 +162,64 @@ void SetupScriptsForGameObjectHead(GameObject* GOHead)
 }
 
 //another traversal func to get light distances where it goes for each light source up the parent tree and then calculates the trasforms
+
+std::vector<GameObject*> GetSpecialGameObjectsPosition()
+{
+	
+	return std::vector<GameObject*>();
+}
+
+void CaculateWorldPosition(GameObject* SpecialObject)
+{
+	if (SpecialObject->GetGoType() != regular)
+		return;
+
+	// Set this to the identity matrix
+	glm::mat4 ResultMatrixTransformation = glm::mat4(1.0f);
+
+	GameObject* obj = SpecialObject;
+	while (obj->GetParent() != nullptr)
+	{
+		obj = obj->GetParent();
+
+		// Get the scale, rotation, and position of the current GameObject
+		if (obj->GetTransform() != nullptr)
+		{
+			GOTransform* tempTransform = obj->GetTransform();
+			GOvec3 objScale = tempTransform->GetScale();
+			GOvec3 objPosition = tempTransform->GetPosition();
+			GOvec3 objRotation = tempTransform->GetRotation();
+
+			glm::vec3 scale = glm::vec3(objScale.x, objScale.y, objScale.z);
+			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
+			glm::vec3 rotation = glm::vec3(objRotation.x, objRotation.y, objRotation.z);
+
+			// Create transformation matrices
+			glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
+			glm::mat4 rotateXMatrix = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::mat4 rotateYMatrix = glm::rotate(glm::mat4(1.0f), rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 rotateZMatrix = glm::rotate(glm::mat4(1.0f), rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 translateMatrix = glm::translate(glm::mat4(1.0f), position);
+
+			// Combine the transformations in the correct order: scale, rotate, then translate
+			glm::mat4 transformMatrix = translateMatrix * rotateZMatrix * rotateYMatrix * rotateXMatrix * scaleMatrix;
+
+			// Multiply with the ResultMatrixTransformation and store in ResultMatrixTransformation
+			ResultMatrixTransformation = transformMatrix * ResultMatrixTransformation;
+		}
+		if (SpecialObject->GetTransform() != nullptr)
+		{
+			//finally calculate and update the world position
+			GOTransform* tempTransform = SpecialObject->GetTransform();
+			GOvec3 objPosition = tempTransform->GetPosition();
+			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
+			// Convert the local position to a 4D homogeneous coordinate
+			glm::vec4 localPosition4D = glm::vec4(position, 1.0f);
+
+			glm::vec3 claculated_position = ResultMatrixTransformation * localPosition4D;
+			tempTransform->setPosition(claculated_position.x, claculated_position.y, claculated_position.z);
+		}
+	}
+
+	// Use the ResultMatrixTransformation as needed, e.g., setting it to the SpecialObject's world transformation
+}

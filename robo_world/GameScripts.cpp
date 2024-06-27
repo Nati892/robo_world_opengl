@@ -21,22 +21,22 @@ void BasicAxisRotateScript::SLoop()
 		float curr_new_red_val = (((float)val2) / (255.0f));
 		auto curr_diff = my_draw->getDiffuseColor();
 		auto curr_ambiant = my_draw->getAmbientColor();
-		my_draw->setDiffuseColor(curr_new_red_val, 0, 0, curr_diff[3]);
+		my_draw->setDiffuseColor(curr_new_red_val, 0, 0, curr_diff.z);
 	}
 
 	if (my_trans != nullptr)
 	{
-		auto curr_rot = my_trans->getRotation();
+		auto curr_rot = my_trans->GetRotation();
 		switch (_rotation_axis)
 		{
 		case axis_x:
-			my_trans->setRotation(val, curr_rot[1], curr_rot[2]);
+			my_trans->setRotation(val, curr_rot.y, curr_rot.z);
 			break;
 		case axis_y:
-			my_trans->setRotation(curr_rot[0], val, curr_rot[2]);
+			my_trans->setRotation(curr_rot.x, val, curr_rot.z);
 			break;
 		case axis_z:
-			my_trans->setRotation(curr_rot[0], curr_rot[1], val);
+			my_trans->setRotation(curr_rot.x, curr_rot.y, val);
 			break;
 		default:
 			_rotation_axis = axis_x;

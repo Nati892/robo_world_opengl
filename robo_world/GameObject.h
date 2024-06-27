@@ -28,6 +28,7 @@ protected:
 	std::vector<GameObject*> children; // Vector to hold pointers to child objects
 	GOType _GO_object_type = regular;
 	GOLightSourceData* _light_source_data = nullptr;
+	GOvec3 _claculated_world_position;
 
 public:
 	GameObject(GameObject* parent, std::string NewName, GOTransform* transform);
@@ -51,17 +52,41 @@ public:
 	GODrawable* GetDrawableObject();
 	void SetDrawableObject(GODrawable* newDrawObj);
 
-	//old ones get destoryed
-	void AttachDrawable(GODrawable* new_attach);
-	void AttachScript(GOScript* new_attach);
-	void AttachTransform(GOTransform* new_attach);
+	GameObject* GetParent();
+
+	//GoType
+	void SetGOType(GOType, int light_number = 0);
+	GOType GetGoType();
 
 	//light source data
-	void SetGOType(GOType, int light_number = 0);//sets 
 	GOLightSourceData* GetLightSourceData();//gives out pointer to light source data
 	bool IsLightSource();
+
+	//calculatedLoc
+	GOvec3 GetCalculatedLocation();
+	void SetCalculatedPosition(GOvec3);
 
 	// children get/add
 	std::vector<GameObject*>& getChildren();
 	void addChildObject(GameObject* child);
+
+	/// <summary>
+	/// old ones get deleted!
+	/// </summary>
+	/// <param name="new_attach"></param>
+	void AttachDrawable(GODrawable* new_attach);
+
+	/// <summary>
+	/// old ones get deleted!
+	/// </summary>
+	/// <param name="new_attach"></param>
+	void AttachScript(GOScript* new_attach);
+
+	/// <summary>
+	/// old ones get deleted!
+	/// </summary>
+	/// <param name="new_attach"></param>
+	void AttachTransform(GOTransform* new_attach);
+
+	void CalculateWorldPosition();
 };

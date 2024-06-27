@@ -19,10 +19,10 @@
     <Filter Include="Source Files\GOComponents_cpp">
       <UniqueIdentifier>{109515ab-751b-454b-a2a2-0b69958dee1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Templates">
+    <Filter Include="Header Files\Predefind objects">
       <UniqueIdentifier>{6e4ee704-e304-4dfa-937b-2494b69233ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Templates">
+    <Filter Include="Source Files\Predefind objects">
       <UniqueIdentifier>{9613ab98-3220-4122-8ca0-c02f610c72ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -52,13 +52,13 @@
       <Filter>Source Files\GOComponents_cpp</Filter>
     </ClCompile>
     <ClCompile Include="Drawables.cpp">
-      <Filter>Source Files\Templates</Filter>
+      <Filter>Source Files\Predefind objects</Filter>
     </ClCompile>
     <ClCompile Include="GameScripts.cpp">
-      <Filter>Source Files\Templates</Filter>
+      <Filter>Source Files\Predefind objects</Filter>
     </ClCompile>
     <ClCompile Include="Prefabs.cpp">
-      <Filter>Source Files\Templates</Filter>
+      <Filter>Source Files\Predefind objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,13 +93,13 @@
       <Filter>Header Files\GOComponents_h</Filter>
     </ClInclude>
     <ClInclude Include="Drawables.h">
-      <Filter>Header Files\Templates</Filter>
+      <Filter>Header Files\Predefind objects</Filter>
     </ClInclude>
     <ClInclude Include="GameScripts.h">
-      <Filter>Header Files\Templates</Filter>
+      <Filter>Header Files\Predefind objects</Filter>
     </ClInclude>
     <ClInclude Include="Prefabs.h">
-      <Filter>Header Files\Templates</Filter>
+      <Filter>Header Files\Predefind objects</Filter>
     </ClInclude>
     <ClInclude Include="GOLightSourceData.h">
       <Filter>Header Files\GOComponents_h</Filter>

@@ -7,9 +7,9 @@ private:
 	GameObject* _GameObject = nullptr;
 
 protected:
-	GLfloat AmbientColor[4] = { 0,0,0,1 }; // Ambient color (RGBA)
-	GLfloat DiffuseColor[4] = { 0,0,0,1 }; // Diffuse color (RGBA)
-	GLfloat SpecularColor[4] = { 0,0,0,1 }; // Specular color (RGBA)
+	GOvec4 AmbientColor = { 0,0,0,1 }; // Ambient color (RGBA)
+	GOvec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
+	GOvec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
 	GLfloat Shininess[1] = { 0 }; // Shininess factor
 
 public:
@@ -28,8 +28,8 @@ public:
 	void setDiffuseColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void setSpecularColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void setShininess(GLfloat shininess);
-	GLfloat* getAmbientColor();
-	GLfloat* getDiffuseColor();
-	GLfloat* getSpecularColor();
+	GOvec4 getAmbientColor();
+	GOvec4 getDiffuseColor();
+	GOvec4 getSpecularColor();
 	GLfloat getShininess();
 };

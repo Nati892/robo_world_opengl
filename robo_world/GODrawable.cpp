@@ -29,10 +29,21 @@ void GODrawable::DrawObject()
 
 void GODrawable::SetActiveMat() const
 {
+	float params[4] = { this->AmbientColor.x,this->AmbientColor.y,this->AmbientColor.z,this->AmbientColor.w };
+	glMaterialfv(GL_FRONT, GL_AMBIENT, params);
 
-	glMaterialfv(GL_FRONT, GL_AMBIENT, this->AmbientColor);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, this->DiffuseColor);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, this->SpecularColor);
+	params[0] = this->DiffuseColor.x;
+	params[1] = this->DiffuseColor.y;
+	params[2] = this->DiffuseColor.z;
+	params[3] = this->DiffuseColor.w;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, params);
+
+	params[0] = this->SpecularColor.x;
+	params[1] = this->SpecularColor.y;
+	params[2] = this->SpecularColor.z;
+	params[3] = this->SpecularColor.w;
+	glMaterialfv(GL_FRONT, GL_SPECULAR, params);
+
 	glMaterialfv(GL_FRONT, GL_SHININESS, this->Shininess);
 }
 
@@ -49,39 +60,39 @@ void GODrawable::SetGameObjectOnce(GameObject* go_head)
 }
 
 void GODrawable::setAmbientColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
-	AmbientColor[0] = r;
-	AmbientColor[1] = g;
-	AmbientColor[2] = b;
-	AmbientColor[3] = a;
+	AmbientColor.x = r;
+	AmbientColor.y = g;
+	AmbientColor.z = b;
+	AmbientColor.w = a;
 }
 
 void GODrawable::setDiffuseColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
-	DiffuseColor[0] = r;
-	DiffuseColor[1] = g;
-	DiffuseColor[2] = b;
-	DiffuseColor[3] = a;
+	DiffuseColor.x = r;
+	DiffuseColor.y = g;
+	DiffuseColor.z = b;
+	DiffuseColor.w = a;
 }
 
 void GODrawable::setSpecularColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
-	SpecularColor[0] = r;
-	SpecularColor[1] = g;
-	SpecularColor[2] = b;
-	SpecularColor[3] = a;
+	SpecularColor.x = r;
+	SpecularColor.y = g;
+	SpecularColor.z = b;
+	SpecularColor.w = a;
 }
 
 void GODrawable::setShininess(GLfloat shininess) {
 	Shininess[0] = shininess;
 }
 
-GLfloat* GODrawable::getAmbientColor() {
+GOvec4 GODrawable::getAmbientColor() {
 	return AmbientColor;
 }
 
-GLfloat* GODrawable::getDiffuseColor() {
+GOvec4 GODrawable::getDiffuseColor() {
 	return DiffuseColor;
 }
 
-GLfloat* GODrawable::getSpecularColor() {
+GOvec4 GODrawable::getSpecularColor() {
 	return SpecularColor;
 }
 
