@@ -2,7 +2,7 @@
 Scene* GetSampleScene()
 {
 	//create scene
-	Scene* ret = new Scene();
+	Scene* ret_scene = new Scene();
 
 	GameObject* Base = Prefabs::GetNewRotatingCube("Papa1");
 	Base->GetTransform()->setPosition(2, 0, 0);
@@ -20,8 +20,8 @@ Scene* GetSampleScene()
 	child2->GetTransform()->setPosition(1, 1, -1);
 	Base2->addChildObject(child2);
 
-	ret->AddGameObjectTree(Base);
-	ret->AddGameObjectTree(Base2);
+	ret_scene->AddGameObjectTree(Base);
+	ret_scene->AddGameObjectTree(Base2);
 
 
 	GOTransform* MainTrans = new GOTransform();
@@ -39,15 +39,38 @@ Scene* GetSampleScene()
 
 	CameraHolder->addChildObject(MainCam);
 	CameraHolder->addChildObject(CamLookAt);
-	ret->AddGameObjectTree(CameraHolder);
+	ret_scene->AddGameObjectTree(CameraHolder);
 
 	auto HolderScript = new BasicCamHeadMove();
 	CameraHolder->AttachScript(HolderScript);
 
 	//test light source
-	auto light =Prefabs::GetReadyLightSource0();
+	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder", nullptr);
+	ret_scene->AddGameObjectTree(LightsHolder);
 
-	return ret;
+	GameObject* light0 = Prefabs::GetReadyLightSource();
+	GameObject* light1 = Prefabs::GetReadyLightSource();
+	GameObject* light2 = Prefabs::GetReadyLightSource();
+	GameObject* light3 = Prefabs::GetReadyLightSource();
+
+	LightsHolder->addChildObject(light0);
+	LightsHolder->addChildObject(light1);
+	LightsHolder->addChildObject(light2);
+	LightsHolder->addChildObject(light3);
+
+	auto l_trans = light0->GetTransform();
+	l_trans->setPosition(-20, 0, 0);
+
+	l_trans = light1->GetTransform();
+	l_trans->setPosition(20, 0, 0);
+
+	l_trans = light2->GetTransform();
+	l_trans->setPosition(0, 20, 10);
+
+	l_trans = light3->GetTransform();
+	l_trans->setPosition(0, -20, 10);
+
+	return ret_scene;
 }
 
 void Scene::AddGameObjectTree(GameObject* obj)
@@ -56,9 +79,42 @@ void Scene::AddGameObjectTree(GameObject* obj)
 		this->SceneObjects.push_back(obj);
 }
 
-void Scene::TraverseLightSource(GameObject* go) 
-{//todo: continue here
-	
+void Scene::TraverseLightSources()
+{
+	for (int i = 0; i < LIGHT_SOURCES_NUM; i++)
+	{
+		LightSourcesArray[i] = nullptr;
+	}
+	for (int i = 0; i < this->GetChildren().size(); i++)
+	{
+		auto curr_child = this->GetChildren().at(i);
+		TraverseLightSourceInObjectTree(curr_child);
+	}
+}
+
+void Scene::TraverseLightSourceInObjectTree(GameObject* go)
+{
+	if (go->IsLightSource())
+	{
+		for (int i = 0; i < LIGHT_SOURCES_NUM; i++)
+		{
+			if (LightSourcesArray[i] == nullptr)
+			{
+				LightSourcesArray[i] = go;
+				go->GetLightSourceData()->light_source_number = i;
+				break;
+			}
+		}
+		if (go->GetLightSourceData()->light_source_number <0 || go->GetLightSourceData()->light_source_number >LIGHT_SOURCES_NUM)
+		{
+			go->GetLightSourceData()->light_source_number = -1;
+		}
+	}
+	for (int i = 0; i < go->getChildren().size(); i++)
+	{
+		GameObject* child = go->getChildren().at(i);
+		TraverseLightSourceInObjectTree(child);
+	}
 
 
 }

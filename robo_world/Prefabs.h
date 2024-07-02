@@ -12,7 +12,7 @@ public:
 	static GameObject* GetNewRotatingSphere(std::string name);
 
 
-	static GameObject* GetReadyLightSource0();
+	static GameObject* GetReadyLightSource();
 
 };
 

@@ -74,6 +74,13 @@ void FixAspectRatio()
 //Draws the scene
 void LoopScene()
 {
+	if (PlayScene == nullptr)
+		return;
+
+	//run scripts
+	PlayScene->RunSceneScripts();
+
+	//setup camera
 	GOvec3 CamPos = GOvec3();
 	GOvec3 LookAtCenter = GOvec3();
 	GOvec3 LookAtUp = GOvec3();
@@ -130,6 +137,9 @@ void LoopScene()
 		LookAtUp.x, LookAtUp.y, LookAtUp.z
 	);
 
+	//enable lights
+	PlayScene->TraverseLightSources();
+
 	if (PlayScene != nullptr)
 	{
 		for (int i = 0; i < SpecialObjects.size(); i++)
@@ -139,60 +149,49 @@ void LoopScene()
 			{
 
 			case GOLightSource:
-				//todo: run the lights
-				auto ls_data=curr_special_obj->GetLightSourceData();
+				//todo: run the light
+				auto ls_data = curr_special_obj->GetLightSourceData();
+				auto curr_light_source_num = GL_LIGHT0 + ls_data->light_source_number;
+				float in_arr[4] = { 0,0,0,0 };
 
+				glEnable(curr_light_source_num);
+
+				auto pos = curr_special_obj->GetTransform()->GetPosition();
+				auto ambiant = ls_data->_light_ambient;
+				auto diffuse = ls_data->_light_diffuse;
+				auto specular = ls_data->_light_specular;
+
+				in_arr[0] = pos.x;
+				in_arr[1] = pos.y;
+				in_arr[2] = pos.z;
+				in_arr[3] = 0;
+				glLightfv(curr_light_source_num, GL_POSITION, in_arr);
+
+				in_arr[0] = ambiant.x;
+				in_arr[1] = ambiant.y;
+				in_arr[2] = ambiant.z;
+				in_arr[3] = ambiant.w;
+				glLightfv(curr_light_source_num, GL_AMBIENT, in_arr);
+
+				in_arr[0] = diffuse.x;
+				in_arr[1] = diffuse.y;
+				in_arr[2] = diffuse.z;
+				in_arr[3] = diffuse.w;
+				glLightfv(curr_light_source_num, GL_DIFFUSE, in_arr);
+
+				in_arr[0] = specular.x;
+				in_arr[1] = specular.y;
+				in_arr[2] = specular.z;
+				in_arr[3] = specular.w;
+				glLightfv(curr_light_source_num, GL_SPECULAR, in_arr);
 				break;
 			}
 
 		}
 	}
 
-	//add lighting here
-
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
-	glEnable(GL_LIGHT2);
-	glEnable(GL_LIGHT3);
-
-	GLfloat light_position0[] = { -20, 0, 0, 0.0 };  // Light position
-	GLfloat light_position1[] = { 20.0, 0, 0, 0.0 };  // Light position
-	GLfloat light_position2[] = { 0, 20, 10, 0.0 };  // Light position
-	GLfloat light_position3[] = { 0, -20, 10, 0.0 };  // Light position
-	GLfloat light_ambient[] = { 0.4, 0.4, 0.4, 1.0 };  // Ambient light
-	GLfloat light_diffuse[] = { 0.8, 0.8, 0.8, 1.0 };  // Diffuse light
-	GLfloat light_zeros[] = { 0, 0, 0, 1.0 };  // Diffuse light
-
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position0);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_zeros);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_zeros);
-
-	glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, light_zeros);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, light_zeros);
-
-	glLightfv(GL_LIGHT2, GL_POSITION, light_position2);
-	glLightfv(GL_LIGHT2, GL_AMBIENT, light_zeros);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT2, GL_SPECULAR, light_zeros);
-
-	glLightfv(GL_LIGHT3, GL_POSITION, light_position3);
-	glLightfv(GL_LIGHT3, GL_AMBIENT, light_zeros);
-	glLightfv(GL_LIGHT3, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT3, GL_SPECULAR, light_zeros);
-
-	auto val = timer->GetCurrentAnimationValue();
-
-	if (PlayScene != nullptr)
-	{
-		//run scripts
-		PlayScene->RunSceneScripts();
-
-		//draw scene
-		PlayScene->DrawScene();
-	}
+	//draw scene
+	PlayScene->DrawScene();
 }
 
 //Redraw callback

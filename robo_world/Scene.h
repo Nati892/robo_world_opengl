@@ -23,7 +23,9 @@ public:
 	void DrawScene();
 	std::vector<GameObject*> GetChildren();
 	void StartScene();
-	void TraverseLightSource(GameObject*);
+	void TraverseLightSourceInObjectTree(GameObject*);
+	void TraverseLightSources();
+
 	/// <summary>
 	/// does tree traversels and retrieves the Special game objects of type :Cam,CamLookAt and lightsource with updated calculated world position
 	/// </summary>
