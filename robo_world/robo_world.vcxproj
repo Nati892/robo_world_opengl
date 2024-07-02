@@ -134,6 +134,7 @@
     <ClCompile Include="Drawables.cpp" />
     <ClCompile Include="GameScripts.cpp" />
     <ClCompile Include="GOScript.cpp" />
+    <ClInclude Include="GOInputSystem.h" />
     <ClInclude Include="GOLightSourceData.h" />
     <ClInclude Include="GOScript.h" />
     <ClCompile Include="GameObject.cpp" />

@@ -104,5 +104,8 @@
     <ClInclude Include="GOLightSourceData.h">
       <Filter>Header Files\GOComponents_h</Filter>
     </ClInclude>
+    <ClInclude Include="GOInputSystem.h">
+      <Filter>Header Files\GOComponents_h</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

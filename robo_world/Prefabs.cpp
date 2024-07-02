@@ -6,7 +6,7 @@
 GameObject* Prefabs::GetNewRotatingCube(std::string name)
 {
 	GameObject* ret = nullptr;
-	ret = new GameObject(nullptr, "head", nullptr);
+	ret = new GameObject(nullptr, name, nullptr);
 
 	//create transform for game object
 	GOTransform* trans = new GOTransform();
@@ -27,7 +27,7 @@ GameObject* Prefabs::GetNewRotatingSphere(std::string name)
 {
 	GameObject* ret = nullptr;
 
-	ret = new GameObject(nullptr, "son", nullptr);
+	ret = new GameObject(nullptr, name, nullptr);
 
 	//create transform for game object
 	GOTransform* trans = new GOTransform();

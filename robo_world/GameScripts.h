@@ -27,3 +27,16 @@ public:
 
 	void SetRotationAxis(axis a);
 };
+
+
+
+
+class BasicCamHeadMove :public GOScript
+{
+	AnimationTimer* basic_timer;
+public:
+	//have to
+	void SSetup();
+	void SLoop();
+	void SCleanUp();
+};

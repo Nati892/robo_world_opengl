@@ -2,10 +2,15 @@
 
 void BasicAxisRotateScript::SSetup()
 {
-	rotate_timer = new AnimationTimer(10, 0, 360);//todo: add cleanup func for this
-	color_timer = new AnimationTimer(5, 1, 255);//todo: add cleanup func this
+	rotate_timer = new AnimationTimer(10, 0, 360);
+	color_timer = new AnimationTimer(5, 1, 255);
 	rotate_timer->StartTimer();
 	color_timer->StartTimer();
+	GameObject* my_go = this->GetGameObject();
+	if (my_go->GetName() == "child2")
+	{
+		my_go->SetGOType(GOCamLookAt);
+	}
 }
 
 void BasicAxisRotateScript::SLoop()
@@ -15,7 +20,6 @@ void BasicAxisRotateScript::SLoop()
 	GameObject* my_go = this->GetGameObject();
 	GODrawable* my_draw = my_go->GetDrawableObject();
 	GOTransform* my_trans = my_go->GetTransform();
-
 	if (my_draw != nullptr)
 	{
 		float curr_new_red_val = (((float)val2) / (255.0f));
@@ -47,7 +51,7 @@ void BasicAxisRotateScript::SLoop()
 
 void BasicAxisRotateScript::SCleanUp()
 {
-	delete rotate_timer;
+	delete this->rotate_timer;
 	delete this->color_timer;
 }
 
@@ -68,4 +72,27 @@ void BasicAxisRotateScript::SetRotationAxis(axis a)
 		this->_rotation_axis = axis_x;
 		break;
 	}
+}
+
+
+
+/////basic cam script
+
+
+void BasicCamHeadMove::SSetup()
+{
+	basic_timer = new AnimationTimer(3, 0, 360);//todo: add cleanup func for this
+	basic_timer->StartTimer();
+}
+
+void BasicCamHeadMove::SLoop()
+{
+	auto val = basic_timer->GetCurrentAnimationValue();
+	GameObject* my_go = this->GetGameObject();
+	GOTransform* my_trans = my_go->GetTransform();
+	my_trans->setRotation(my_trans->GetRotation().x, val, my_trans->GetRotation().z);
+}
+
+void BasicCamHeadMove::SCleanUp()
+{
 }

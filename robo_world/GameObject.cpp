@@ -10,7 +10,8 @@ GameObject::GameObject(GameObject* parent, std::string NewName, GOTransform* tra
 	if (this->_parent != nullptr)
 		this->_parent->addChildObject(this);
 	this->_name = NewName;
-	this->_transoform = transoform;
+	//this->_transoform = transoform;
+	AttachTransform(transoform);
 	this->_DrawableObject = nullptr;
 	this->_script = nullptr;
 }
@@ -56,7 +57,7 @@ GOTransform* GameObject::GetTransform()
 
 void GameObject::AttachDrawable(GODrawable* new_attach)
 {
-	if (this->_DrawableObject != nullptr)
+	if (this->_DrawableObject != nullptr && this->_DrawableObject != new_attach)
 		delete this->_DrawableObject;
 	this->_DrawableObject = new_attach;
 	new_attach->SetGameObjectOnce(this);
@@ -64,7 +65,7 @@ void GameObject::AttachDrawable(GODrawable* new_attach)
 
 void GameObject::AttachScript(GOScript* new_attach)
 {
-	if (this->_script != nullptr)
+	if (this->_script != nullptr && this->_script != new_attach)
 		delete this->_script;
 	this->_script = new_attach;
 	new_attach->SetGameObjectOnce(this);
@@ -72,7 +73,7 @@ void GameObject::AttachScript(GOScript* new_attach)
 
 void GameObject::AttachTransform(GOTransform* new_attach)
 {
-	if (this->_transoform != nullptr)
+	if (this->_transoform != nullptr && this->_transoform != new_attach)
 		delete this->_transoform;
 	this->_transoform = new_attach;
 	new_attach->SetGameObjectOnce(this);
@@ -80,9 +81,6 @@ void GameObject::AttachTransform(GOTransform* new_attach)
 
 void GameObject::CalculateWorldPosition()
 {
-	if (this->GetGoType() != regular)
-		return;
-
 	// Set this to the identity matrix
 	glm::mat4 ResultMatrixTransformation = glm::mat4(1.0f);
 
@@ -101,7 +99,7 @@ void GameObject::CalculateWorldPosition()
 
 			glm::vec3 scale = glm::vec3(objScale.x, objScale.y, objScale.z);
 			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
-			glm::vec3 rotation = glm::vec3(objRotation.x, objRotation.y, objRotation.z);
+			glm::vec3 rotation = glm::vec3(glm::radians(objRotation.x), glm::radians(objRotation.y), glm::radians(objRotation.z));
 
 			// Create transformation matrices
 			glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
@@ -116,17 +114,20 @@ void GameObject::CalculateWorldPosition()
 			// Multiply with the ResultMatrixTransformation and store in ResultMatrixTransformation
 			ResultMatrixTransformation = transformMatrix * ResultMatrixTransformation;
 		}
-		if (this->GetTransform() != nullptr)
-		{
-			GOTransform* tempTransform = this->GetTransform();
-			GOvec3 objPosition = tempTransform->GetPosition();
-			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
-			// Convert the local position to a 4D homogeneous coordinate
-			glm::vec4 localPosition4D = glm::vec4(position, 1.0f);
 
-			glm::vec3 claculated_position = ResultMatrixTransformation * localPosition4D;
-			tempTransform->setPosition(claculated_position.x, claculated_position.y, claculated_position.z);
-		}
+	}
+	if (this->GetTransform() != nullptr)
+	{
+		GOTransform* tempTransform = this->GetTransform();
+		GOvec3 objPosition = tempTransform->GetPosition();
+		glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
+		// Convert the local position to a 4D homogeneous coordinate
+		glm::vec4 localPosition4D = glm::vec4(position, 1.0f);
+
+		glm::vec3 claculated_position = ResultMatrixTransformation * localPosition4D;
+		GOvec3 res = { claculated_position.x, claculated_position.y, claculated_position.z };
+
+		this->SetCalculatedPosition(res);
 	}
 
 	// Use the ResultMatrixTransformation as needed, e.g., setting it to the SpecialObject's world transformation
@@ -135,17 +136,18 @@ void GameObject::CalculateWorldPosition()
 
 void GameObject::SetGOType(GOType new_type, int light_number)
 {
-	if (this->_GO_object_type == GOLightSource && new_type != GOLightSource)
+	static GameObject* CurrentLookAt = nullptr;
+	if (new_type == GOCamLookAt)
 	{
-		if (this->_light_source_data != nullptr)
+		if (CurrentLookAt != nullptr)
 		{
-			delete this->_light_source_data;
+			CurrentLookAt->SetGOType(regular);
 		}
+		CurrentLookAt = this;
 	}
-
 	this->_GO_object_type = new_type;
 
-	if (!this->IsLightSource())
+	if (this->IsLightSource())
 	{
 		this->_GO_object_type = GOLightSource;
 		if (this->_light_source_data == nullptr)
@@ -172,7 +174,7 @@ bool GameObject::IsLightSource()
 
 GOvec3 GameObject::GetCalculatedLocation()
 {
-	return GOvec3();
+	return this->_claculated_world_position;
 }
 
 void GameObject::SetCalculatedPosition(GOvec3 new_calc_pos)
@@ -205,6 +207,16 @@ void GameObject::Destroy(bool deep)
 	delete this;
 }
 
+std::string GameObject::GetName()
+{
+	return this->_name;
+}
+
+void GameObject::SetName(std::string new_name)
+{
+	this->_name = new_name;
+}
+
 std::vector<GameObject*>& GameObject::getChildren()
 {
 	// TODO: insert return statement here
@@ -223,6 +235,6 @@ GameObject* GameObject::GetParent()
 
 void GameObject::addChildObject(GameObject* child)
 {
-	children.push_back(child);
+	this->children.push_back(child);
 	child->_parent = this;
 }

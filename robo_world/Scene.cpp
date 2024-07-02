@@ -23,6 +23,27 @@ Scene* GetSampleScene()
 	ret->AddGameObjectTree(Base);
 	ret->AddGameObjectTree(Base2);
 
+
+	GOTransform* MainTrans = new GOTransform();
+	GameObject* CameraHolder = new GameObject(nullptr, "CamHead", MainTrans);
+
+	GOTransform* CamTrans = new GOTransform();
+	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
+	CamTrans->setPosition(0, 0, 5);
+	MainCam->SetGOType(GOCamPoint);
+
+	GOTransform* CamLookAtTrans = new GOTransform();
+	GameObject* CamLookAt = new GameObject(nullptr, "MainCamLookAt", CamLookAtTrans);
+	CamLookAtTrans->setPosition(0, 1, 0);
+	CamLookAt->SetGOType(GOCamLookAt);
+
+	CameraHolder->addChildObject(MainCam);
+	CameraHolder->addChildObject(CamLookAt);
+	ret->AddGameObjectTree(CameraHolder);
+
+	auto HolderScript = new BasicCamHeadMove();
+	CameraHolder->AttachScript(HolderScript);
+
 	return ret;
 }
 

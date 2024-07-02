@@ -40,6 +40,10 @@ public:
 	//when deep is set then it does so for all children
 	void Destroy(bool deep);
 
+	//name get/set
+	std::string GetName();
+	void SetName(std::string);
+
 	//script get/set
 	void SetGOScript(GOScript*);//creates a script instance (c++ object) for this child
 	GOScript* GetRunningScript();
@@ -52,7 +56,6 @@ public:
 	GODrawable* GetDrawableObject();
 	void SetDrawableObject(GODrawable* newDrawObj);
 
-	GameObject* GetParent();
 
 	//GoType
 	void SetGOType(GOType, int light_number = 0);
@@ -88,5 +91,6 @@ public:
 	/// <param name="new_attach"></param>
 	void AttachTransform(GOTransform* new_attach);
 
+	GameObject* GetParent();
 	void CalculateWorldPosition();
 };

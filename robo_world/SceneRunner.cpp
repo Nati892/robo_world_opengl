@@ -91,7 +91,7 @@ void LoopScene()
 	LookAtUp.z = 0;
 
 	std::vector<GameObject*> SpecialObjects;
-
+	GOvec3 pos;
 	if (PlayScene != nullptr)
 	{
 		SpecialObjects = PlayScene->GetSpecialGameObjects();
@@ -101,14 +101,14 @@ void LoopScene()
 			switch (curr_special_obj->GetGoType())
 			{
 			case GOCamPoint:
-				auto pos = curr_special_obj->GetCalculatedLocation();
+				pos = curr_special_obj->GetCalculatedLocation();
 				CamPos.x = pos.x;
 				CamPos.y = pos.y;
 				CamPos.z = pos.z;
 				break;
 
 			case GOCamLookAt:
-				auto pos = curr_special_obj->GetCalculatedLocation();
+				pos = curr_special_obj->GetCalculatedLocation();
 				LookAtCenter.x = pos.x;
 				LookAtCenter.y = pos.y;
 				LookAtCenter.z = pos.z;
@@ -148,6 +148,7 @@ void LoopScene()
 	}
 
 	//add lighting here
+
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	glEnable(GL_LIGHT2);

@@ -82,6 +82,7 @@ GameObject* GOTransform::GetGameObject()
 
 void GOTransform::SetGameObjectOnce(GameObject* go_head)
 {
+	if (this == nullptr) return;//In case of an uninitialized object, just a class call
 	if (this->_GameObject == nullptr)
 		this->_GameObject = go_head;
 }
