@@ -42,3 +42,12 @@ GameObject* Prefabs::GetNewRotatingSphere(std::string name)
 	ret->AttachScript(scripty);
 	return ret;
 }
+
+GameObject* Prefabs::GetReadyLightSource0()
+{
+	GOTransform* light_trans = new GOTransform();
+	GameObject* ret = new GameObject(nullptr, "", light_trans);
+	ret->SetGOType(GOLightSource);
+
+	return nullptr;
+}

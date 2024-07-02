@@ -44,14 +44,23 @@ Scene* GetSampleScene()
 	auto HolderScript = new BasicCamHeadMove();
 	CameraHolder->AttachScript(HolderScript);
 
+	//test light source
+	auto light =Prefabs::GetReadyLightSource0();
+
 	return ret;
 }
 
 void Scene::AddGameObjectTree(GameObject* obj)
 {
-
 	if (obj != nullptr)
 		this->SceneObjects.push_back(obj);
+}
+
+void Scene::TraverseLightSource(GameObject* go) 
+{//todo: continue here
+	
+
+
 }
 
 void Scene::StartScene()

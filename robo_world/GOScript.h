@@ -20,6 +20,4 @@ public:
 
 	GameObject* GetGameObject();
 	void SetGameObjectOnce(GameObject*);
-
-
 };

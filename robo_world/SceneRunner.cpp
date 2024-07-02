@@ -140,6 +140,7 @@ void LoopScene()
 
 			case GOLightSource:
 				//todo: run the lights
+				auto ls_data=curr_special_obj->GetLightSourceData();
 
 				break;
 			}

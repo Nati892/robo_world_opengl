@@ -3,7 +3,6 @@
 #include "GOScript.h"
 #include "GOTransform.h"
 
-
 GameObject::GameObject(GameObject* parent, std::string NewName, GOTransform* transoform)
 {
 	this->_parent = parent;
@@ -33,11 +32,11 @@ GameObject::~GameObject()
 		this->_script->CleanUp();
 		delete this->_script;
 	}
-
-	if (this->_light_source_data != nullptr)
-	{
-		delete this->_light_source_data;
-	}
+	
+		if (this->_light_source_data != nullptr)
+		{
+			delete this->_light_source_data;
+		}
 }
 
 void GameObject::SetGOScript(GOScript* scripty)
@@ -129,15 +128,13 @@ void GameObject::CalculateWorldPosition()
 
 		this->SetCalculatedPosition(res);
 	}
-
-	// Use the ResultMatrixTransformation as needed, e.g., setting it to the SpecialObject's world transformation
-
 }
 
-void GameObject::SetGOType(GOType new_type, int light_number)
+bool GameObject::SetGOType(GOType new_type)
 {
+	bool res = true;
 	static GameObject* CurrentLookAt = nullptr;
-	if (new_type == GOCamLookAt)
+	if (new_type == GOCamLookAt)//Make sure there is only one lookat
 	{
 		if (CurrentLookAt != nullptr)
 		{
@@ -145,16 +142,22 @@ void GameObject::SetGOType(GOType new_type, int light_number)
 		}
 		CurrentLookAt = this;
 	}
+
 	this->_GO_object_type = new_type;
 
-	if (this->IsLightSource())
+	if (this->IsLightSource())//Make sure there are only eight light sources
 	{
-		this->_GO_object_type = GOLightSource;
 		if (this->_light_source_data == nullptr)
 		{
 			this->_light_source_data = new GOLightSourceData();
 		}
+		else
+		{
+			this->_GO_object_type = regular;
+			res = false;
+		}
 	}
+	return res;
 }
 
 GOType GameObject::GetGoType()
@@ -165,6 +168,15 @@ GOType GameObject::GetGoType()
 GOLightSourceData* GameObject::GetLightSourceData()
 {
 	return this->_light_source_data;
+}
+
+void GameObject::SetLightSourceData(GOLightSourceData* data)
+{
+	if (this->_light_source_data != nullptr)
+	{
+		delete this->_light_source_data;
+	}
+	this->_light_source_data = data;
 }
 
 bool GameObject::IsLightSource()

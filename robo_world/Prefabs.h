@@ -11,4 +11,9 @@ public:
 	static GameObject* GetNewRotatingCube(std::string name);
 	static GameObject* GetNewRotatingSphere(std::string name);
 
+
+	static GameObject* GetReadyLightSource0();
+
 };
+
+

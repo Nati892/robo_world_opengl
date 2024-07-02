@@ -5,6 +5,7 @@
 class GOLightSourceData
 {
 public:
+	int light_source_number = -1;
 	GOvec4 _light_ambient[4] = { 1.0f, 1.0f,  1.0f, 1.0 };  // Ambient light
 	GOvec4 _light_diffuse[4] = { 1.0f,  1.0f,  1.0f, 1.0 };  // Diffuse light
 	GOvec4 _light_zeros[4] = { 1.0f,  1.0f,  1.0f, 1.0 };  // Diffuse light

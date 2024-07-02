@@ -12,7 +12,7 @@ class Scene
 {
 private:
 	std::vector<GameObject*> SceneObjects;
-
+	GameObject* LightSourcesArray[LIGHT_SOURCES_NUM] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 public:
 	/// <summary>
 	/// add game object to scene
@@ -23,7 +23,7 @@ public:
 	void DrawScene();
 	std::vector<GameObject*> GetChildren();
 	void StartScene();
-
+	void TraverseLightSource(GameObject*);
 	/// <summary>
 	/// does tree traversels and retrieves the Special game objects of type :Cam,CamLookAt and lightsource with updated calculated world position
 	/// </summary>
@@ -66,3 +66,4 @@ void SetupScriptsForGameObjectHead(GameObject* GOHead);
 void GetAllSpecialObjectsForObjTree(GameObject* head, std::vector<GameObject*>* GOMem);
 
 void CaculateWorldPosition(GameObject* SpecialObject);
+

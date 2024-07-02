@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 #include "GOLightSourceData.h"
+
+#define LIGHT_SOURCES_NUM 8
 class GODrawable;
 class GOScript;
 class GOTransform;
@@ -29,7 +31,6 @@ protected:
 	GOType _GO_object_type = regular;
 	GOLightSourceData* _light_source_data = nullptr;
 	GOvec3 _claculated_world_position;
-
 public:
 	GameObject(GameObject* parent, std::string NewName, GOTransform* transform);
 	~GameObject();
@@ -58,11 +59,18 @@ public:
 
 
 	//GoType
-	void SetGOType(GOType, int light_number = 0);
+	/// <summary>
+	/// sets the object type and returns if able to set it or note,
+	/// can returns false if its a light source and that there is no room
+	/// </summary>
+	/// <param name=""></param>
+	/// <returns></returns>
+	bool SetGOType(GOType);
 	GOType GetGoType();
 
 	//light source data
 	GOLightSourceData* GetLightSourceData();//gives out pointer to light source data
+	void  SetLightSourceData(GOLightSourceData* data);//gives out pointer to light source data
 	bool IsLightSource();
 
 	//calculatedLoc
