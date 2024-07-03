@@ -79,6 +79,28 @@ void Scene::AddGameObjectTree(GameObject* obj)
 		this->SceneObjects.push_back(obj);
 }
 
+//note: I know this could be implemented in a lot more efficient manner, but this is true for much of this. I just want this to work well for now, in the future I might revamp this project
+GameObject* Scene::FindObjectByName(std::string object_name)
+{
+	GameObject* found_obj = nullptr;
+	auto children = this->GetChildren();
+	for (int i = 0; i < children.size(); i++)
+	{
+		auto curr_obj = children.at(i);
+		found_obj = SearchObjectByNameInObjectTree(object_name, curr_obj);
+		if (found_obj != nullptr)
+			break;
+	}
+	return found_obj;
+}
+
+
+
+GOInputSystem* Scene::GetSceneInputSystem()
+{
+	return this->SceneInputSystem;
+}
+
 void Scene::TraverseLightSources()
 {
 	for (int i = 0; i < LIGHT_SOURCES_NUM; i++)
@@ -92,6 +114,7 @@ void Scene::TraverseLightSources()
 	}
 }
 
+//another traversal func to get light distances where it goes for each light source up the parent tree and then calculates the trasforms
 void Scene::TraverseLightSourceInObjectTree(GameObject* go)
 {
 	if (go->IsLightSource())
@@ -119,15 +142,27 @@ void Scene::TraverseLightSourceInObjectTree(GameObject* go)
 
 }
 
+Scene::Scene()
+{
+	this->SceneInputSystem = new GOInputSystem();
+}
+
+Scene::~Scene()
+{
+	if (this->SceneInputSystem != nullptr)
+		delete this->SceneInputSystem;
+}
 void Scene::StartScene()
 {
 	GameObject* curr_GO;
 	for (int i = 0; i < this->SceneObjects.size(); i++)
 	{
 		curr_GO = SceneObjects.at(i);
-		SetupScriptsForGameObjectHead(curr_GO);
+		SetupScriptsForGameObjectHead(this, curr_GO);
 	}
 }
+
+
 
 void Scene::RunSceneScripts()
 {
@@ -214,19 +249,7 @@ void RunGameObjectsForFrame(GameObject* GOHead)
 		_obj_trans->PopObjectTransformMatrix();
 }
 
-void SetupScriptForGameObject(GameObject* GO_in)
-{
-	if (GO_in == nullptr)
-		return;
-
-	GOScript* GO_Script = GO_in->GetRunningScript();
-	if (GO_Script != nullptr)
-	{
-		GO_Script->SetupOnce();
-	}
-}
-
-void SetupScriptsForGameObjectHead(GameObject* GOHead)
+void SetupScriptsForGameObjectHead(Scene* CurrScene, GameObject* GOHead)
 {
 	if (GOHead == nullptr)
 		return;
@@ -235,7 +258,7 @@ void SetupScriptsForGameObjectHead(GameObject* GOHead)
 	GOScript* curr_script = GOHead->GetRunningScript();
 	if (curr_script != nullptr)
 	{
-		curr_script->SetupOnce();
+		curr_script->SetupOnce(CurrScene);
 	}
 
 	//run scripts for children
@@ -243,11 +266,10 @@ void SetupScriptsForGameObjectHead(GameObject* GOHead)
 	for (int i = 0; i < children.size(); i++)
 	{
 		GameObject* curr_child = children.at(i);
-		SetupScriptsForGameObjectHead(curr_child);
+		SetupScriptsForGameObjectHead(CurrScene, curr_child);
 	}
 }
 
-//another traversal func to get light distances where it goes for each light source up the parent tree and then calculates the trasforms
 
 
 /// <summary>
@@ -348,3 +370,31 @@ void GetAllSpecialObjectsForObjTree(GameObject* head, std::vector<GameObject*>* 
 }
 
 
+
+GameObject* SearchObjectByNameInObjectTree(std::string objName, GameObject* objTree)
+{
+	GameObject* res_obj = nullptr;
+	if (objTree == nullptr)
+		return res_obj;
+
+	if (objTree->GetName() == objName)//test head
+	{
+		res_obj = objTree;
+		return res_obj;
+	}
+	auto obj_children = objTree->getChildren();
+	if (obj_children.size() <= 0)
+		return res_obj;
+
+	for (int i = 0; i < obj_children.size(); i++)
+	{
+		GameObject* curr_child = obj_children.at(i);
+		auto child_res = SearchObjectByNameInObjectTree(objName, curr_child);//search in child tree for res object
+		if (child_res != nullptr)
+		{
+			res_obj = child_res;
+			return res_obj;
+		}
+	}
+	return res_obj;
+}

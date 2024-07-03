@@ -60,6 +60,9 @@
     <ClCompile Include="Prefabs.cpp">
       <Filter>Source Files\Predefind objects</Filter>
     </ClCompile>
+    <ClCompile Include="GOInputSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glut.h">

@@ -7,13 +7,17 @@
 #include "Drawables.h"
 #include "GameScripts.h"
 #include "Prefabs.h"
+#include "GOInputSystem.h"
 
 class Scene
 {
 private:
 	std::vector<GameObject*> SceneObjects;
 	GameObject* LightSourcesArray[LIGHT_SOURCES_NUM] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	GOInputSystem* SceneInputSystem = nullptr;
 public:
+	Scene();
+	~Scene();
 	/// <summary>
 	/// add game object to scene
 	/// </summary>
@@ -25,18 +29,20 @@ public:
 	void StartScene();
 	void TraverseLightSourceInObjectTree(GameObject*);
 	void TraverseLightSources();
-
+	GameObject* FindObjectByName(std::string);
 	/// <summary>
 	/// does tree traversels and retrieves the Special game objects of type :Cam,CamLookAt and lightsource with updated calculated world position
 	/// </summary>
 	/// <returns> a list of all the special game objects found in scene</returns>
 	std::vector<GameObject*> GetSpecialGameObjects();
+
+	GOInputSystem* GetSceneInputSystem();
 };
 
 //Scene* GetTestScene();
 Scene* GetSampleScene();
 
-/// <summary>
+/// <summary>manner
 /// runs over all game objects and applies, transforms ,material and draws the object trees in scene.
 /// doenst do the scripts
 /// </summary>
@@ -60,7 +66,7 @@ void SetupScriptForGameObject(GameObject*);
 
 void StartScript(GameObject*);
 
-void SetupScriptsForGameObjectHead(GameObject* GOHead);
+void SetupScriptsForGameObjectHead(Scene* CurrScene, GameObject* GOHead);
 
 //TODO: add functions to run from ambient light to parent, and get parent list, and then calculate the camera location.
 //	also to calculate the lookat, we do the same for a "lookat" object, where the object is relative to player, is where we look to.
@@ -68,4 +74,10 @@ void SetupScriptsForGameObjectHead(GameObject* GOHead);
 void GetAllSpecialObjectsForObjTree(GameObject* head, std::vector<GameObject*>* GOMem);
 
 void CaculateWorldPosition(GameObject* SpecialObject);
+
+/// <summary>
+/// finds a game object with the given name and returns a pointer to it, if not then returns null
+/// </summary>
+GameObject* SearchObjectByNameInObjectTree(std::string, GameObject*);
+
 

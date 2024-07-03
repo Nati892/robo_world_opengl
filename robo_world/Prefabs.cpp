@@ -46,7 +46,7 @@ GameObject* Prefabs::GetNewRotatingSphere(std::string name)
 GameObject* Prefabs::GetReadyLightSource()
 {
 	GOTransform* light_trans = new GOTransform();
-	GameObject* ret = new GameObject(nullptr, "", light_trans);
+	GameObject* ret = new GameObject(nullptr, "light", light_trans);
 	ret->SetGOType(GOLightSource);
 	auto ldata = ret->GetLightSourceData();
 	ldata->_light_ambient = { 0.0,0.0,0.0,1 };

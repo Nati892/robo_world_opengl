@@ -1,42 +1,9 @@
 #include "SceneRunner.h"
 
-//macros
-#define MY_NAME "Netanel Cohen Gindi"
-#define MY_HEADER "Robo-World"
-#define TARGET_FPS 60
-#define FRUSTUM_X 2
-#define FRUSTUM_Y 2
-
-//window sizing and aspect ration
-int scale_x_start = -960;
-int scale_x_end = 960;
-int scale_y_start = -540;
-int scale_y_end = 540;
-int scale_z_start = 960;
-int scale_z_end = -960;
-
-int AspectRatioNumerator;
-int AspectRatioDenominator;
-int currentWindowWidth;
-int currentWindowHeight;
-int CurrentSceneWidth = 1920;
-int CurrentSceneHeight = 1080;
-
-int WindowRectBounds_x = 0;
-int WindowRectBounds_y = 0;
-int WindowRectBounds_width = 0;
-int WindowRectBounds_height = 0;
-AnimationTimer* timer;
-Scene* PlayScene;
-//scene control and animation structs
-
-void CleanupAndExit()
-{
-	exit(0);
-}
+SceneRunner* SceneRunner::CurrentRegisteredSceneRunner = nullptr;
 
 //fixes the current aspect ratio
-void FixAspectRatio()
+void SceneRunner::FixAspectRatio()
 {
 	int finalW = currentWindowWidth;
 	int finalH = currentWindowHeight;
@@ -70,15 +37,14 @@ void FixAspectRatio()
 	WindowRectBounds_height = finalH;
 }
 
-//CubeObject* obj;
 //Draws the scene
-void LoopScene()
+void SceneRunner::LoopScene()
 {
-	if (PlayScene == nullptr)
+	if (currentScene == nullptr)
 		return;
 
 	//run scripts
-	PlayScene->RunSceneScripts();
+	currentScene->RunSceneScripts();
 
 	//setup camera
 	GOvec3 CamPos = GOvec3();
@@ -99,9 +65,9 @@ void LoopScene()
 
 	std::vector<GameObject*> SpecialObjects;
 	GOvec3 pos;
-	if (PlayScene != nullptr)
+	if (currentScene != nullptr)
 	{
-		SpecialObjects = PlayScene->GetSpecialGameObjects();
+		SpecialObjects = currentScene->GetSpecialGameObjects();
 		for (int i = 0; i < SpecialObjects.size(); i++)
 		{
 			auto curr_special_obj = SpecialObjects.at(i);
@@ -138,9 +104,9 @@ void LoopScene()
 	);
 
 	//enable lights
-	PlayScene->TraverseLightSources();
+	currentScene->TraverseLightSources();
 
-	if (PlayScene != nullptr)
+	if (currentScene != nullptr)
 	{
 		for (int i = 0; i < SpecialObjects.size(); i++)
 		{
@@ -186,82 +152,90 @@ void LoopScene()
 				glLightfv(curr_light_source_num, GL_SPECULAR, in_arr);
 				break;
 			}
-
 		}
 	}
 
 	//draw scene
-	PlayScene->DrawScene();
+	currentScene->DrawScene();
+	this->currentScene->GetSceneInputSystem()->ClearFrameInputData();
 }
 
 //Redraw callback
-void DisplayCallback()
+void SceneRunner::DisplayCallback()
 {
+	if (CurrentRegisteredSceneRunner == nullptr)
+		return;
+
 	//draw all three scenes on one window
-	FixAspectRatio();
-	glViewport(WindowRectBounds_x, WindowRectBounds_y, WindowRectBounds_width, WindowRectBounds_height);
+	CurrentRegisteredSceneRunner->FixAspectRatio();
+	glViewport(CurrentRegisteredSceneRunner->WindowRectBounds_x, CurrentRegisteredSceneRunner->WindowRectBounds_y, CurrentRegisteredSceneRunner->WindowRectBounds_width, CurrentRegisteredSceneRunner->WindowRectBounds_height);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	LoopScene();
+	CurrentRegisteredSceneRunner->LoopScene();
 	glutSwapBuffers();
 }
 
 //window resize callback
-void ReshapeCallback(int w, int h)
+void SceneRunner::ReshapeCallback(int w, int h)
 {
-	currentWindowWidth = w;
-	currentWindowHeight = h;
+	if (CurrentRegisteredSceneRunner == nullptr)
+		return;
+	CurrentRegisteredSceneRunner->currentWindowWidth = w;
+	CurrentRegisteredSceneRunner->currentWindowHeight = h;
 	glutPostRedisplay();
 }
 
 //Mouse events
-void MouseEventCallback(int button, int state, int x, int y)
+void SceneRunner::MouseEventCallback(int button, int state, int x, int y)
 {
-	if (state == 0)
+	if (state == 0 || CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
-	float converted_x = ((float)x - ((float)currentWindowWidth - (float)CurrentSceneWidth) / 2) / (float)CurrentSceneWidth;
-	float converted_y = 1.0f - (((float)y - ((float)currentWindowHeight - (float)CurrentSceneHeight) / 2) / (float)CurrentSceneHeight);
+
+	auto input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
+
+	//float converted_x = ((float)x - ((float)CurrentRegisteredSceneRunner->currentWindowWidth - (float)CurrentRegisteredSceneRunner->CurrentSceneWidth) / 2) / (float)CurrentRegisteredSceneRunner->CurrentSceneWidth;
+	//float converted_y = 1.0f - (((float)y - ((float)CurrentRegisteredSceneRunner->currentWindowHeight - (float)CurrentRegisteredSceneRunner->CurrentSceneHeight) / 2) / (float)CurrentRegisteredSceneRunner->CurrentSceneHeight);
+
+	if (state == GLUT_UP)
+	{
+		input_sys->EnterMouseButtonUp(button);
+	}
+	else
+	{
+		input_sys->EnterMouseButtonDown(button);
+	}
 }
 
 //Keybard events
-void KeyboardEventCallback(unsigned char c, int x, int y)
+void SceneRunner::KeyboardEventCallback(unsigned char c, int x, int y)
 {
-	switch (c)
-	{
-	case 'a'://left object
-	case 'A':
-		break;
+	if (CurrentRegisteredSceneRunner == nullptr)
+		return;
 
-	case 'D'://right object
-	case 'd':
-		break;
-
-	case '+'://faster animation
-		break;
-
-	case '-'://slower animation
-		break;
-
-	case 'c'://change perspective type
-	case 'C':
-		break;
-
-	case 'q':
-	case 'Q':
-		exit(0);
-		break;
-	}
-
+	CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem()->EnterCharInput(c, true);
 }
 
-void timerCallback(int value) {
+//fps timer callback
+void SceneRunner::timerCallback(int value) {
 	glutPostRedisplay();  // Mark the current window as needing to be redisplayed
 	glutTimerFunc(1000 / TARGET_FPS, timerCallback, 0);  // Register the timer callback again to achieve 60 FPS
 }
 
+SceneRunner::SceneRunner()
+{
+	//good enough for this project.
+	//if I upgrade in the future I wont be using glut... 
+	//I'll be using glfw or my own input manger using ll api using something like user32
+	SceneRunner::CurrentRegisteredSceneRunner = this;
+}
 
-//my initiation function
-void MyInit(int argc, char** argv)
+SceneRunner::~SceneRunner()
+{
+	if (this->currentScene != nullptr)
+		delete currentScene;
+}
+
+void SceneRunner::SceneRunnerInit(int argc, char** argv)
 {
 	//call init on glut
 	glutInit(&argc, argv);
@@ -279,37 +253,35 @@ void MyInit(int argc, char** argv)
 	glutInitWindowSize(CurrentSceneWidth, CurrentSceneHeight);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(MY_HEADER);
-	PlayScene = GetSampleScene();
-	if (PlayScene != nullptr)
+
+	if (currentScene != nullptr)
 	{
-		PlayScene->StartScene();
-
+		currentScene->StartScene();
 	}
-	//run startup scripts
-
-	timer = new AnimationTimer(10, 0, 360);
-	timer->StartTimer();
-	//set startup settings
 
 	glEnable(GL_DEPTH_TEST);  // Enable depth testing for 3D rendering
 	glEnable(GL_LIGHTING);
 	glShadeModel(GL_FLAT);
 }
 
-//set system/input events
-void SetEvents()
+void SceneRunner::SetEvents()
 {
-	glutDisplayFunc(DisplayCallback);
-	glutReshapeFunc(ReshapeCallback);
-	glutMouseFunc(MouseEventCallback);
-	glutKeyboardFunc(KeyboardEventCallback);
-	glutTimerFunc(0, timerCallback, 0);
+	//todo change to my callbacks
+	glutDisplayFunc(SceneRunner::DisplayCallback);
+	glutReshapeFunc(SceneRunner::ReshapeCallback);
+	glutMouseFunc(SceneRunner::MouseEventCallback);
+	glutKeyboardFunc(SceneRunner::KeyboardEventCallback);
+	glutTimerFunc(0, SceneRunner::timerCallback, 0);
 }
 
-//start play my beautiful scene
-void RunScene(int argc, char** argv)
+//start playing my beautiful scene
+bool SceneRunner::RunScene(int argc, char** argv, Scene* scene_to_run)
 {
-	MyInit(argc, argv);
-	SetEvents();
+	if (scene_to_run == nullptr)
+		return false;
+	currentScene = scene_to_run;
+	this->SceneRunnerInit(argc, argv);
+	this->SetEvents();
 	glutMainLoop();
+	return true;
 }

@@ -13,6 +13,7 @@
 #endif
 int main(int argc, char** argv)
 {
-	RunScene(argc, argv);
+	SceneRunner runner;
+	runner.RunScene(argc, argv, GetSampleScene());
 	return 0;
 }

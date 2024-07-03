@@ -16,12 +16,13 @@ enum axis
 
 class BasicAxisRotateScript :public GOScript
 {
+private:
 	AnimationTimer* rotate_timer;
 	AnimationTimer* color_timer;
 	axis _rotation_axis = axis_x;
+	void SSetup(Scene* CurrScene);
 public:
 	//have to
-	void SSetup();
 	void SLoop();
 	void SCleanUp();
 
@@ -33,10 +34,11 @@ public:
 
 class BasicCamHeadMove :public GOScript
 {
+private:
 	AnimationTimer* basic_timer;
+	void SSetup(Scene* CurrScene);
 public:
 	//have to
-	void SSetup();
 	void SLoop();
 	void SCleanUp();
 };

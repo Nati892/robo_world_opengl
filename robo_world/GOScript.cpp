@@ -1,6 +1,6 @@
 #include "GOScript.h"
 
-void GOScript::SSetup()
+void GOScript::SSetup(Scene* CurrScene)
 {
 	//empty, to be overriden
 }
@@ -35,12 +35,12 @@ void GOScript::SLoop()
 	//empty, to be overriden
 }
 
-void GOScript::SetupOnce()
+void GOScript::SetupOnce(Scene* CurrScene)
 {
 	if (_started)
 		return;
 
-	this->SSetup();
+	this->SSetup(CurrScene);
 	_started = true;
 }
 

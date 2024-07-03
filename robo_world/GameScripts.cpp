@@ -1,6 +1,6 @@
 #include "GameScripts.h"
-
-void BasicAxisRotateScript::SSetup()
+#include "Scene.h"
+void BasicAxisRotateScript::SSetup(Scene* CurrScene)
 {
 	rotate_timer = new AnimationTimer(10, 0, 360);
 	color_timer = new AnimationTimer(5, 1, 255);
@@ -77,12 +77,11 @@ void BasicAxisRotateScript::SetRotationAxis(axis a)
 
 
 /////basic cam script
-
-
-void BasicCamHeadMove::SSetup()
+void BasicCamHeadMove::SSetup(Scene* CurrScene)
 {
 	basic_timer = new AnimationTimer(3, 0, 360);//todo: add cleanup func for this
 	basic_timer->StartTimer();
+
 }
 
 void BasicCamHeadMove::SLoop()
@@ -95,4 +94,5 @@ void BasicCamHeadMove::SLoop()
 
 void BasicCamHeadMove::SCleanUp()
 {
+	delete basic_timer;
 }
