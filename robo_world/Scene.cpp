@@ -56,7 +56,7 @@ Scene* GetSampleScene()
 	LightsHolder->addChildObject(light3);
 
 	auto l_trans = light0->GetTransform();
-	l_trans->setPosition(-20, 0, 0);
+	l_trans->setPosition(0, 10, 0);
 
 	l_trans = light1->GetTransform();
 	l_trans->setPosition(20, 0, 0);
@@ -82,7 +82,7 @@ Scene* GetWorldScene()
 	GameObject* light_ambiant = Prefabs::GetReadyAmbiantLightSource();
 	GameObject* light1 = Prefabs::GetReadyDiffuseLightSource();
 	GameObject* light2 = Prefabs::GetReadySpecularLightSource();
-	GameObject* light3 = Prefabs::GetReadyLightSource();
+	GameObject* light3 = Prefabs::GetReadyDiffuseLightSource();
 
 	LightsHolder->addChildObject(light_ambiant);
 	LightsHolder->addChildObject(light1);
@@ -90,23 +90,23 @@ Scene* GetWorldScene()
 	//LightsHolder->addChildObject(light3);
 
 	auto l_trans = light_ambiant->GetTransform();
-	l_trans->setPosition(100000, 10000, 10000);
+	l_trans->setPosition(4, 10, 0);
 
 	l_trans = light1->GetTransform();
-	l_trans->setPosition(00, 1000, 000);
+	l_trans->setPosition(-20, 20, 5);
 
 	l_trans = light2->GetTransform();
-	l_trans->setPosition(0, 7, 5);
-	light2->GetLightSourceData()->_spot_direction = GOvec3{ 0,1,1 };
-	light2->GetLightSourceData()->_GL_SPOT_CUTOFF = 43.3;
+	l_trans->setPosition(20, 20, 20);
+	light2->GetLightSourceData()->_spot_direction = GOvec3{ 0,-1,-0.1 };
+	light2->GetLightSourceData()->_GL_SPOT_CUTOFF = 50;
 
 	l_trans = light3->GetTransform();
-	l_trans->setPosition(0, -20, 10);
-
+	l_trans->setPosition(0, 1, 0);
 
 	//add cam object
 	GOTransform* CamHolderTransform = new GOTransform();
 	GameObject* CameraHolder = new GameObject(nullptr, "CamHead", CamHolderTransform);
+	CamHolderTransform->setPosition(0, 0, 0);
 
 	GOTransform* CamTrans = new GOTransform();
 	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
@@ -116,6 +116,7 @@ Scene* GetWorldScene()
 	GOTransform* CamLookAtTrans = new GOTransform();
 	GameObject* CamLookAt = new GameObject(nullptr, "MainCamLookAt", CamLookAtTrans);
 	CamLookAtTrans->setPosition(0, 0, 0);
+	CamLookAt->SetGOType(GOCamLookAt);
 
 	CameraHolder->addChildObject(MainCam);
 	CameraHolder->addChildObject(CamLookAt);
@@ -124,21 +125,26 @@ Scene* GetWorldScene()
 	CameraHolder->SetGOScript(new Camera3rdPerson());
 
 	//add surface
-	auto surface = Prefabs::GetReadyCubeGameObject();
+	auto surface = Prefabs::GetReadySurface2d();
 	surface->SetName("surface");
 	ret_scene->AddGameObjectTree(surface);
-	surface->GetTransform()->setScale(10, 0.3, 10);
-	surface->GetDrawableObject()->setAmbientColor(0.25, 0.25, 0.25, 1.0);
+	surface->GetTransform()->setScale(100, 1, 100);
+	surface->GetTransform()->setPosition(0,0,0);
+	surface->GetDrawableObject()->setAmbientColor(0.3, 0.3, 0.3, 1.0);
 	surface->GetDrawableObject()->setDiffuseColor(0.4, 0.4, 0.4, 1.0);
 	surface->GetDrawableObject()->setSpecularColor(0.774597, 0.774597, 0.774597, 1.0);
+	surface->GetDrawableObject()->setSpecularColor(1,1,1, 1.0);
 	surface->GetDrawableObject()->setShininess(76.8);
 
 	//add sphere in middle of scen to test specular light
 	GameObject* sphere = Prefabs::GetNewSphere("sphereylibibidibuliluliluuuuuu");
 
-	//sphere->GetTransform()->setPosition(2, 1.5, 1);
-	sphere->GetDrawableObject()->setSpecularColor(0.774597, 0.774597, 0.774597, 1.0);
+	sphere->GetTransform()->setPosition(0, 2, 0);
 	ret_scene->AddGameObjectTree(sphere);
+
+	GameObject* cube2 = Prefabs::GetNewRotatingCube("rotaty");
+	cube2->GetTransform()->setPosition(-3,0,0);
+	ret_scene->AddGameObjectTree(cube2);
 
 	sphere->addChildObject(CameraHolder);
 	return ret_scene;

@@ -20,6 +20,7 @@ public:
 
 	//non-moving objects
 	static GameObject* GetReadyCubeGameObject();
+	static GameObject* GetReadySurface2d();
 	static GameObject* GetNewSphere(std::string name);
 
 };

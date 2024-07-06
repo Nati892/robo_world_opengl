@@ -115,13 +115,13 @@ void Camera3rdPerson::SLoop()
 	auto total_movement=my_trans->GetRotation() + movement_vec;
 	
 	//cutoff
-	if (total_movement.x < -45)
+	if (total_movement.x < -40)
 	{
-		total_movement.x = -45;
+		total_movement.x = -40;
 	}
-	if (total_movement.x > 45)
+	if (total_movement.x > 40)
 	{
-		total_movement.x = 45;
+		total_movement.x =40;
 	}
 	std::cout << total_movement.x << "," << total_movement.y << "," << total_movement.z << std::endl;
 	my_trans->setRotation(total_movement);

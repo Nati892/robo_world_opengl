@@ -21,3 +21,13 @@ public:
 	void DrawObject();
 	DrawSphere();
 };
+
+
+class DrawSurface2d : public GODrawable 
+{
+
+public:
+	void DrawObject();
+	DrawSurface2d();
+
+};

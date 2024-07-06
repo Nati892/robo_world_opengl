@@ -30,21 +30,21 @@ void GODrawable::DrawObject()
 void GODrawable::SetActiveMat() const
 {
 	float params[4] = { this->AmbientColor.x,this->AmbientColor.y,this->AmbientColor.z,this->AmbientColor.w };
-	glMaterialfv(GL_FRONT, GL_AMBIENT, params);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, params);
 
 	params[0] = this->DiffuseColor.x;
 	params[1] = this->DiffuseColor.y;
 	params[2] = this->DiffuseColor.z;
 	params[3] = this->DiffuseColor.w;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, params);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, params);
 
 	params[0] = this->SpecularColor.x;
 	params[1] = this->SpecularColor.y;
 	params[2] = this->SpecularColor.z;
 	params[3] = this->SpecularColor.w;
-	glMaterialfv(GL_FRONT, GL_SPECULAR, params);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, params);
 
-	glMaterialfv(GL_FRONT, GL_SHININESS, this->Shininess);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, this->Shininess);
 }
 
 GameObject* GODrawable::GetGameObject()

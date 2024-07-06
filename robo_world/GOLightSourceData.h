@@ -12,4 +12,5 @@ public:
 	GOvec3 _spot_direction = { 0.0f, 0.0f, 0.0f };
 	GLfloat _GL_SPOT_CUTOFF = 180.0f;
 	GLfloat _shininess = 0.0f;
+	GLfloat _exponent = 3;
 };

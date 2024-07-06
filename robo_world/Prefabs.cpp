@@ -66,7 +66,7 @@ GameObject* Prefabs::GetReadyAmbiantLightSource()
 	GameObject* ret = new GameObject(nullptr, "light", light_trans);
 	ret->SetGOType(GOLightSource);
 	auto ldata = ret->GetLightSourceData();
-	ldata->_light_ambient = { 0.2,0.2,0.2,1 };
+	ldata->_light_ambient = { 0.4,0.4,0.4,1 };
 	ldata->_light_diffuse = { 0.0,0.0,0.0,1 };
 	ldata->_light_specular = { 0,0,0,1 };
 	return ret;
@@ -116,4 +116,15 @@ GameObject* Prefabs::GetReadyCubeGameObject()
 	DrawCube* cube_drawable = new DrawCube();
 	cube_obj->AttachDrawable(cube_drawable);
 	return cube_obj;
+}
+
+GameObject* Prefabs::GetReadySurface2d() 
+{
+	GOTransform* surface2d_trans = new GOTransform();
+	GameObject* surface2d_obj = new GameObject(nullptr, "surface2d", surface2d_trans);
+
+	DrawSurface2d* surface2d_drawable = new DrawSurface2d();
+	surface2d_obj->AttachDrawable(surface2d_drawable);
+	return surface2d_obj;
+
 }

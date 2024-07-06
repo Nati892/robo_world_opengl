@@ -153,6 +153,10 @@ void SceneRunner::LoopScene()
 
 				GLfloat param[1] = { ls_data->_GL_SPOT_CUTOFF };
 				glLightfv(curr_light_source_num, GL_SPOT_CUTOFF, param);
+
+				param[0] = ls_data->_exponent;
+				glLightfv(curr_light_source_num, GL_SPOT_EXPONENT, param);
+
 				break;
 
 			}
@@ -162,6 +166,15 @@ void SceneRunner::LoopScene()
 	//draw scene
 	currentScene->DrawScene();
 	this->currentScene->GetSceneInputSystem()->ClearFrameInputData();
+
+	GLenum err;
+	if ((err = glGetError()) != GL_NO_ERROR)
+	{
+		std::cout<<err<<std::endl;
+	}
+	else
+	{
+	}
 }
 
 //Redraw callback
@@ -298,7 +311,11 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 
 	glEnable(GL_DEPTH_TEST);  // Enable depth testing for 3D rendering
 	glEnable(GL_LIGHTING);
-	glShadeModel(GL_FLAT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glDisable(GL_BLEND);
 }
 
 void SceneRunner::SetEvents()
