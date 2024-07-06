@@ -7,6 +7,8 @@
 #include "GODrawable.h"
 //write game script headers here
 
+class GOInputSystem;
+
 enum axis
 {
 	axis_x,
@@ -20,25 +22,27 @@ private:
 	AnimationTimer* rotate_timer;
 	AnimationTimer* color_timer;
 	axis _rotation_axis = axis_x;
+	//virtual inherited
 	void SSetup(Scene* CurrScene);
 public:
-	//have to
+	//virtual inherited
 	void SLoop();
 	void SCleanUp();
 
 	void SetRotationAxis(axis a);
 };
 
-
-
-
-class BasicCamHeadMove :public GOScript
+class Camera3rdPerson :public GOScript
 {
 private:
-	AnimationTimer* basic_timer;
+	Scene* this_scene;
+	GOInputSystem* this_input_sys;
+	float y_axis_limit = 50.0f;
+	float speed;
 	void SSetup(Scene* CurrScene);
 public:
-	//have to
+	//virtual inherited
 	void SLoop();
 	void SCleanUp();
+
 };

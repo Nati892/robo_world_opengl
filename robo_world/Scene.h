@@ -41,7 +41,7 @@ public:
 
 //Scene* GetTestScene();
 Scene* GetSampleScene();
-
+Scene* GetWorldScene();
 /// <summary>manner
 /// runs over all game objects and applies, transforms ,material and draws the object trees in scene.
 /// doenst do the scripts

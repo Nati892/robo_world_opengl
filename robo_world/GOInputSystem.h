@@ -15,11 +15,10 @@ public:
 	void ClearFrameInputData(); // Clears all data in the table for inputs
 
 	// Methods to update input states
-	void EnterCharInput(char key,bool);
+	void EnterCharInput(char key, bool);
 	void EnterAxisMovement(axis ax, float movement);
 	void EnterMouseButtonDown(int button);
 	void EnterMouseButtonUp(int button);
-
 private:
 	std::map<char, bool> keyState; // Stores key states
 	std::map<int, bool> mouseButtonState; // Stores mouse button states

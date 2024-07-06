@@ -63,6 +63,22 @@ void GOTransform::setScale(GLfloat x, GLfloat y, GLfloat z) {
 	Scale.y = y;
 	Scale.z = z;
 }
+
+void GOTransform::setPosition(GOvec3 vec)
+{
+	this->Position = vec;
+}
+
+void GOTransform::setRotation(GOvec3 vec)
+{
+	this->Rotation = vec;
+}
+
+void GOTransform::setScale(GOvec3 vec)
+{
+	this->Scale = vec;
+}
+
 GOvec3 GOTransform::GetPosition() {
 	return Position;
 }

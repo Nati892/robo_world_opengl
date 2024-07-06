@@ -14,6 +14,6 @@
 int main(int argc, char** argv)
 {
 	SceneRunner runner;
-	runner.RunScene(argc, argv, GetSampleScene());
+	runner.RunScene(argc, argv, GetWorldScene());
 	return 0;
 }

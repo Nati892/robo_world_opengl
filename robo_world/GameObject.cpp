@@ -32,16 +32,17 @@ GameObject::~GameObject()
 		this->_script->CleanUp();
 		delete this->_script;
 	}
-	
-		if (this->_light_source_data != nullptr)
-		{
-			delete this->_light_source_data;
-		}
+
+	if (this->_light_source_data != nullptr)
+	{
+		delete this->_light_source_data;
+	}
 }
 
 void GameObject::SetGOScript(GOScript* scripty)
 {
 	this->_script = scripty;
+	scripty->SetGameObjectOnce(this);
 }
 
 GOScript* GameObject::GetRunningScript()
@@ -238,6 +239,16 @@ std::vector<GameObject*>& GameObject::getChildren()
 void GameObject::SetDrawableObject(GODrawable* new_draw)
 {
 	this->_DrawableObject = new_draw;
+}
+
+Scene* GameObject::GetCurrentScene()
+{
+	return this->_attached_scene;
+}
+
+void GameObject::SetCurrentScene(Scene* curr_scene)
+{
+	this->_attached_scene = curr_scene;
 }
 
 GameObject* GameObject::GetParent()

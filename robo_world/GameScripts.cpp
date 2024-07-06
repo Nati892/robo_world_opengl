@@ -1,5 +1,6 @@
 #include "GameScripts.h"
 #include "Scene.h"
+#include "GOInputSystem.h"
 void BasicAxisRotateScript::SSetup(Scene* CurrScene)
 {
 	rotate_timer = new AnimationTimer(10, 0, 360);
@@ -74,25 +75,60 @@ void BasicAxisRotateScript::SetRotationAxis(axis a)
 	}
 }
 
-
-
-/////basic cam script
-void BasicCamHeadMove::SSetup(Scene* CurrScene)
+void Camera3rdPerson::SSetup(Scene* CurrScene)
 {
-	basic_timer = new AnimationTimer(3, 0, 360);//todo: add cleanup func for this
-	basic_timer->StartTimer();
-
+	this->this_scene = CurrScene;
+	if (this->this_scene != nullptr)
+	{
+		this->this_input_sys = this->this_scene->GetSceneInputSystem();
+	}
 }
 
-void BasicCamHeadMove::SLoop()
+void Camera3rdPerson::SLoop()
 {
-	auto val = basic_timer->GetCurrentAnimationValue();
+
 	GameObject* my_go = this->GetGameObject();
 	GOTransform* my_trans = my_go->GetTransform();
-	my_trans->setRotation(my_trans->GetRotation().x, val, my_trans->GetRotation().z);
+	if (this_input_sys == nullptr)
+		return;
+
+	if (this_input_sys->IsKeyPressed('q') || this_input_sys->IsKeyPressed('Q'))
+	{
+		exit(0);
+	}
+
+	int x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
+	int y_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::Y_AXIS);
+	auto movement_vec = GOvec3{ 0,0,0 };
+	if (x_movement != 0)
+	{
+		movement_vec += GOvec3{ 0,static_cast<float>(x_movement),0 };
+	}
+	if (y_movement != 0)
+	{
+		movement_vec += GOvec3{ static_cast<float>(y_movement),0,0 };
+	}
+
+
+	movement_vec *= 0.01f;
+
+	auto total_movement=my_trans->GetRotation() + movement_vec;
+	
+	//cutoff
+	if (total_movement.x < -45)
+	{
+		total_movement.x = -45;
+	}
+	if (total_movement.x > 45)
+	{
+		total_movement.x = 45;
+	}
+	std::cout << total_movement.x << "," << total_movement.y << "," << total_movement.z << std::endl;
+	my_trans->setRotation(total_movement);
+
+
 }
 
-void BasicCamHeadMove::SCleanUp()
+void Camera3rdPerson::SCleanUp()
 {
-	delete basic_timer;
 }

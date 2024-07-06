@@ -4,6 +4,7 @@
 AnimationTimer::AnimationTimer()
 {
 }
+
 AnimationTimer::AnimationTimer(float Speed, float StartValue, float EndValue)
 {
 	this->_AnimationEndValue = EndValue;

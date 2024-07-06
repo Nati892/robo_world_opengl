@@ -8,11 +8,19 @@
 class Prefabs
 {
 public:
+	//rotating objects
 	static GameObject* GetNewRotatingCube(std::string name);
 	static GameObject* GetNewRotatingSphere(std::string name);
 
-
+	//lights
 	static GameObject* GetReadyLightSource();
+	static GameObject* GetReadyAmbiantLightSource();
+	static GameObject* GetReadyDiffuseLightSource();
+	static GameObject* GetReadySpecularLightSource();
+
+	//non-moving objects
+	static GameObject* GetReadyCubeGameObject();
+	static GameObject* GetNewSphere(std::string name);
 
 };
 

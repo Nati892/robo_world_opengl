@@ -41,9 +41,6 @@ Scene* GetSampleScene()
 	CameraHolder->addChildObject(CamLookAt);
 	ret_scene->AddGameObjectTree(CameraHolder);
 
-	auto HolderScript = new BasicCamHeadMove();
-	CameraHolder->AttachScript(HolderScript);
-
 	//test light source
 	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder", nullptr);
 	ret_scene->AddGameObjectTree(LightsHolder);
@@ -70,13 +67,91 @@ Scene* GetSampleScene()
 	l_trans = light3->GetTransform();
 	l_trans->setPosition(0, -20, 10);
 
+
+	return ret_scene;
+}
+
+Scene* GetWorldScene()
+{
+	Scene* ret_scene = new Scene();
+
+	//add lights to scene
+	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder", nullptr);
+	ret_scene->AddGameObjectTree(LightsHolder);
+
+	GameObject* light_ambiant = Prefabs::GetReadyAmbiantLightSource();
+	GameObject* light1 = Prefabs::GetReadyDiffuseLightSource();
+	GameObject* light2 = Prefabs::GetReadySpecularLightSource();
+	GameObject* light3 = Prefabs::GetReadyLightSource();
+
+	LightsHolder->addChildObject(light_ambiant);
+	LightsHolder->addChildObject(light1);
+	LightsHolder->addChildObject(light2);
+	//LightsHolder->addChildObject(light3);
+
+	auto l_trans = light_ambiant->GetTransform();
+	l_trans->setPosition(100000, 10000, 10000);
+
+	l_trans = light1->GetTransform();
+	l_trans->setPosition(00, 1000, 000);
+
+	l_trans = light2->GetTransform();
+	l_trans->setPosition(0, 7, 5);
+	light2->GetLightSourceData()->_spot_direction = GOvec3{ 0,1,1 };
+	light2->GetLightSourceData()->_GL_SPOT_CUTOFF = 43.3;
+
+	l_trans = light3->GetTransform();
+	l_trans->setPosition(0, -20, 10);
+
+
+	//add cam object
+	GOTransform* CamHolderTransform = new GOTransform();
+	GameObject* CameraHolder = new GameObject(nullptr, "CamHead", CamHolderTransform);
+
+	GOTransform* CamTrans = new GOTransform();
+	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
+	CamTrans->setPosition(0, 3, 3);
+	MainCam->SetGOType(GOCamPoint);
+
+	GOTransform* CamLookAtTrans = new GOTransform();
+	GameObject* CamLookAt = new GameObject(nullptr, "MainCamLookAt", CamLookAtTrans);
+	CamLookAtTrans->setPosition(0, 0, 0);
+
+	CameraHolder->addChildObject(MainCam);
+	CameraHolder->addChildObject(CamLookAt);
+
+	//set script to camera holder
+	CameraHolder->SetGOScript(new Camera3rdPerson());
+
+	//add surface
+	auto surface = Prefabs::GetReadyCubeGameObject();
+	surface->SetName("surface");
+	ret_scene->AddGameObjectTree(surface);
+	surface->GetTransform()->setScale(10, 0.3, 10);
+	surface->GetDrawableObject()->setAmbientColor(0.25, 0.25, 0.25, 1.0);
+	surface->GetDrawableObject()->setDiffuseColor(0.4, 0.4, 0.4, 1.0);
+	surface->GetDrawableObject()->setSpecularColor(0.774597, 0.774597, 0.774597, 1.0);
+	surface->GetDrawableObject()->setShininess(76.8);
+
+	//add sphere in middle of scen to test specular light
+	GameObject* sphere = Prefabs::GetNewSphere("sphereylibibidibuliluliluuuuuu");
+
+	//sphere->GetTransform()->setPosition(2, 1.5, 1);
+	sphere->GetDrawableObject()->setSpecularColor(0.774597, 0.774597, 0.774597, 1.0);
+	ret_scene->AddGameObjectTree(sphere);
+
+	sphere->addChildObject(CameraHolder);
 	return ret_scene;
 }
 
 void Scene::AddGameObjectTree(GameObject* obj)
 {
 	if (obj != nullptr)
+	{
 		this->SceneObjects.push_back(obj);
+		obj->SetCurrentScene(this);
+	}
+
 }
 
 //note: I know this could be implemented in a lot more efficient manner, but this is true for much of this. I just want this to work well for now, in the future I might revamp this project
@@ -93,8 +168,6 @@ GameObject* Scene::FindObjectByName(std::string object_name)
 	}
 	return found_obj;
 }
-
-
 
 GOInputSystem* Scene::GetSceneInputSystem()
 {
@@ -152,6 +225,7 @@ Scene::~Scene()
 	if (this->SceneInputSystem != nullptr)
 		delete this->SceneInputSystem;
 }
+
 void Scene::StartScene()
 {
 	GameObject* curr_GO;
@@ -161,8 +235,6 @@ void Scene::StartScene()
 		SetupScriptsForGameObjectHead(this, curr_GO);
 	}
 }
-
-
 
 void Scene::RunSceneScripts()
 {
@@ -217,7 +289,7 @@ void RunGameObjectsForFrame(GameObject* GOHead)
 	GOTransform* _obj_trans = nullptr;
 	GODrawable* _obj_Draw = nullptr;
 
-	if (GOHead == nullptr || GOHead->GetDrawableObject() == nullptr)
+	if (GOHead == nullptr)
 		return;
 
 	_obj_Draw = GOHead->GetDrawableObject();
@@ -269,8 +341,6 @@ void SetupScriptsForGameObjectHead(Scene* CurrScene, GameObject* GOHead)
 		SetupScriptsForGameObjectHead(CurrScene, curr_child);
 	}
 }
-
-
 
 /// <summary>
 /// calculates the world position for GameObject relative to the parents

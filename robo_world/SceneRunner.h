@@ -9,6 +9,9 @@
 #define FRUSTUM_X 2
 #define FRUSTUM_Y 2
 
+static int x_last;
+static int y_last;
+
 class SceneRunner {
 private:
 	//window sizing and aspect ration
@@ -19,10 +22,10 @@ private:
 	int scale_z_start = 960;
 	int scale_z_end = -960;
 
-	int AspectRatioNumerator=1920;
-	int AspectRatioDenominator=1080;
-	int currentWindowWidth=1920;
-	int currentWindowHeight=1080;
+	int AspectRatioNumerator = 1920;
+	int AspectRatioDenominator = 1080;
+	int currentWindowWidth = 1920;
+	int currentWindowHeight = 1080;
 	int CurrentSceneWidth = 1920;
 	int CurrentSceneHeight = 1080;
 
@@ -39,12 +42,15 @@ private:
 	void LoopScene();
 
 	//glut callbacks
+
 	static SceneRunner* CurrentRegisteredSceneRunner;
 	static void DisplayCallback();
 	static void ReshapeCallback(int w, int h);
 	static void MouseEventCallback(int button, int state, int x, int y);
 	static void KeyboardEventCallback(unsigned char c, int x, int y);
 	static void timerCallback(int value);
+	static void MouseMotionCallback(int x, int y);
+	static void MousePassiveMotionCallback(int x, int y);
 public:
 	SceneRunner();
 	~SceneRunner();

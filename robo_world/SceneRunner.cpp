@@ -93,7 +93,7 @@ void SceneRunner::LoopScene()
 	glMatrixMode(GL_MODELVIEW | GL_PROJECTION);
 	glLoadIdentity();
 
-	glFrustum(-FRUSTUM_X / 2, FRUSTUM_X / 2, -FRUSTUM_Y / 2, FRUSTUM_Y / 2, 0.4, 200.0);//todo: change to camera properties soon 
+	glFrustum(-FRUSTUM_X / 2, FRUSTUM_X / 2, -FRUSTUM_Y / 2, FRUSTUM_Y / 2, 0.3, 2000.0);//todo: change to camera properties soon 
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -150,7 +150,11 @@ void SceneRunner::LoopScene()
 				in_arr[2] = specular.z;
 				in_arr[3] = specular.w;
 				glLightfv(curr_light_source_num, GL_SPECULAR, in_arr);
+
+				GLfloat param[1] = { ls_data->_GL_SPOT_CUTOFF };
+				glLightfv(curr_light_source_num, GL_SPOT_CUTOFF, param);
 				break;
+
 			}
 		}
 	}
@@ -198,12 +202,45 @@ void SceneRunner::MouseEventCallback(int button, int state, int x, int y)
 
 	if (state == GLUT_UP)
 	{
-		input_sys->EnterMouseButtonUp(button);
+		//input_sys->EnterMouseButtonUp(button);
 	}
 	else
 	{
-		input_sys->EnterMouseButtonDown(button);
+		//input_sys->EnterMouseButtonDown(button);
 	}
+}
+
+void SceneRunner::MouseMotionCallback(int x, int y)
+{
+	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
+		return;
+
+	int x_motion = x - CurrentRegisteredSceneRunner->currentWindowWidth / 2;
+
+	int y_motion = y - CurrentRegisteredSceneRunner->currentWindowHeight / 2;
+	glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
+
+	GOInputSystem* input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
+
+	input_sys->EnterAxisMovement(GOInputSystem::axis::X_AXIS, x_motion);
+	input_sys->EnterAxisMovement(GOInputSystem::axis::Y_AXIS, y_motion);
+}
+
+void SceneRunner::MousePassiveMotionCallback(int x, int y)
+{
+	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
+		return;
+
+
+	int x_motion = x - CurrentRegisteredSceneRunner->currentWindowWidth / 2;
+
+	int y_motion = y - CurrentRegisteredSceneRunner->currentWindowHeight / 2;
+	glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
+
+	GOInputSystem* input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
+
+	input_sys->EnterAxisMovement(GOInputSystem::axis::X_AXIS, x_motion);
+	input_sys->EnterAxisMovement(GOInputSystem::axis::Y_AXIS, y_motion);
 }
 
 //Keybard events
@@ -270,6 +307,8 @@ void SceneRunner::SetEvents()
 	glutDisplayFunc(SceneRunner::DisplayCallback);
 	glutReshapeFunc(SceneRunner::ReshapeCallback);
 	glutMouseFunc(SceneRunner::MouseEventCallback);
+	glutMotionFunc(SceneRunner::MouseMotionCallback);
+	glutPassiveMotionFunc(SceneRunner::MousePassiveMotionCallback);
 	glutKeyboardFunc(SceneRunner::KeyboardEventCallback);
 	glutTimerFunc(0, SceneRunner::timerCallback, 0);
 }
@@ -285,3 +324,4 @@ bool SceneRunner::RunScene(int argc, char** argv, Scene* scene_to_run)
 	glutMainLoop();
 	return true;
 }
+

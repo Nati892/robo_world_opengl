@@ -23,6 +23,9 @@ public:
 	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 	void setRotation(GLfloat x, GLfloat y, GLfloat z);
 	void setScale(GLfloat x, GLfloat y, GLfloat z);
+	void setPosition(GOvec3);
+	void setRotation(GOvec3);
+	void setScale(GOvec3);
 	GOvec3 GetPosition();
 	GOvec3 GetRotation();
 	GOvec3 GetScale();

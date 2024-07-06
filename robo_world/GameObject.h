@@ -2,11 +2,11 @@
 #include "stdafx.h"
 #include "GOLightSourceData.h"
 
-#define LIGHT_SOURCES_NUM 8
+
 class GODrawable;
 class GOScript;
 class GOTransform;
-
+class Scene;
 //this enum - GOCamPoint, GOCamLookAtPoint, GOLightSource// todo add all of them
 //are helpers and basci opengl 1.1 doesnt allow to calculate my own matrices, only with some gltransform... or something like that
 //this attach to objects and then get their location calculated to set normally in the scene
@@ -31,6 +31,7 @@ protected:
 	GOType _GO_object_type = regular;
 	GOLightSourceData* _light_source_data = nullptr;
 	GOvec3 _claculated_world_position;
+	Scene* _attached_scene;
 public:
 	GameObject(GameObject* parent, std::string NewName, GOTransform* transform);
 	~GameObject();
@@ -57,7 +58,8 @@ public:
 	GODrawable* GetDrawableObject();
 	void SetDrawableObject(GODrawable* newDrawObj);
 
-
+	Scene* GetCurrentScene();
+	void SetCurrentScene(Scene*);
 	//GoType
 	/// <summary>
 	/// sets the object type and returns if able to set it or note,
