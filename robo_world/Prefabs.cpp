@@ -99,12 +99,17 @@ GameObject* Prefabs::GetReadySpecularLightSource()
 GameObject* Prefabs::GetReadyLightSource()
 {
 	GOTransform* light_trans = new GOTransform();
+	light_trans->setPosition(0,100,0);
 	GameObject* ret = new GameObject(nullptr, "light", light_trans);
 	ret->SetGOType(GOLightSource);
 	auto ldata = ret->GetLightSourceData();
-	ldata->_light_ambient = { 0.2,0.2,0.2,1 };
-	ldata->_light_diffuse = { 0.8,0.8,0.8,1 };
-	ldata->_light_specular = { 0,0,0,1 };
+	ldata->_light_ambient = { 0.4,0.4,0.4,1 };
+	ldata->_light_diffuse = { 0.6,0.6,0.6,1 };
+	ldata->_light_specular = { 0.5,0.5,0.5,1 };
+	ldata->_GL_SPOT_CUTOFF = 180;
+	ldata->_shininess = 1;
+	ldata->_spot_direction = {0,-10,0};
+	ldata->_exponent = 5;
 	return ret;
 }
 

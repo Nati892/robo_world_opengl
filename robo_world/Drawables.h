@@ -25,9 +25,10 @@ public:
 
 class DrawSurface2d : public GODrawable 
 {
-
+	int axiscuts = 100;
 public:
 	void DrawObject();
 	DrawSurface2d();
+	DrawSurface2d(int a);
 
 };

@@ -102,18 +102,18 @@ void Camera3rdPerson::SLoop()
 	auto movement_vec = GOvec3{ 0,0,0 };
 	if (x_movement != 0)
 	{
-		movement_vec += GOvec3{ 0,static_cast<float>(x_movement),0 };
+		movement_vec += GOvec3{ 0,static_cast<float>(x_movement * -1),0 };
 	}
 	if (y_movement != 0)
 	{
-		movement_vec += GOvec3{ static_cast<float>(y_movement),0,0 };
+		movement_vec += GOvec3{ static_cast<float>(y_movement*-1),0,0 };
 	}
 
 
 	movement_vec *= 0.01f;
 
-	auto total_movement=my_trans->GetRotation() + movement_vec;
-	
+	auto total_movement = my_trans->GetRotation() + movement_vec ;
+
 	//cutoff
 	if (total_movement.x < -40)
 	{
@@ -121,7 +121,7 @@ void Camera3rdPerson::SLoop()
 	}
 	if (total_movement.x > 40)
 	{
-		total_movement.x =40;
+		total_movement.x = 40;
 	}
 	std::cout << total_movement.x << "," << total_movement.y << "," << total_movement.z << std::endl;
 	my_trans->setRotation(total_movement);

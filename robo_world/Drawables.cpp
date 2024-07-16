@@ -52,14 +52,44 @@ DrawSphere::DrawSphere()
 void DrawSurface2d::DrawObject()
 {
 	glColor3f(1, 0, 0);
-	glBegin(GL_POLYGON);
-	glNormal3f(0,1,0);
-	glVertex3f(-1, 0, -1);
-	glVertex3f(-1, 0, 1);
-	glVertex3f(1, 0, 1);
-	glVertex3f(1, 0, -1);
+
+	float step = 2.0f / axiscuts;  // Step size between each vertex
+
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);  // Normal is constant for the entire surface
+
+	for (int i = 0; i < axiscuts; ++i) {
+		for (int j = 0; j < axiscuts; ++j) {
+			// Calculate vertex positions based on current slice indices
+			float x0 = -1.0f + j * step;
+			float z0 = -1.0f + i * step;
+			float x1 = x0 + step;
+			float z1 = z0 + step;
+
+			// Define vertices of the current quad
+			glVertex3f(x0, 0, z0);
+			glVertex3f(x0, 0, z1);
+			glVertex3f(x1, 0, z1);
+			glVertex3f(x1, 0, z0);
+		}
+	}
+
 	glEnd();
 }
+
+//
+//void DrawSurface2d::DrawObject()
+//{
+//	glColor3f(1, 0, 0);
+//	glBegin(GL_QUADS);
+//	glNormal3f(0, 1, 0);
+//	//for here and fix the quad rendering
+//	glVertex3f(-1, 0, -1);
+//	glVertex3f(-1, 0, 1);
+//	glVertex3f(1, 0, 1);
+//	glVertex3f(1, 0, -1);
+//	glEnd();
+//}
 
 DrawSurface2d::DrawSurface2d()
 {
@@ -80,4 +110,9 @@ DrawSurface2d::DrawSurface2d()
 
 	this->Shininess[0] = 0;
 
+}
+
+DrawSurface2d::DrawSurface2d(int cuts)
+{
+	axiscuts = cuts;
 }

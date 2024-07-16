@@ -79,29 +79,30 @@ Scene* GetWorldScene()
 	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder", nullptr);
 	ret_scene->AddGameObjectTree(LightsHolder);
 
-	GameObject* light_ambiant = Prefabs::GetReadyAmbiantLightSource();
+	GameObject* main_light = Prefabs::GetReadyLightSource();
 	GameObject* light1 = Prefabs::GetReadyDiffuseLightSource();
 	GameObject* light2 = Prefabs::GetReadySpecularLightSource();
 	GameObject* light3 = Prefabs::GetReadyDiffuseLightSource();
 
-	LightsHolder->addChildObject(light_ambiant);
-	LightsHolder->addChildObject(light1);
-	LightsHolder->addChildObject(light2);
+	LightsHolder->addChildObject(main_light);
+	//LightsHolder->addChildObject(light1);
+	//LightsHolder->addChildObject(light2);
 	//LightsHolder->addChildObject(light3);
 
-	auto l_trans = light_ambiant->GetTransform();
-	l_trans->setPosition(4, 10, 0);
+	//auto l_trans = light_ambiant->GetTransform();
+	//l_trans->setPosition(4, 10, 0);
 
-	l_trans = light1->GetTransform();
-	l_trans->setPosition(-20, 20, 5);
+	//l_trans = light1->GetTransform();
+	//light1->GetLightSourceData()->_light_diffuse = GOvec4{0.55,0.2,0.2,1};
+	//l_trans->setPosition(-20, 20, 5);
 
-	l_trans = light2->GetTransform();
-	l_trans->setPosition(20, 20, 20);
-	light2->GetLightSourceData()->_spot_direction = GOvec3{ 0,-1,-0.1 };
-	light2->GetLightSourceData()->_GL_SPOT_CUTOFF = 50;
+	//l_trans = light2->GetTransform();
+	//l_trans->setPosition(10, 10, 10);
+	//light2->GetLightSourceData()->_spot_direction = GOvec3{ 0,-1,-0.1 };
+	//light2->GetLightSourceData()->_GL_SPOT_CUTOFF = 50;
 
-	l_trans = light3->GetTransform();
-	l_trans->setPosition(0, 1, 0);
+	//l_trans = light3->GetTransform();
+	//l_trans->setPosition(0, 1, 0);
 
 	//add cam object
 	GOTransform* CamHolderTransform = new GOTransform();
@@ -130,11 +131,12 @@ Scene* GetWorldScene()
 	ret_scene->AddGameObjectTree(surface);
 	surface->GetTransform()->setScale(100, 1, 100);
 	surface->GetTransform()->setPosition(0,0,0);
-	surface->GetDrawableObject()->setAmbientColor(0.3, 0.3, 0.3, 1.0);
-	surface->GetDrawableObject()->setDiffuseColor(0.4, 0.4, 0.4, 1.0);
+	surface->GetDrawableObject()->setAmbientColor(0, 0.3, 0, 1.0);
+	surface->GetDrawableObject()->setDiffuseColor(0, 0.4, 0, 1.0);
 	surface->GetDrawableObject()->setSpecularColor(0.774597, 0.774597, 0.774597, 1.0);
-	surface->GetDrawableObject()->setSpecularColor(1,1,1, 1.0);
-	surface->GetDrawableObject()->setShininess(76.8);
+//	surface->GetDrawableObject()->setSpecularColor(0, 0, 0, 1.0);
+	//surface->GetDrawableObject()->setSpecularColor(1,1,1, 1.0);
+	//surface->GetDrawableObject()->setShininess(76.8);
 
 	//add sphere in middle of scen to test specular light
 	GameObject* sphere = Prefabs::GetNewSphere("sphereylibibidibuliluliluuuuuu");
@@ -147,6 +149,8 @@ Scene* GetWorldScene()
 	ret_scene->AddGameObjectTree(cube2);
 
 	sphere->addChildObject(CameraHolder);
+	//todo understnad why surface(already tesalated) is not giving any specular color shininess
+	
 	return ret_scene;
 }
 
@@ -157,7 +161,6 @@ void Scene::AddGameObjectTree(GameObject* obj)
 		this->SceneObjects.push_back(obj);
 		obj->SetCurrentScene(this);
 	}
-
 }
 
 //note: I know this could be implemented in a lot more efficient manner, but this is true for much of this. I just want this to work well for now, in the future I might revamp this project
