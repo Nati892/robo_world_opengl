@@ -93,7 +93,7 @@ void SceneRunner::LoopScene()
 	glMatrixMode(GL_MODELVIEW | GL_PROJECTION);
 	glLoadIdentity();
 
-	glFrustum(-FRUSTUM_X / 2, FRUSTUM_X / 2, -FRUSTUM_Y / 2, FRUSTUM_Y / 2, 0.3, 2000.0);//todo: change to camera properties soon 
+	glFrustum(-FRUSTUM_X / 8.0f, FRUSTUM_X / 8.0f, -FRUSTUM_Y / 8.0f, FRUSTUM_Y / 8.0f, 0.3, 2000.0);//todo: change to camera properties soon 
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

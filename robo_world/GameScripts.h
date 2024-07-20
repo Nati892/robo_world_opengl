@@ -8,7 +8,7 @@
 //write game script headers here
 
 class GOInputSystem;
-
+class DynamicSurfaceScript;
 enum axis
 {
 	axis_x,
@@ -37,12 +37,36 @@ class Camera3rdPerson :public GOScript
 private:
 	Scene* this_scene;
 	GOInputSystem* this_input_sys;
+	GameObject* CamObject;
+	GameObject* LookAtObject;
+	GameObject* DynamicSurface;
+	DynamicSurfaceScript* CurrDynamicSurfaceScript;
 	float y_axis_limit = 50.0f;
 	float speed;
 	void SSetup(Scene* CurrScene);
 public:
 	//virtual inherited
 	void SLoop();
+	void SCleanUp();
+
+};
+
+
+
+class DynamicSurfaceScript :public GOScript
+{
+private:
+	
+	GOvec3 _Scale;
+	GOvec3 _Count;
+	GOvec3 _Position;
+
+	void SSetup(Scene* CurrScene);
+public:
+	//virtual inherited
+	DynamicSurfaceScript(GOvec3 _Scale,GOvec3 _Count);
+	void SLoop();
+	void UpdatePosition(GOvec3 new_pos);
 	void SCleanUp();
 
 };

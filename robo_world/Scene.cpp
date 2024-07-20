@@ -111,7 +111,7 @@ Scene* GetWorldScene()
 
 	GOTransform* CamTrans = new GOTransform();
 	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
-	CamTrans->setPosition(0, 3, 3);
+	CamTrans->setPosition(0, 0, 3);
 	MainCam->SetGOType(GOCamPoint);
 
 	GOTransform* CamLookAtTrans = new GOTransform();
@@ -126,19 +126,19 @@ Scene* GetWorldScene()
 	CameraHolder->SetGOScript(new Camera3rdPerson());
 
 	//add surface
-	auto surface = Prefabs::GetReadySurface2d();
-	surface->SetName("surface");
-	ret_scene->AddGameObjectTree(surface);
-	surface->GetTransform()->setScale(10, 1, 10);
-	surface->GetTransform()->setPosition(0,0,0);
-//	surface->GetDrawableObject()->setSpecularColor(0, 0, 0, 1.0);
-	//surface->GetDrawableObject()->setSpecularColor(1,1,1, 1.0);
-	//surface->GetDrawableObject()->setShininess(76.8);
+	//auto surface = Prefabs::GetReadySurface2d();
+	//surface->SetName("surface");
+	//ret_scene->AddGameObjectTree(surface);
+	//surface->GetTransform()->setScale(10, 1, 10);
+	//surface->GetTransform()->setPosition(0,0,0);
+
+	auto d_surface = Prefabs::GetReadyDynamicSurface2d();
+	ret_scene->AddGameObjectTree(d_surface);
 
 	//add sphere in middle of scen to test specular light
 	GameObject* sphere = Prefabs::GetNewSphere("sphereylibibidibuliluliluuuuuu");
 
-	sphere->GetTransform()->setPosition(0, 2, 0);
+	sphere->GetTransform()->setPosition(0, 8, 0);
 	ret_scene->AddGameObjectTree(sphere);
 
 	GameObject* cube2 = Prefabs::GetNewRotatingCube("rotaty");
@@ -228,8 +228,12 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	if (this->SceneInputSystem != nullptr)
-		delete this->SceneInputSystem;
+	GameObject* curr_GO;
+	for (int i = 0; i < this->SceneObjects.size(); i++)
+	{
+		curr_GO = SceneObjects.at(i);
+		curr_GO->Destroy(true);
+	}
 }
 
 void Scene::StartScene()

@@ -133,3 +133,12 @@ GameObject* Prefabs::GetReadySurface2d()
 	return surface2d_obj;
 
 }
+
+GameObject* Prefabs::GetReadyDynamicSurface2d()
+{
+	GOTransform* surface2d_trans = new GOTransform();
+	GameObject* surface2d_obj = new GameObject(nullptr, "dynamic_surface2d", surface2d_trans);
+
+	surface2d_obj->AttachScript(new DynamicSurfaceScript(GOvec3{ 10, 0, 10 }, GOvec3{10,0,10}));
+	return surface2d_obj;
+}

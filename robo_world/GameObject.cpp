@@ -217,6 +217,11 @@ void GameObject::Destroy(bool deep)
 			curr_child->Destroy(true);
 		}
 	}
+	auto curr_script= this->GetRunningScript();
+	if (curr_script != nullptr)
+	{
+		curr_script->CleanUp();
+	}
 	delete this;
 }
 
