@@ -77,7 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Repos\OpenGL_final_proj\robo_world\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\robo_world\include;$(SolutionDir)\robo_world\include\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Repos\OpenGL_final_proj\robo_world\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\robo_world\include;$(SolutionDir)\robo_world\include\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,6 +135,7 @@
     <ClCompile Include="GameScripts.cpp" />
     <ClCompile Include="GOInputSystem.cpp" />
     <ClCompile Include="GOScript.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClInclude Include="GOInputSystem.h" />
     <ClInclude Include="GOLightSourceData.h" />
     <ClInclude Include="GOScript.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="AnimationTimer.cpp" />
     <ClInclude Include="GODrawable.h" />
     <ClCompile Include="GODrawable.cpp" />
+    <ClInclude Include="TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Drawables.h" />

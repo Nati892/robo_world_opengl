@@ -129,11 +129,8 @@ Scene* GetWorldScene()
 	auto surface = Prefabs::GetReadySurface2d();
 	surface->SetName("surface");
 	ret_scene->AddGameObjectTree(surface);
-	surface->GetTransform()->setScale(100, 1, 100);
+	surface->GetTransform()->setScale(10, 1, 10);
 	surface->GetTransform()->setPosition(0,0,0);
-	surface->GetDrawableObject()->setAmbientColor(0, 0.3, 0, 1.0);
-	surface->GetDrawableObject()->setDiffuseColor(0, 0.4, 0, 1.0);
-	surface->GetDrawableObject()->setSpecularColor(0.774597, 0.774597, 0.774597, 1.0);
 //	surface->GetDrawableObject()->setSpecularColor(0, 0, 0, 1.0);
 	//surface->GetDrawableObject()->setSpecularColor(1,1,1, 1.0);
 	//surface->GetDrawableObject()->setShininess(76.8);

@@ -49,47 +49,27 @@ DrawSphere::DrawSphere()
 	this->SpecularColor.w = 1;
 }
 
-void DrawSurface2d::DrawObject()
-{
-	glColor3f(1, 0, 0);
+void DrawSurface2d::DrawObject() {
+	auto texture = TextureLoader::loadTexture("surface_board_texture.jpg");
 
-	float step = 2.0f / axiscuts;  // Step size between each vertex
+	glEnable(GL_TEXTURE_2D);        // Enable texturing
+	glBindTexture(GL_TEXTURE_2D, texture); // Bind the texture
 
 	glBegin(GL_QUADS);
+
 	glNormal3f(0, 1, 0);  // Normal is constant for the entire surface
 
-	for (int i = 0; i < axiscuts; ++i) {
-		for (int j = 0; j < axiscuts; ++j) {
-			// Calculate vertex positions based on current slice indices
-			float x0 = -1.0f + j * step;
-			float z0 = -1.0f + i * step;
-			float x1 = x0 + step;
-			float z1 = z0 + step;
-
-			// Define vertices of the current quad
-			glVertex3f(x0, 0, z0);
-			glVertex3f(x0, 0, z1);
-			glVertex3f(x1, 0, z1);
-			glVertex3f(x1, 0, z0);
-		}
-	}
+	// Specify texture coordinates and vertex positions
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5f, 0.0f, -0.5f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(-0.5f, 0.0f, 0.5f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5f, 0.0f, 0.5f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(0.5f, 0.0f, -0.5f);
 
 	glEnd();
+
+	glDisable(GL_TEXTURE_2D);       // Disable texturing
 }
 
-//
-//void DrawSurface2d::DrawObject()
-//{
-//	glColor3f(1, 0, 0);
-//	glBegin(GL_QUADS);
-//	glNormal3f(0, 1, 0);
-//	//for here and fix the quad rendering
-//	glVertex3f(-1, 0, -1);
-//	glVertex3f(-1, 0, 1);
-//	glVertex3f(1, 0, 1);
-//	glVertex3f(1, 0, -1);
-//	glEnd();
-//}
 
 DrawSurface2d::DrawSurface2d()
 {
@@ -114,5 +94,4 @@ DrawSurface2d::DrawSurface2d()
 
 DrawSurface2d::DrawSurface2d(int cuts)
 {
-	axiscuts = cuts;
 }

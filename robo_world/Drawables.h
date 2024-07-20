@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "GODrawable.h"
-
+#include <stb_image.h>
 
 class DrawCube :public GODrawable
 {
@@ -25,7 +25,6 @@ public:
 
 class DrawSurface2d : public GODrawable 
 {
-	int axiscuts = 100;
 public:
 	void DrawObject();
 	DrawSurface2d();
