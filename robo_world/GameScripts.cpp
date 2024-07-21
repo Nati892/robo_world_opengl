@@ -84,11 +84,20 @@ void Camera3rdPerson::SSetup(Scene* CurrScene)
 		this->CamObject = this_scene->FindObjectByName("MainCam");
 		this->LookAtObject = this_scene->FindObjectByName("MainCamLookAt");
 		this->DynamicSurface = this_scene->FindObjectByName("dynamic_surface2d");
+		this->FollowObject = this_scene->FindObjectByName("player");
+		this->MoveObject = this_scene->FindObjectByName("player_holder");
 	}
 	if (DynamicSurface != nullptr)
 	{
-
-		CurrDynamicSurfaceScript =dynamic_cast<DynamicSurfaceScript*>(DynamicSurface->GetRunningScript());
+		CurrDynamicSurfaceScript = dynamic_cast<DynamicSurfaceScript*>(DynamicSurface->GetRunningScript());
+	}
+	if (FollowObject != nullptr)
+	{
+		FollowObjectTrans = FollowObject->GetTransform();
+	}
+	if (MoveObject != nullptr)
+	{
+		MoveObjectTrans = MoveObject->GetTransform();
 	}
 }
 
@@ -97,7 +106,6 @@ void Camera3rdPerson::SLoop()
 
 	GameObject* my_go = this->GetGameObject();
 	GOTransform* my_trans = my_go->GetTransform();
-	GOTransform* sphere_trans = my_go->GetParent()->GetTransform();
 	if (this_input_sys == nullptr)
 		return;
 
@@ -110,10 +118,16 @@ void Camera3rdPerson::SLoop()
 	if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
 	{
 		GOvec3 movement = this->LookAtObject->GetCalculatedLocation() - this->CamObject->GetCalculatedLocation();
+		auto res = glm::normalize(glm::vec3(movement.x, movement.y, movement.z));
+		movement = GOvec3{res.x,res.y,res.z};
 		movement.y = 0;
-		movement *= 0.1f;
-		sphere_trans->setPosition(sphere_trans->GetPosition() + movement);
-		CurrDynamicSurfaceScript->UpdatePosition(sphere_trans->GetPosition());
+		movement *= 0.2f;
+		MoveObjectTrans->setPosition(MoveObjectTrans->GetPosition() + movement);
+		CurrDynamicSurfaceScript->UpdatePosition(FollowObjectTrans->GetPosition());
+
+		auto rot= FollowObjectTrans->GetRotation();
+		rot.y = my_trans->GetRotation().y;
+		FollowObjectTrans->setRotation(rot + GOvec3{0,90,0});
 	}
 
 	int x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
@@ -128,20 +142,21 @@ void Camera3rdPerson::SLoop()
 		movement_vec += GOvec3{ static_cast<float>(y_movement * -1),0,0 };
 	}
 
-
-	movement_vec *= 0.01f;
+	movement_vec *= this->this_scene->GetDeltaTime();
 
 	auto total_movement = my_trans->GetRotation() + movement_vec;
 
 	//cutoff
-	if (total_movement.x < -40)
+	if (total_movement.x < -30)
 	{
-		total_movement.x = -40;
+		total_movement.x = -30;
 	}
-	if (total_movement.x > 40)
+	if (total_movement.x > 60)
 	{
-		total_movement.x = 40;
+		total_movement.x = 60;
 	}
+
+
 	std::cout << total_movement.x << "," << total_movement.y << "," << total_movement.z << std::endl;
 	my_trans->setRotation(total_movement);
 
@@ -159,7 +174,7 @@ void DynamicSurfaceScript::SSetup(Scene* CurrScene)
 	{
 		for (int j = -_Count.z / 2; j < _Count.z / 2; j++)
 		{
-			auto new_surface = Prefabs::GetReadySurface2d();
+			auto new_surface = Prefabs::GetReadySurface2d("surface" + i + j, "surface_board_texture.jpg");
 			if (new_surface != nullptr && new_surface->GetTransform() != nullptr)
 			{
 				// Calculate new position
@@ -212,5 +227,43 @@ void DynamicSurfaceScript::UpdatePosition(GOvec3 new_pos)
 }
 
 void DynamicSurfaceScript::SCleanUp()
+{
+}
+
+
+/// SkyBox script///
+
+
+void SkyBoxScript::SSetup(Scene* CurrScene)
+{
+	GameObject* go = CurrScene->FindObjectByName(this->FollowObjName);
+	if (go != nullptr)
+	{
+		this->FollowObject = go;
+		auto trans = go->GetTransform();
+		if (trans != nullptr)
+		{
+			this->FollowObjectTransform = trans;
+		}
+	}
+}
+
+SkyBoxScript::SkyBoxScript(std::string follow_object_name)
+{
+	this->FollowObjName = follow_object_name;
+}
+
+void SkyBoxScript::SLoop()
+{
+
+	if (this->FollowObjectTransform != nullptr)
+	{
+		auto pos = FollowObjectTransform->GetPosition();
+		this->GetGameObject()->GetTransform()->setPosition(pos + GOvec3{ 0,-45,0 });
+
+	}
+}
+
+void SkyBoxScript::SCleanUp()
 {
 }

@@ -6,8 +6,8 @@
 #define MY_NAME "Netanel Cohen Gindi"
 #define MY_HEADER "Robo-World"
 #define TARGET_FPS 60
-#define FRUSTUM_X 5.0f
-#define FRUSTUM_Y 5.0f
+#define FRUSTUM_X 4.0f
+#define FRUSTUM_Y 4.0f
 
 static int x_last;
 static int y_last;

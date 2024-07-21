@@ -45,10 +45,10 @@ Scene* GetSampleScene()
 	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder", nullptr);
 	ret_scene->AddGameObjectTree(LightsHolder);
 
-	GameObject* light0 = Prefabs::GetReadyLightSource();
-	GameObject* light1 = Prefabs::GetReadyLightSource();
-	GameObject* light2 = Prefabs::GetReadyLightSource();
-	GameObject* light3 = Prefabs::GetReadyLightSource();
+	GameObject* light0 = Prefabs::GetReadyLightSource("light0");
+	GameObject* light1 = Prefabs::GetReadyLightSource("light1");
+	GameObject* light2 = Prefabs::GetReadyLightSource("light2");
+	GameObject* light3 = Prefabs::GetReadyLightSource("light3");
 
 	LightsHolder->addChildObject(light0);
 	LightsHolder->addChildObject(light1);
@@ -76,33 +76,20 @@ Scene* GetWorldScene()
 	Scene* ret_scene = new Scene();
 
 	//add lights to scene
-	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder", nullptr);
+	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder");
 	ret_scene->AddGameObjectTree(LightsHolder);
 
-	GameObject* main_light = Prefabs::GetReadyLightSource();
-	GameObject* light1 = Prefabs::GetReadyDiffuseLightSource();
-	GameObject* light2 = Prefabs::GetReadySpecularLightSource();
-	GameObject* light3 = Prefabs::GetReadyDiffuseLightSource();
+	GameObject* main_light = Prefabs::GetReadyLightSource("main_light");
+	GameObject* light1 = Prefabs::GetReadyDiffuseLightSource("light1");
+	GameObject* light2 = Prefabs::GetReadySpecularLightSource("light2");
+	GameObject* light3 = Prefabs::GetReadyDiffuseLightSource("light3");
 
 	LightsHolder->addChildObject(main_light);
-	//LightsHolder->addChildObject(light1);
-	//LightsHolder->addChildObject(light2);
-	//LightsHolder->addChildObject(light3);
+	LightsHolder->addChildObject(light1);
+	LightsHolder->addChildObject(light2);
+	LightsHolder->addChildObject(light3);
 
-	//auto l_trans = light_ambiant->GetTransform();
-	//l_trans->setPosition(4, 10, 0);
-
-	//l_trans = light1->GetTransform();
-	//light1->GetLightSourceData()->_light_diffuse = GOvec4{0.55,0.2,0.2,1};
-	//l_trans->setPosition(-20, 20, 5);
-
-	//l_trans = light2->GetTransform();
-	//l_trans->setPosition(10, 10, 10);
-	//light2->GetLightSourceData()->_spot_direction = GOvec3{ 0,-1,-0.1 };
-	//light2->GetLightSourceData()->_GL_SPOT_CUTOFF = 50;
-
-	//l_trans = light3->GetTransform();
-	//l_trans->setPosition(0, 1, 0);
+	GameObject* PlayerAndCameraHolder = new GameObject(nullptr,"player_holder",nullptr);
 
 	//add cam object
 	GOTransform* CamHolderTransform = new GOTransform();
@@ -111,7 +98,7 @@ Scene* GetWorldScene()
 
 	GOTransform* CamTrans = new GOTransform();
 	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
-	CamTrans->setPosition(0, 0, 3);
+	CamTrans->setPosition(0, 5, 3);
 	MainCam->SetGOType(GOCamPoint);
 
 	GOTransform* CamLookAtTrans = new GOTransform();
@@ -125,53 +112,44 @@ Scene* GetWorldScene()
 	//set script to camera holder
 	CameraHolder->SetGOScript(new Camera3rdPerson());
 
-	//add surface
-	//auto surface = Prefabs::GetReadySurface2d();
-	//surface->SetName("surface");
-	//ret_scene->AddGameObjectTree(surface);
-	//surface->GetTransform()->setScale(10, 1, 10);
-	//surface->GetTransform()->setPosition(0,0,0);
+	PlayerAndCameraHolder->addChildObject(CameraHolder);
+	PlayerAndCameraHolder->GetTransform()->setPosition(0,8,0);
+	ret_scene->AddGameObjectTree(PlayerAndCameraHolder);
+	auto Box = Prefabs::GetReadySkyBox("Skybox", "player");
 
-	auto d_surface = Prefabs::GetReadyDynamicSurface2d();
+	auto d_surface = Prefabs::GetReadyDynamicSurface2d("dynamic_surface2d");
 	ret_scene->AddGameObjectTree(d_surface);
 
+	ret_scene->AddGameObjectTree(Box);
 	//add sphere in middle of scen to test specular light
-	GameObject* sphere = Prefabs::GetNewSphere("sphereylibibidibuliluliluuuuuu");
-
-	sphere->GetTransform()->setPosition(0, 8, 0);
-	ret_scene->AddGameObjectTree(sphere);
+	GameObject* player_object = Prefabs::GetReadyTeapot("player");
+	PlayerAndCameraHolder->addChildObject(player_object);
+	player_object->GetTransform()->setPosition(0, 0, 0);
+	//ret_scene->AddGameObjectTree(player_object);
 
 	GameObject* cube2 = Prefabs::GetNewRotatingCube("rotaty");
-	cube2->GetTransform()->setPosition(-3,0,0);
+	cube2->GetTransform()->setPosition(-3, 3, 0);
+	cube2->GetTransform()->setRotation(30, 30, 30);
 	ret_scene->AddGameObjectTree(cube2);
 
-	sphere->addChildObject(CameraHolder);
-	//todo understnad why surface(already tesalated) is not giving any specular color shininess
-	
+
+	auto TeapotObj = Prefabs::GetNewRotatingteapot("teapot");
+	TeapotObj->GetTransform()->setPosition(0, 10, 0);
+	ret_scene->AddGameObjectTree(TeapotObj);
+
+
 	return ret_scene;
 }
 
 void Scene::AddGameObjectTree(GameObject* obj)
 {
-	if (obj != nullptr)
-	{
-		this->SceneObjects.push_back(obj);
-		obj->SetCurrentScene(this);
-	}
+	SceneMasterParent->addChildObject(obj);
 }
 
 //note: I know this could be implemented in a lot more efficient manner, but this is true for much of this. I just want this to work well for now, in the future I might revamp this project
 GameObject* Scene::FindObjectByName(std::string object_name)
 {
-	GameObject* found_obj = nullptr;
-	auto children = this->GetChildren();
-	for (int i = 0; i < children.size(); i++)
-	{
-		auto curr_obj = children.at(i);
-		found_obj = SearchObjectByNameInObjectTree(object_name, curr_obj);
-		if (found_obj != nullptr)
-			break;
-	}
+	auto found_obj = SearchObjectByNameInObjectTree(object_name, this->SceneMasterParent);
 	return found_obj;
 }
 
@@ -180,17 +158,25 @@ GOInputSystem* Scene::GetSceneInputSystem()
 	return this->SceneInputSystem;
 }
 
+float Scene::GetDeltaTime()
+{
+	return this->DeltaTime;
+}
+
 void Scene::TraverseLightSources()
 {
 	for (int i = 0; i < LIGHT_SOURCES_NUM; i++)
 	{
 		LightSourcesArray[i] = nullptr;
 	}
-	for (int i = 0; i < this->GetChildren().size(); i++)
-	{
-		auto curr_child = this->GetChildren().at(i);
-		TraverseLightSourceInObjectTree(curr_child);
-	}
+	TraverseLightSourceInObjectTree(SceneMasterParent);
+}
+
+void Scene::UpdateTime()
+{
+	DeltaTime = this->SceneTimer.TimeLapseFromLastSampleMillis() / 1000;
+	std::cout << "delta time: " << DeltaTime << std::endl;
+	this->SceneTimer.SampleNow();
 }
 
 //another traversal func to get light distances where it goes for each light source up the parent tree and then calculates the trasforms
@@ -223,54 +209,36 @@ void Scene::TraverseLightSourceInObjectTree(GameObject* go)
 
 Scene::Scene()
 {
+	SceneTimer = AnimationTimer();
+	SceneTimer.StartTimer();
+	SceneTimer.SampleNow();
 	this->SceneInputSystem = new GOInputSystem();
+	this->SceneMasterParent = new GameObject(nullptr, "scene_master", nullptr);
 }
 
 Scene::~Scene()
 {
-	GameObject* curr_GO;
-	for (int i = 0; i < this->SceneObjects.size(); i++)
+	if (SceneMasterParent != nullptr)
 	{
-		curr_GO = SceneObjects.at(i);
-		curr_GO->Destroy(true);
+		SceneMasterParent->Destroy(true);
 	}
 }
 
 void Scene::StartScene()
 {
-	GameObject* curr_GO;
-	for (int i = 0; i < this->SceneObjects.size(); i++)
-	{
-		curr_GO = SceneObjects.at(i);
-		SetupScriptsForGameObjectHead(this, curr_GO);
-	}
+	SetupScriptsForGameObjectHead(this, SceneMasterParent);
 }
 
 void Scene::RunSceneScripts()
 {
-
-	GameObject* curr_GO;
-	for (int i = 0; i < this->SceneObjects.size(); i++)
-	{
-		curr_GO = SceneObjects.at(i);
-		RunScripts(curr_GO);
-	}
+	RunScripts(SceneMasterParent);
 }
 
 void Scene::DrawScene()
 {
-	GameObject* curr_GO;
-	for (int i = 0; i < this->SceneObjects.size(); i++)
-	{
-		curr_GO = SceneObjects.at(i);
-		RunGameObjectsForFrame(curr_GO);
-	}
+	RunGameObjectsForFrame(SceneMasterParent);
 }
 
-std::vector<GameObject*> Scene::GetChildren()
-{
-	return this->SceneObjects;
-}
 
 void RunScripts(GameObject* GOHead)
 {
@@ -416,11 +384,8 @@ std::vector<GameObject*> Scene::GetSpecialGameObjects()
 {
 	std::vector<GameObject*> ret_vec = std::vector<GameObject*>();
 
-	for (int i = 0; i < this->GetChildren().size(); i++)
-	{
-		auto curr_child = this->GetChildren().at(i);
-		GetAllSpecialObjectsForObjTree(curr_child, &ret_vec);
-	}
+
+	GetAllSpecialObjectsForObjTree(this->SceneMasterParent, &ret_vec);
 
 	//after got all special objects, get them to calculate position
 	for (int i = 0; i < ret_vec.size(); i++)

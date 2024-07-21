@@ -34,6 +34,7 @@ protected:
 	Scene* _attached_scene;
 public:
 	GameObject(GameObject* parent, std::string NewName, GOTransform* transform);
+	GameObject(GameObject* parent, std::string NewName);
 	~GameObject();
 
 	//when called it destroys the script,transform and drawable.

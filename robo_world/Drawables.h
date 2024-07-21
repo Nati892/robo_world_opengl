@@ -22,12 +22,22 @@ public:
 	DrawSphere();
 };
 
+class DrawTeapot :public GODrawable
+{
+
+public:
+	void DrawObject();
+	DrawTeapot();
+};
 
 class DrawSurface2d : public GODrawable 
 {
+
+private:
+	bool texture_loaded = false;
+	GLuint TextureId;
+	std::string texture_name;
 public:
 	void DrawObject();
-	DrawSurface2d();
-	DrawSurface2d(int a);
-
+	DrawSurface2d(std::string texture);
 };

@@ -40,6 +40,10 @@ private:
 	GameObject* CamObject;
 	GameObject* LookAtObject;
 	GameObject* DynamicSurface;
+	GameObject* FollowObject;
+	GOTransform* FollowObjectTrans;	
+	GameObject* MoveObject;
+	GOTransform* MoveObjectTrans;
 	DynamicSurfaceScript* CurrDynamicSurfaceScript;
 	float y_axis_limit = 50.0f;
 	float speed;
@@ -67,6 +71,23 @@ public:
 	DynamicSurfaceScript(GOvec3 _Scale,GOvec3 _Count);
 	void SLoop();
 	void UpdatePosition(GOvec3 new_pos);
+	void SCleanUp();
+
+};
+
+
+class SkyBoxScript :public GOScript
+{
+private:
+	std::string FollowObjName;
+	GameObject* FollowObject;
+	GOTransform* FollowObjectTransform;
+
+	void SSetup(Scene* CurrScene);
+public:
+	//virtual inherited
+	SkyBoxScript(std::string follow_object_name);
+	void SLoop();
 	void SCleanUp();
 
 };

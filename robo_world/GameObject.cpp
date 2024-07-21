@@ -10,10 +10,14 @@ GameObject::GameObject(GameObject* parent, std::string NewName, GOTransform* tra
 		this->_parent->addChildObject(this);
 	this->_name = NewName;
 	//this->_transoform = transoform;
+	if (transoform == nullptr)
+		transoform = new GOTransform();
 	AttachTransform(transoform);
 	this->_DrawableObject = nullptr;
 	this->_script = nullptr;
 }
+
+GameObject::GameObject(GameObject* parent, std::string NewName) :GameObject(parent, NewName, nullptr) {};
 
 GameObject::~GameObject()
 {
@@ -217,7 +221,7 @@ void GameObject::Destroy(bool deep)
 			curr_child->Destroy(true);
 		}
 	}
-	auto curr_script= this->GetRunningScript();
+	auto curr_script = this->GetRunningScript();
 	if (curr_script != nullptr)
 	{
 		curr_script->CleanUp();

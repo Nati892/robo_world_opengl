@@ -43,6 +43,8 @@ void SceneRunner::LoopScene()
 	if (currentScene == nullptr)
 		return;
 
+	currentScene->UpdateTime();
+
 	//run scripts
 	currentScene->RunSceneScripts();
 
