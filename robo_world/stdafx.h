@@ -33,7 +33,8 @@
 #include <map>
 #include "glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "TextureLoader.h"
+#include "tiny_obj_loader.h"
+#include "Loaders.h"
 
 //macros
 #define LIGHT_SOURCES_NUM 8

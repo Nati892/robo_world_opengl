@@ -123,7 +123,7 @@ void Camera3rdPerson::SLoop()
 		movement.y = 0;
 		movement *= 0.2f;
 		MoveObjectTrans->setPosition(MoveObjectTrans->GetPosition() + movement);
-		CurrDynamicSurfaceScript->UpdatePosition(FollowObjectTrans->GetPosition());
+		CurrDynamicSurfaceScript->UpdatePosition(MoveObjectTrans->GetPosition());
 
 		auto rot= FollowObjectTrans->GetRotation();
 		rot.y = my_trans->GetRotation().y;

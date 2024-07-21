@@ -41,3 +41,11 @@ public:
 	void DrawObject();
 	DrawSurface2d(std::string texture);
 };
+
+class DrawMonkey :public GODrawable
+{
+	std::vector<Vertex>* ModelVector;
+public:
+	void DrawObject();
+	DrawMonkey();
+};

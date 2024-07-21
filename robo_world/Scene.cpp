@@ -68,6 +68,7 @@ Scene* GetSampleScene()
 	l_trans->setPosition(0, -20, 10);
 
 
+
 	return ret_scene;
 }
 
@@ -115,13 +116,14 @@ Scene* GetWorldScene()
 	PlayerAndCameraHolder->addChildObject(CameraHolder);
 	PlayerAndCameraHolder->GetTransform()->setPosition(0,8,0);
 	ret_scene->AddGameObjectTree(PlayerAndCameraHolder);
-	auto Box = Prefabs::GetReadySkyBox("Skybox", "player");
+
+	auto Box = Prefabs::GetReadySkyBox("Skybox", "player_holder");
+	ret_scene->AddGameObjectTree(Box);
 
 	auto d_surface = Prefabs::GetReadyDynamicSurface2d("dynamic_surface2d");
 	ret_scene->AddGameObjectTree(d_surface);
 
-	ret_scene->AddGameObjectTree(Box);
-	//add sphere in middle of scen to test specular light
+	//Add sphere in middle of scen to test specular light
 	GameObject* player_object = Prefabs::GetReadyTeapot("player");
 	PlayerAndCameraHolder->addChildObject(player_object);
 	player_object->GetTransform()->setPosition(0, 0, 0);
@@ -132,12 +134,14 @@ Scene* GetWorldScene()
 	cube2->GetTransform()->setRotation(30, 30, 30);
 	ret_scene->AddGameObjectTree(cube2);
 
-
 	auto TeapotObj = Prefabs::GetNewRotatingteapot("teapot");
 	TeapotObj->GetTransform()->setPosition(0, 10, 0);
 	ret_scene->AddGameObjectTree(TeapotObj);
 
-
+	GameObject* go_tst = new GameObject(nullptr, "testy_monkey", nullptr);
+	go_tst->AttachDrawable(new DrawMonkey());
+	ret_scene->AddGameObjectTree(go_tst);
+	go_tst->GetTransform()->setPosition(0,4,0);
 	return ret_scene;
 }
 

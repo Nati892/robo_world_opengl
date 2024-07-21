@@ -141,3 +141,35 @@ DrawSurface2d::DrawSurface2d(std::string texture)
 	this->Shininess[0] = 0;
 
 }
+
+void DrawMonkey::DrawObject()
+{
+	if (ModelVector != nullptr) {
+		std::vector<Vertex>* ret = new std::vector<Vertex>();
+		bool res = OBJLoader::MyLoadOBJ("suzi.obj", &ret);
+		this->ModelVector = ret;
+	}
+	
+	if (ModelVector == nullptr)
+		return;
+
+	glColor3f(1,1,1);
+	glBegin(GL_TRIANGLES);
+	for (const auto& vertex : *ModelVector) {
+		glTexCoord2fv((float*)(&(vertex.texCoord)));
+		glNormal3fv((float*)(&(vertex.normal)));
+		glVertex3fv((float*)(&(vertex.position)));
+	}
+	glEnd();
+}
+
+DrawMonkey::DrawMonkey()
+{
+	std::vector<Vertex>* ret = new std::vector<Vertex>();
+	bool res = OBJLoader::MyLoadOBJ("suzi.obj", &ret);
+	if (res)
+	{
+		this->ModelVector = ret;
+	}
+	std::cout << "debug point res: " << res << std::endl;
+}
