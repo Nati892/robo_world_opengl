@@ -42,11 +42,15 @@ private:
 	GameObject* DynamicSurface;
 	GameObject* FollowObject;
 	GOTransform* FollowObjectTrans;	
+	GameObject* CamHeadObject;
+	GameObject* RobotHeadObject;
+	GOTransform* HeadObjectTrans;
 	GameObject* MoveObject;
 	GOTransform* MoveObjectTrans;
 	DynamicSurfaceScript* CurrDynamicSurfaceScript;
 	float y_axis_limit = 50.0f;
 	float speed;
+	bool ThirdPersonCamera = true;// input #1
 	void SSetup(Scene* CurrScene);
 public:
 	//virtual inherited

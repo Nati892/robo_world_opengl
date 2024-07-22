@@ -82,6 +82,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(SolutionDir)robo_world\textures" "$(OutDir)textures"</Command>
@@ -102,6 +103,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(SolutionDir)robo_world\textures" "$(OutDir)textures"</Command>
@@ -137,13 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Users\Nati Laptop\Downloads\tinyobjloader-1.0.6\tiny_obj_loader.cc" />
     <ClCompile Include="Drawables.cpp" />
     <ClCompile Include="GameScripts.cpp" />
     <ClCompile Include="GOInputSystem.cpp" />
     <ClCompile Include="GOScript.cpp" />
+    <ClCompile Include="GoTexture.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="tiny_obj_loader.cc" />
+    <ClInclude Include="GO3DObj.h" />
     <ClInclude Include="GOInputSystem.h" />
     <ClInclude Include="GOLightSourceData.h" />
     <ClInclude Include="GOScript.h" />
@@ -156,6 +160,7 @@
     <ClCompile Include="AnimationTimer.cpp" />
     <ClInclude Include="GODrawable.h" />
     <ClCompile Include="GODrawable.cpp" />
+    <ClInclude Include="GoTexture.h" />
     <ClInclude Include="Loaders.h" />
     <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>

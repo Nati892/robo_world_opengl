@@ -86,6 +86,8 @@ void Camera3rdPerson::SSetup(Scene* CurrScene)
 		this->DynamicSurface = this_scene->FindObjectByName("dynamic_surface2d");
 		this->FollowObject = this_scene->FindObjectByName("player");
 		this->MoveObject = this_scene->FindObjectByName("player_holder");
+		this->CamHeadObject = this_scene->FindObjectByName("CamHead");
+		this->RobotHeadObject = this_scene->FindObjectByName("robot_head");
 	}
 	if (DynamicSurface != nullptr)
 	{
@@ -98,6 +100,10 @@ void Camera3rdPerson::SSetup(Scene* CurrScene)
 	if (MoveObject != nullptr)
 	{
 		MoveObjectTrans = MoveObject->GetTransform();
+	}
+	if (CamHeadObject != nullptr)
+	{
+		HeadObjectTrans = CamHeadObject->GetTransform();
 	}
 }
 
@@ -113,21 +119,32 @@ void Camera3rdPerson::SLoop()
 	{
 		exit(0);
 	}
-
+	if (this_input_sys->IsKeyPressed('v') || this_input_sys->IsKeyPressed('v'))
+	{
+		this->ThirdPersonCamera = !this->ThirdPersonCamera;
+		if (this->ThirdPersonCamera)
+		{
+			HeadObjectTrans->setPosition(0, 0, 0);
+			CamObject->GetTransform()->setPosition(0, 7, 3);
+			LookAtObject->GetTransform()->setPosition(0, 2, 0);
+		}
+		else
+		{
+			HeadObjectTrans->setPosition(0, -1, 0);
+			CamObject->GetTransform()->setPosition(0, 4, -3);
+			LookAtObject->GetTransform()->setPosition(0, 4, -6);
+		}
+	}
 	//check foword motion 'w' key
 	if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
 	{
 		GOvec3 movement = this->LookAtObject->GetCalculatedLocation() - this->CamObject->GetCalculatedLocation();
 		auto res = glm::normalize(glm::vec3(movement.x, movement.y, movement.z));
-		movement = GOvec3{res.x,res.y,res.z};
+		movement = GOvec3{ res.x,res.y,res.z };
 		movement.y = 0;
 		movement *= 0.2f;
 		MoveObjectTrans->setPosition(MoveObjectTrans->GetPosition() + movement);
 		CurrDynamicSurfaceScript->UpdatePosition(MoveObjectTrans->GetPosition());
-
-		auto rot= FollowObjectTrans->GetRotation();
-		rot.y = my_trans->GetRotation().y;
-		FollowObjectTrans->setRotation(rot + GOvec3{0,90,0});
 	}
 
 	int x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
@@ -156,11 +173,13 @@ void Camera3rdPerson::SLoop()
 		total_movement.x = 60;
 	}
 
-
-	std::cout << total_movement.x << "," << total_movement.y << "," << total_movement.z << std::endl;
 	my_trans->setRotation(total_movement);
+	
+	auto rot = FollowObjectTrans->GetRotation();
+	rot.y = my_trans->GetRotation().y;
+	FollowObjectTrans->setRotation(rot + GOvec3{ 0,90,0 });
 
-
+	
 }
 
 void Camera3rdPerson::SCleanUp()

@@ -1,16 +1,31 @@
 #pragma once
 #include "stdafx.h"
 #include "GameObject.h"
+struct GOMaterial
+{
+	GOvec4 AmbientColor = { 1,1,1,1 }; // Ambient color (RGBA)
+	GOvec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
+	GOvec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
+	GLfloat Shininess[1] = { 0 }; // Shininess factor
+	static void SetActiveMaterial(GOMaterial,int);
+
+	bool operator==(GOMaterial other)
+	{
+		return	(
+			this->AmbientColor == other.AmbientColor &&
+			this->DiffuseColor == other.DiffuseColor &&
+			this->SpecularColor == other.SpecularColor &&
+			this->Shininess == other.Shininess
+			);
+	}
+};
 
 class GODrawable {
 private:
 	GameObject* _GameObject = nullptr;
 
 protected:
-	GOvec4 AmbientColor = { 0,0,0,1 }; // Ambient color (RGBA)
-	GOvec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
-	GOvec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
-	GLfloat Shininess[1] = { 0 }; // Shininess factor
+	GOMaterial material;
 
 public:
 	GODrawable();

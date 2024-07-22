@@ -67,8 +67,6 @@ Scene* GetSampleScene()
 	l_trans = light3->GetTransform();
 	l_trans->setPosition(0, -20, 10);
 
-
-
 	return ret_scene;
 }
 
@@ -90,7 +88,7 @@ Scene* GetWorldScene()
 	LightsHolder->addChildObject(light2);
 	LightsHolder->addChildObject(light3);
 
-	GameObject* PlayerAndCameraHolder = new GameObject(nullptr,"player_holder",nullptr);
+	GameObject* PlayerAndCameraHolder = new GameObject(nullptr, "player_holder", nullptr);
 
 	//add cam object
 	GOTransform* CamHolderTransform = new GOTransform();
@@ -99,12 +97,12 @@ Scene* GetWorldScene()
 
 	GOTransform* CamTrans = new GOTransform();
 	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
-	CamTrans->setPosition(0, 5, 3);
+	CamTrans->setPosition(0, 7, 3);
 	MainCam->SetGOType(GOCamPoint);
 
 	GOTransform* CamLookAtTrans = new GOTransform();
 	GameObject* CamLookAt = new GameObject(nullptr, "MainCamLookAt", CamLookAtTrans);
-	CamLookAtTrans->setPosition(0, 0, 0);
+	CamLookAtTrans->setPosition(0, 2, 0);
 	CamLookAt->SetGOType(GOCamLookAt);
 
 	CameraHolder->addChildObject(MainCam);
@@ -114,7 +112,7 @@ Scene* GetWorldScene()
 	CameraHolder->SetGOScript(new Camera3rdPerson());
 
 	PlayerAndCameraHolder->addChildObject(CameraHolder);
-	PlayerAndCameraHolder->GetTransform()->setPosition(0,8,0);
+	PlayerAndCameraHolder->GetTransform()->setPosition(0, 12, 0);
 	ret_scene->AddGameObjectTree(PlayerAndCameraHolder);
 
 	auto Box = Prefabs::GetReadySkyBox("Skybox", "player_holder");
@@ -123,25 +121,33 @@ Scene* GetWorldScene()
 	auto d_surface = Prefabs::GetReadyDynamicSurface2d("dynamic_surface2d");
 	ret_scene->AddGameObjectTree(d_surface);
 
+	//rotating teapot
+	auto TeapotObj = Prefabs::GetNewRotatingteapot("teapot");
+	TeapotObj->GetTransform()->setPosition(0, 10, 0);
+	ret_scene->AddGameObjectTree(TeapotObj);
+
 	//Add sphere in middle of scen to test specular light
-	GameObject* player_object = Prefabs::GetReadyTeapot("player");
-	PlayerAndCameraHolder->addChildObject(player_object);
+	GameObject* player_go = new GameObject(PlayerAndCameraHolder,"player",nullptr);
+	player_go->GetTransform()->setPosition(0,3,0);
+	GameObject* player_object = Prefabs::GetNewHead("player_head");
+	player_go->addChildObject(player_object);
 	player_object->GetTransform()->setPosition(0, 0, 0);
-	//ret_scene->AddGameObjectTree(player_object);
+
+
+	GameObject* player_object2 = Prefabs::GetNewTorso("player_torso");
+	player_go->addChildObject(player_object2);
+	player_object2->GetTransform()->setPosition(0, -3, 0);
 
 	GameObject* cube2 = Prefabs::GetNewRotatingCube("rotaty");
 	cube2->GetTransform()->setPosition(-3, 3, 0);
 	cube2->GetTransform()->setRotation(30, 30, 30);
 	ret_scene->AddGameObjectTree(cube2);
 
-	auto TeapotObj = Prefabs::GetNewRotatingteapot("teapot");
-	TeapotObj->GetTransform()->setPosition(0, 10, 0);
-	ret_scene->AddGameObjectTree(TeapotObj);
 
-	GameObject* go_tst = new GameObject(nullptr, "testy_monkey", nullptr);
-	go_tst->AttachDrawable(new DrawMonkey());
-	ret_scene->AddGameObjectTree(go_tst);
-	go_tst->GetTransform()->setPosition(0,4,0);
+	//GameObject* go_tst =Prefabs::GetNewHead(
+	
+	//ret_scene->AddGameObjectTree(go_tst);
+	//go_tst->GetTransform()->setPosition(0, 4, 0);
 	return ret_scene;
 }
 
@@ -179,7 +185,6 @@ void Scene::TraverseLightSources()
 void Scene::UpdateTime()
 {
 	DeltaTime = this->SceneTimer.TimeLapseFromLastSampleMillis() / 1000;
-	std::cout << "delta time: " << DeltaTime << std::endl;
 	this->SceneTimer.SampleNow();
 }
 

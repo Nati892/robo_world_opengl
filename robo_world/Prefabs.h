@@ -26,6 +26,8 @@ public:
 	static GameObject* GetReadyDynamicSurface2d(std::string name);
 	static GameObject* GetReadySkyBox( std::string name,std::string FollowObject );
 	static GameObject* GetNewSphere(std::string name);
+	static GameObject* GetNewHead(std::string name);
+	static GameObject* GetNewTorso(std::string name);
 };
 
 

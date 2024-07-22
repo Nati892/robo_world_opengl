@@ -40,6 +40,31 @@ GameObject* Prefabs::GetNewSphere(std::string name)
 	return ret;
 }
 
+GameObject* Prefabs::GetNewHead(std::string name)
+{
+	GameObject* ret = new GameObject(nullptr,name,nullptr);
+	GameObject* ret_child = new GameObject(ret,name,nullptr);
+
+	ret_child->AttachDrawable( new GoDrawble3d("head.obj","metal_texture.jpg"));
+	ret_child->GetTransform()->setRotation(180,90,0);
+	ret_child->GetTransform()->setPosition(0,-9,0);
+	ret_child->GetTransform()->setScale(3,3,3);
+
+	return ret;
+}
+
+GameObject* Prefabs::GetNewTorso(std::string name)
+{
+	GameObject* ret = new GameObject(nullptr, name, nullptr);
+	GameObject* ret_child = new GameObject(ret, name, nullptr);
+
+	ret_child->AttachDrawable(new GoDrawble3d("torst.obj", "metal_texture.jpg"));
+	ret_child->GetTransform()->setScale(3, 3, 3);
+	ret_child->GetTransform()->setPosition(0, -6, 0);
+	ret_child->GetTransform()->setRotation(180, 90, 0);
+	return ret;
+}
+
 GameObject* Prefabs::GetNewRotatingSphere(std::string name)
 {
 	GameObject* ret = nullptr;

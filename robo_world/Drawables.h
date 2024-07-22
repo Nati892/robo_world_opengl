@@ -45,7 +45,25 @@ public:
 class DrawMonkey :public GODrawable
 {
 	std::vector<Vertex>* ModelVector;
+	GLuint model_texture;
 public:
 	void DrawObject();
 	DrawMonkey();
+};
+
+class GoDrawble3d :public GODrawable {
+	std::string obj_model_name;
+	std::string texture_name;
+
+	std::vector<Vertex>* ModelVector;
+
+	std::map<int, GOMaterial> Loaded_Materials;
+	GLuint model_texture;
+
+	bool display_list_initialized = false;
+	GLuint displayList_id = 0;
+	static GLuint id_giver;
+public:
+	void DrawObject();
+	GoDrawble3d(std::string obj_model_name,std::string texture_name);
 };

@@ -35,6 +35,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "tiny_obj_loader.h"
 #include "Loaders.h"
+#include <filesystem>
 
 //macros
 #define LIGHT_SOURCES_NUM 8
@@ -50,6 +51,15 @@ struct GOvec3 {
 		this->y += other.y;
 		this->z += other.z;
 		return *this;
+	}
+
+	bool operator==(GOvec3 other)
+	{
+		return	(
+			this->x == other.x &&
+			this->y == other.y &&
+			this->z == other.z
+			);
 	}
 
 	GOvec3& operator-=(GOvec3 other)
@@ -145,5 +155,16 @@ struct GOvec4 {
 		this->z *= a;
 		this->w *= a;
 		return *this;
+	}
+
+	bool operator==(GOvec4 other)
+	{
+		return	(
+			this->x == other.x &&
+			this->y == other.y &&
+			this->z == other.z &&
+			this->w == other.w
+
+			);
 	}
 };

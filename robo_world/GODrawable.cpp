@@ -29,22 +29,7 @@ void GODrawable::DrawObject()
 
 void GODrawable::SetActiveMat() const
 {
-	float params[4] = { this->AmbientColor.x,this->AmbientColor.y,this->AmbientColor.z,this->AmbientColor.w };
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, params);
-
-	params[0] = this->DiffuseColor.x;
-	params[1] = this->DiffuseColor.y;
-	params[2] = this->DiffuseColor.z;
-	params[3] = this->DiffuseColor.w;
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, params);
-
-	params[0] = this->SpecularColor.x;
-	params[1] = this->SpecularColor.y;
-	params[2] = this->SpecularColor.z;
-	params[3] = this->SpecularColor.w;
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, params);
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, this->Shininess);
+	GOMaterial::SetActiveMaterial(this->material,-1);
 }
 
 GameObject* GODrawable::GetGameObject()
@@ -60,44 +45,72 @@ void GODrawable::SetGameObjectOnce(GameObject* go_head)
 }
 
 void GODrawable::setAmbientColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
-	AmbientColor.x = r;
-	AmbientColor.y = g;
-	AmbientColor.z = b;
-	AmbientColor.w = a;
+	material.AmbientColor.x = r;
+	material.AmbientColor.y = g;
+	material.AmbientColor.z = b;
+	material.AmbientColor.w = a;
 }
 
 void GODrawable::setDiffuseColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
-	DiffuseColor.x = r;
-	DiffuseColor.y = g;
-	DiffuseColor.z = b;
-	DiffuseColor.w = a;
+	material.DiffuseColor.x = r;
+	material.DiffuseColor.y = g;
+	material.DiffuseColor.z = b;
+	material.DiffuseColor.w = a;
 }
 
 void GODrawable::setSpecularColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
-	SpecularColor.x = r;
-	SpecularColor.y = g;
-	SpecularColor.z = b;
-	SpecularColor.w = a;
+	material.SpecularColor.x = r;
+	material.SpecularColor.y = g;
+	material.SpecularColor.z = b;
+	material.SpecularColor.w = a;
 }
 
 void GODrawable::setShininess(GLfloat shininess) {
-	Shininess[0] = shininess;
+	material.Shininess[0] = shininess;
 }
 
 GOvec4 GODrawable::getAmbientColor() {
-	return AmbientColor;
+	return material.AmbientColor;
 }
 
 GOvec4 GODrawable::getDiffuseColor() {
-	return DiffuseColor;
+	return material.DiffuseColor;
 }
 
 GOvec4 GODrawable::getSpecularColor() {
-	return SpecularColor;
+	return material.SpecularColor;
 }
 
 GLfloat GODrawable::getShininess() {
-	return Shininess[0];
+	return material.Shininess[0];
+}
+
+
+void GOMaterial::SetActiveMaterial(GOMaterial mat,int id)
+{
+	static int last_id=-1;
+	if (id != -1 && id == last_id)
+	{
+		return;
+	}
+	last_id = id;
+	float params[4] = { mat.AmbientColor.x,mat.AmbientColor.y,mat.AmbientColor.z,mat.AmbientColor.w };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, params);
+
+	params[0] = mat.DiffuseColor.x;
+	params[1] = mat.DiffuseColor.y;
+	params[2] = mat.DiffuseColor.z;
+	params[3] = mat.DiffuseColor.w;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, params);
+
+	params[0] = mat.SpecularColor.x;
+	params[1] = mat.SpecularColor.y;
+	params[2] = mat.SpecularColor.z;
+	params[3] = mat.SpecularColor.w;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, params);
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat.Shininess);
+
 }
 
 
