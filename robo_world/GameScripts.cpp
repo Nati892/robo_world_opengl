@@ -145,6 +145,10 @@ void Camera3rdPerson::SLoop()
 		movement *= 0.2f;
 		MoveObjectTrans->setPosition(MoveObjectTrans->GetPosition() + movement);
 		CurrDynamicSurfaceScript->UpdatePosition(MoveObjectTrans->GetPosition());
+
+		auto rot = FollowObjectTrans->GetRotation();
+		rot.y = my_trans->GetRotation().y;
+		FollowObjectTrans->setRotation(rot + GOvec3{ 0,90,0 });
 	}
 
 	int x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
@@ -174,12 +178,13 @@ void Camera3rdPerson::SLoop()
 	}
 
 	my_trans->setRotation(total_movement);
-	
-	auto rot = FollowObjectTrans->GetRotation();
-	rot.y = my_trans->GetRotation().y;
-	FollowObjectTrans->setRotation(rot + GOvec3{ 0,90,0 });
 
-	
+	if (!this->ThirdPersonCamera) {
+		auto rot = FollowObjectTrans->GetRotation();
+		rot.y = my_trans->GetRotation().y;
+		FollowObjectTrans->setRotation(rot + GOvec3{ 0,90,0 });
+	}
+
 }
 
 void Camera3rdPerson::SCleanUp()

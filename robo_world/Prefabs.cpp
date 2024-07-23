@@ -42,13 +42,13 @@ GameObject* Prefabs::GetNewSphere(std::string name)
 
 GameObject* Prefabs::GetNewHead(std::string name)
 {
-	GameObject* ret = new GameObject(nullptr,name,nullptr);
-	GameObject* ret_child = new GameObject(ret,name,nullptr);
+	GameObject* ret = new GameObject(nullptr, name, nullptr);
+	GameObject* ret_child = new GameObject(ret, name, nullptr);
 
-	ret_child->AttachDrawable( new GoDrawble3d("head.obj","metal_texture.jpg"));
-	ret_child->GetTransform()->setRotation(180,90,0);
-	ret_child->GetTransform()->setPosition(0,-9,0);
-	ret_child->GetTransform()->setScale(3,3,3);
+	ret_child->AttachDrawable(new GoDrawble3d("head.obj", "metal_texture.jpg"));
+	ret_child->GetTransform()->setRotation(180, 90, 0);
+	ret_child->GetTransform()->setPosition(0, -9, 0);
+	ret_child->GetTransform()->setScale(3, 3, 3);
 
 	return ret;
 }
@@ -58,11 +58,38 @@ GameObject* Prefabs::GetNewTorso(std::string name)
 	GameObject* ret = new GameObject(nullptr, name, nullptr);
 	GameObject* ret_child = new GameObject(ret, name, nullptr);
 
-	ret_child->AttachDrawable(new GoDrawble3d("torst.obj", "metal_texture.jpg"));
+	ret_child->AttachDrawable(new GoDrawble3d("torso.obj", "metal_texture.jpg"));
 	ret_child->GetTransform()->setScale(3, 3, 3);
 	ret_child->GetTransform()->setPosition(0, -6, 0);
 	ret_child->GetTransform()->setRotation(180, 90, 0);
 	return ret;
+}
+
+GameObject* Prefabs::GetNewRobotLeg(std::string name)
+{
+	GameObject* ret = new GameObject(nullptr, name, nullptr);
+	GameObject* ret_child = new GameObject(ret, name, nullptr);
+
+	ret_child->AttachDrawable(new GoDrawble3d("robot_leg.obj", "metal_texture.jpg"));
+	ret_child->GetTransform()->setScale(3, 3, 3);
+	ret_child->GetTransform()->setPosition(0, -6, 0);
+	ret_child->GetTransform()->setRotation(180, 90, 0);
+
+	
+	return ret;
+}
+
+GameObject* Prefabs::GetNewTree1(std::string name)
+{
+	GameObject* go = new GameObject(nullptr,name,nullptr);
+	auto tree_go = Prefabs::GetNewSimpleModel("tree", "realistic_tree.obj",  std::vector<std::string> { "clay_texture.jpg", "surface_board_texture.jpg", "metal_texture.jpg" });
+	//auto tree_go = Prefabs::GetNewSimpleModel("tree", "realistic_tree.obj", "middle.jpg");
+	go->addChildObject(tree_go);
+
+	tree_go->GetTransform()->setPosition(0, 0, 0);
+	tree_go->GetTransform()->setRotation(-90,0,0);
+	go->GetTransform()->setPosition(0,0,15);
+	return go;
 }
 
 GameObject* Prefabs::GetNewRotatingSphere(std::string name)
@@ -166,7 +193,7 @@ GameObject* Prefabs::GetReadyTeapot(std::string name)
 	return cube_obj;
 }
 
-GameObject* Prefabs::GetReadySurface2d(std::string name,std::string texture)
+GameObject* Prefabs::GetReadySurface2d(std::string name, std::string texture)
 {
 	GOTransform* surface2d_trans = new GOTransform();
 	GameObject* surface2d_obj = new GameObject(nullptr, "surface2d", surface2d_trans);
@@ -237,4 +264,22 @@ GameObject* Prefabs::GetReadySkyBox(std::string name, std::string FollowObject)
 }
 
 
+GameObject* Prefabs::GetNewSimpleModel(std::string name, std::string model_name,std::string texture)
+{
+	GameObject* ret = new GameObject(nullptr, name, nullptr);
+	GameObject* ret_child = new GameObject(ret, name, nullptr);
 
+	ret_child->AttachDrawable(new GoDrawble3d(model_name, texture));
+
+	return ret;
+}
+
+GameObject* Prefabs::GetNewSimpleModel(std::string name, std::string model_name, std::vector<std::string> textures)
+{
+	GameObject* ret = new GameObject(nullptr, name, nullptr);
+	GameObject* ret_child = new GameObject(ret, name, nullptr);
+
+	ret_child->AttachDrawable(new GoDrawble3d(model_name,"", textures));
+
+	return ret;
+}

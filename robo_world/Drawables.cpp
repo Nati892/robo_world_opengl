@@ -115,7 +115,7 @@ void DrawSurface2d::DrawObject() {
 
 	glEnd();
 
-	glDisable(GL_TEXTURE_2D);       // Disable texturing
+	//	glDisable(GL_TEXTURE_2D);       // Disable texturing
 }
 
 
@@ -170,7 +170,7 @@ void DrawMonkey::DrawObject()
 		glVertex3fv((float*)(&(vertex.position)));
 	}
 	glEnd();
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 }
 
 void GoDrawble3d::DrawObject()
@@ -183,18 +183,52 @@ void GoDrawble3d::DrawObject()
 	}
 	if (ModelVector == nullptr)
 		return;
-	if (this->model_texture == 0)
+	if (this->model_texture == 0 && texture_name != "")
 	{
 		auto text = TextureLoader::loadTexture(this->texture_name, &(this->model_texture));
+		if (!text)
+		{
+			std::cout << "texture failed" << this->texture_name << std::endl;
+			std::cout << ">>" << this->texture_name << " <|||" << std::endl;
+		}
+		else
+		{
+			std::cout << "texture loaded " << this->texture_name << " <|||" << std::endl;
+			std::cout << " <|||" << std::endl;
+		}
 		if (!text)
 		{
 			this->model_texture = 1;
 		}
 	}
 
+	int index = 0;
+	while (this->texture_names.size() > this->texture_ids.size())
+	{
+		GLuint text_id = 0;
+		auto text = TextureLoader::loadTexture(this->texture_names.at(index), &(text_id));
+		if (!text)
+		{
+			std::cout << "texture failed" << std::endl;
+			std::cout << ">" << this->texture_names.at(index) << " <|||" << std::endl;
+		}
+		else
+		{
+			std::cout << "texture loaded" << this->texture_names.at(index) << std::endl;
+		}
+		texture_ids.push_back(text_id);
+		index++;
+	}
+
+	if (obj_model_name == "realistic_tree.obj")//todo debug point
+	{
+		int a = 1;
+	}
+
 	if (this->display_list_initialized)
 	{
 		glCallList(displayList_id);
+		//std::cout << "calling list of " << this->obj_model_name << std::endl;
 		return;
 	}
 
@@ -202,29 +236,94 @@ void GoDrawble3d::DrawObject()
 	this->displayList_id = glGenLists(1);
 	glNewList(this->displayList_id, GL_COMPILE);
 
-	if (texture_name != "")
+	//if (texture_name != "")
 	{
 		glEnable(GL_TEXTURE_2D);        // Enable texturing
 		glBindTexture(GL_TEXTURE_2D, this->model_texture); // Bind the texture
+		std::cout << "binding " << obj_model_name << " with " << model_texture << std::endl;
 	}
+	//else
+		//if (texture_ids.size() > 0)
+		//{
+		//	glEnable(GL_TEXTURE_2D);        // Enable texturing
+		//}
 	glBegin(GL_TRIANGLES);
+	GLuint CurrentTexture = model_texture;
+	int text_id_size = texture_ids.size();
 	for (const auto& vertex : *ModelVector) {
 		auto mat = Loaded_Materials[vertex.material_id];
-		//GOMaterial::SetActiveMaterial(mat,vertex.material_id);
+		if (text_id_size > vertex.material_id && texture_ids.at(vertex.material_id) != CurrentTexture)
+		{
+			CurrentTexture = texture_ids.at(vertex.material_id);
+			glEnd();
+
+			glBindTexture(GL_TEXTURE_2D, CurrentTexture);
+
+			glBegin(GL_TRIANGLES);
+			std::cout << "binding " << obj_model_name << " with " << CurrentTexture << std::endl;
+		}
+		GOMaterial::SetActiveMaterial(mat, vertex.material_id);
 		glTexCoord2fv((float*)(&(vertex.texCoord)));
 		glNormal3fv((float*)(&(vertex.normal)));
 		glVertex3fv((float*)(&(vertex.position)));
 	}
 	glEnd();
-
-	glDisable(GL_TEXTURE_2D);
 	glEndList();
+			glDisable(GL_TEXTURE_2D);        // Enable texturing
 }
 
-GoDrawble3d::GoDrawble3d(std::string obj_model_name, std::string texture_name)
+GoDrawble3d::GoDrawble3d(std::string obj_model_name, std::string texture_name, std::vector<std::string> mat_textures)
 {
 	std::vector<Vertex>* ret = new std::vector<Vertex>();
 	this->obj_model_name = obj_model_name;
 	this->texture_name = texture_name;
+	this->texture_names = mat_textures;
+
 }
 
+void DrawWheel::DrawObject()
+{
+
+	if (!texture_loaded)
+	{
+		GLuint res = 0;
+		auto texture_res = TextureLoader::loadTexture(this->texture_name, &res);
+		if (texture_res)
+		{
+			this->TextureId = res;
+		}
+		else
+		{
+			std::cout << "error loading texture file:" << texture_name << ", set to default texture 0" << std::endl;
+			this->TextureId = 0;
+		}
+		texture_loaded = true;
+	}
+	glEnable(GL_TEXTURE_2D);        // Enable texturing
+	glBindTexture(GL_TEXTURE_2D, this->TextureId); // Bind the texture
+
+	glutSolidTorus(0.10, 0.20, 20, 20);
+
+	glDisable(GL_TEXTURE_2D);       // Disable texturing
+}
+
+DrawWheel::DrawWheel(std::string texutre_name)
+{
+	this->material.AmbientColor.x = 1;
+	this->material.AmbientColor.y = 1;
+	this->material.AmbientColor.z = 1;
+	this->material.AmbientColor.w = 1;
+
+	this->material.DiffuseColor.x = 1;
+	this->material.DiffuseColor.y = 1;
+	this->material.DiffuseColor.z = 1;
+	this->material.DiffuseColor.w = 1;
+
+	this->material.SpecularColor.x = 1;
+	this->material.SpecularColor.y = 1;
+	this->material.SpecularColor.z = 1;
+	this->material.SpecularColor.w = 1;
+
+	this->material.Shininess[0] = 0;
+	this->texture_name = texutre_name;
+}

@@ -131,8 +131,5 @@
     <ClInclude Include="GoTexture.h">
       <Filter>Header Files\GOComponents_h</Filter>
     </ClInclude>
-    <ClInclude Include="GO3DObj.h">
-      <Filter>Header Files\GOComponents_h</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -315,8 +315,6 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 	glEnable(GL_DEPTH_TEST);  // Enable depth testing for 3D rendering
 	glEnable(GL_LIGHTING);
 	glDepthFunc(GL_LESS);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	glDisable(GL_BLEND);
 }
 

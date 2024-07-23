@@ -28,6 +28,10 @@ public:
 	static GameObject* GetNewSphere(std::string name);
 	static GameObject* GetNewHead(std::string name);
 	static GameObject* GetNewTorso(std::string name);
+	static GameObject* GetNewRobotLeg(std::string name);
+	static GameObject* GetNewSimpleModel(std::string name,std::string model_name,std::string texture);
+	static GameObject* GetNewSimpleModel(std::string name,std::string model_name,std::vector<std::string> texture);
+	static GameObject* GetNewTree1(std::string name);
 };
 
 

@@ -147,7 +147,6 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
-    <ClInclude Include="GO3DObj.h" />
     <ClInclude Include="GOInputSystem.h" />
     <ClInclude Include="GOLightSourceData.h" />
     <ClInclude Include="GOScript.h" />

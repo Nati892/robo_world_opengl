@@ -11,15 +11,22 @@ public:
 	DrawCube();
 };
 
-
-
-
 class DrawSphere :public GODrawable
 {
 
 public:
 	void DrawObject();
 	DrawSphere();
+};
+
+class DrawWheel :public GODrawable
+{
+	bool texture_loaded = false;
+	GLuint TextureId;
+	std::string texture_name;
+public:
+	void DrawObject();
+	DrawWheel(std::string texture);
 };
 
 class DrawTeapot :public GODrawable
@@ -30,7 +37,7 @@ public:
 	DrawTeapot();
 };
 
-class DrawSurface2d : public GODrawable 
+class DrawSurface2d : public GODrawable
 {
 
 private:
@@ -63,7 +70,9 @@ class GoDrawble3d :public GODrawable {
 	bool display_list_initialized = false;
 	GLuint displayList_id = 0;
 	static GLuint id_giver;
+	std::vector<std::string> texture_names;
+	std::vector<GLuint> texture_ids;
 public:
 	void DrawObject();
-	GoDrawble3d(std::string obj_model_name,std::string texture_name);
+	GoDrawble3d(std::string obj_model_name, std::string texture_name,std::vector<std::string> mat_textures=std::vector<std::string>());
 };
