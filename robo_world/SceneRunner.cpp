@@ -159,6 +159,11 @@ void SceneRunner::LoopScene()
 				param[0] = ls_data->_exponent;
 				glLightfv(curr_light_source_num, GL_SPOT_EXPONENT, param);
 
+				in_arr[0] = ls_data->_spot_direction.x;
+				in_arr[1] = ls_data->_spot_direction.y;
+				in_arr[2] = ls_data->_spot_direction.z;
+				glLightfv(curr_light_source_num, GL_SPOT_DIRECTION, in_arr);
+
 				break;
 
 			}

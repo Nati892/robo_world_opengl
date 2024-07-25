@@ -88,6 +88,8 @@ Scene* GetWorldScene()
 	LightsHolder->addChildObject(light2);
 	LightsHolder->addChildObject(light3);
 
+	light2->GetTransform()->setPosition(10,10,10);
+
 	GameObject* PlayerAndCameraHolder = new GameObject(nullptr, "player_holder", nullptr);
 
 	//add cam object

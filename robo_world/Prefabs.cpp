@@ -209,7 +209,9 @@ GameObject* Prefabs::GetReadySpecularLightSource(std::string name)
 	auto ldata = ret->GetLightSourceData();
 	ldata->_light_ambient = { 0,0,0,1 };
 	ldata->_light_diffuse = { 0,0,0,1 };
-	ldata->_light_specular = { 0.6,0.6,0.6,1 };
+	ldata->_light_specular = { 1,1,1,1 };
+	ldata->_exponent = 3;
+	ldata->_spot_direction = { -1, -1, -1 };
 	return ret;
 }
 
