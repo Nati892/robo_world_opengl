@@ -23,6 +23,49 @@ GameObject* Prefabs::GetNewRotatingCube(std::string name)
 	return ret;
 }
 
+GameObject* Prefabs::GetNewRobot(std::string name)
+{
+	GameObject* player_go = new GameObject(nullptr, name, nullptr);
+	GameObject* player_object = Prefabs::GetNewHead("player_head");
+	player_go->addChildObject(player_object);
+	player_object->GetTransform()->setPosition(0, -1, 0);
+
+	GameObject* player_torso = Prefabs::GetNewTorso("player_torso");
+	player_go->addChildObject(player_torso);
+	player_torso->GetTransform()->setPosition(0, -3, 0);
+
+	GameObject* WheelsHolder = new GameObject(player_go, "wheels_holder", nullptr);
+	WheelsHolder->GetTransform()->setPosition(-0.5, -4.7, 0);
+	auto scripty = new BasicAxisRotateScript();
+	scripty->SetRotationAxis(axis_z);
+	WheelsHolder->AttachScript(scripty);
+
+	//create and add left wheel to holder
+	auto wheel = Prefabs::GetNewWheel("left_wheel");
+	wheel->GetTransform()->setRotation(0, 90, 0);
+	wheel->GetTransform()->setPosition(0, 0, -0.8);
+	WheelsHolder->addChildObject(wheel);
+
+	//create and add right wheel to holder
+	wheel = Prefabs::GetNewWheel("right_wheel");
+	WheelsHolder->addChildObject(wheel);
+	wheel->GetTransform()->setRotation(0, 270, 0);
+	wheel->GetTransform()->setPosition(0, 0, 0.8);
+
+	//create and add arms
+	GameObject* right_hand_holder = new GameObject(player_go, "robot_right_arm_holder", nullptr);
+
+	auto right_hand = Prefabs::GetNewRobotArm("right_hand");
+
+	right_hand_holder->addChildObject(right_hand);
+	right_hand_holder->GetTransform()->setPosition(-0.3, -2.3, 1.3);
+	right_hand_holder->GetTransform()->setRotation(90, 0, 0);
+	right_hand_holder->GetTransform()->setScale(1, 1, -1);
+
+	return player_go;
+}
+
+
 GameObject* Prefabs::GetNewSphere(std::string name)
 {
 	GameObject* ret = nullptr;
@@ -47,7 +90,7 @@ GameObject* Prefabs::GetNewHead(std::string name)
 
 	ret_child->AttachDrawable(new GoDrawble3d("head.obj", "metal_texture.jpg"));
 	ret_child->GetTransform()->setRotation(180, 90, 0);
-	ret_child->GetTransform()->setPosition(0, -9, 0);
+	ret_child->GetTransform()->setPosition(0, -8, 0);
 	ret_child->GetTransform()->setScale(3, 3, 3);
 
 	return ret;
@@ -58,37 +101,50 @@ GameObject* Prefabs::GetNewTorso(std::string name)
 	GameObject* ret = new GameObject(nullptr, name, nullptr);
 	GameObject* ret_child = new GameObject(ret, name, nullptr);
 
-	ret_child->AttachDrawable(new GoDrawble3d("torso.obj", "metal_texture.jpg"));
+	ret_child->AttachDrawable(new GoDrawble3d("torso.obj", "metal_texture2.jpg"));
 	ret_child->GetTransform()->setScale(3, 3, 3);
 	ret_child->GetTransform()->setPosition(0, -6, 0);
 	ret_child->GetTransform()->setRotation(180, 90, 0);
 	return ret;
 }
 
-GameObject* Prefabs::GetNewRobotLeg(std::string name)
+GameObject* Prefabs::GetNewRobotArm(std::string name)
 {
-	GameObject* ret = new GameObject(nullptr, name, nullptr);
-	GameObject* ret_child = new GameObject(ret, name, nullptr);
+	//hand_holder<-arm<-forarm<-hand
+	GameObject* hand_holder = new GameObject(nullptr, name);
+	GameObject* hand_holder2 = new GameObject(hand_holder, "hand_fix_transform");
 
-	ret_child->AttachDrawable(new GoDrawble3d("robot_leg.obj", "metal_texture.jpg"));
-	ret_child->GetTransform()->setScale(3, 3, 3);
-	ret_child->GetTransform()->setPosition(0, -6, 0);
-	ret_child->GetTransform()->setRotation(180, 90, 0);
+	GameObject* arm_go = Prefabs::GetNewSimpleModel("left_robot_arm", "robot_arm.obj", "");
+	GameObject* forarm_go = Prefabs::GetNewSimpleModel("left_robot_arm", "robot_forarm.obj", "metal_texture.jpg");
+	GameObject* hand_go = Prefabs::GetNewSimpleModel("left_robot_arm", "robot_hand.obj", "metal_texture.jpg");
 
-	
-	return ret;
+	forarm_go->GetTransform()->setPosition(-0.575, 0, 0);
+	hand_go->GetTransform()->setPosition(-0.63, 0, 0.04);
+	hand_holder2->GetTransform()->setScale(-1, 1, 1);
+
+	hand_holder2->addChildObject(arm_go);
+	arm_go->addChildObject(forarm_go);
+	forarm_go->addChildObject(hand_go);
+
+	return hand_holder;
 }
 
-GameObject* Prefabs::GetNewTree1(std::string name)
+
+GameObject* Prefabs::GetNewRandomTree(std::string name)
 {
-	GameObject* go = new GameObject(nullptr,name,nullptr);
-	auto tree_go = Prefabs::GetNewSimpleModel("tree", "realistic_tree.obj",  std::vector<std::string> { "clay_texture.jpg", "surface_board_texture.jpg", "metal_texture.jpg" });
-	//auto tree_go = Prefabs::GetNewSimpleModel("tree", "realistic_tree.obj", "middle.jpg");
+	GameObject* go = new GameObject(nullptr, name, nullptr);
+
+	int randomIndex = (rand() % 6) + 1;//pick tree bark
+	randomIndex = 1;
+	std::string tree_bark_texture = "tree_bark_texture" + std::to_string(randomIndex) + ".jpg";
+
+	randomIndex = (rand() % 8) + 1;//pick tree bark
+	randomIndex = 1;
+	std::string tree_l_texture = "tree_l_texture" + std::to_string(randomIndex) + ".jpg";
+
+	auto tree_go = Prefabs::GetNewSimpleModel("tree", "tree1.obj", std::vector<std::string> { tree_bark_texture, tree_l_texture });
 	go->addChildObject(tree_go);
 
-	tree_go->GetTransform()->setPosition(0, 0, 0);
-	tree_go->GetTransform()->setRotation(-90,0,0);
-	go->GetTransform()->setPosition(0,0,15);
 	return go;
 }
 
@@ -264,13 +320,23 @@ GameObject* Prefabs::GetReadySkyBox(std::string name, std::string FollowObject)
 }
 
 
-GameObject* Prefabs::GetNewSimpleModel(std::string name, std::string model_name,std::string texture)
+GameObject* Prefabs::GetNewMushroom(std::string name)
+{
+	GameObject* go = new GameObject(nullptr, name, nullptr);
+	auto muhs_obj = Prefabs::GetNewSimpleModel(name, "mushroom1.obj", "mushroom_texture.jpg");
+	go->addChildObject(muhs_obj);
+
+	muhs_obj->GetTransform()->setPosition(5, 0.4, 5);
+	muhs_obj->GetTransform()->setRotation(-90, 0, 0);
+	return go;
+}
+
+GameObject* Prefabs::GetNewSimpleModel(std::string name, std::string model_name, std::string texture)
 {
 	GameObject* ret = new GameObject(nullptr, name, nullptr);
 	GameObject* ret_child = new GameObject(ret, name, nullptr);
 
 	ret_child->AttachDrawable(new GoDrawble3d(model_name, texture));
-
 	return ret;
 }
 
@@ -279,7 +345,12 @@ GameObject* Prefabs::GetNewSimpleModel(std::string name, std::string model_name,
 	GameObject* ret = new GameObject(nullptr, name, nullptr);
 	GameObject* ret_child = new GameObject(ret, name, nullptr);
 
-	ret_child->AttachDrawable(new GoDrawble3d(model_name,"", textures));
-
+	ret_child->AttachDrawable(new GoDrawble3d(model_name, "", textures));
 	return ret;
+}
+
+GameObject* Prefabs::GetNewWheel(std::string name)
+{
+	auto obj = Prefabs::GetNewSimpleModel(name, "wheel.obj", "metal_texture.jpg");
+	return obj;
 }

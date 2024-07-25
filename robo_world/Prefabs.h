@@ -26,12 +26,17 @@ public:
 	static GameObject* GetReadyDynamicSurface2d(std::string name);
 	static GameObject* GetReadySkyBox( std::string name,std::string FollowObject );
 	static GameObject* GetNewSphere(std::string name);
+
+	static GameObject* GetNewRobot(std::string name);
 	static GameObject* GetNewHead(std::string name);
 	static GameObject* GetNewTorso(std::string name);
-	static GameObject* GetNewRobotLeg(std::string name);
+	static GameObject* GetNewRobotArm(std::string name);
+
 	static GameObject* GetNewSimpleModel(std::string name,std::string model_name,std::string texture);
 	static GameObject* GetNewSimpleModel(std::string name,std::string model_name,std::vector<std::string> texture);
-	static GameObject* GetNewTree1(std::string name);
+	static GameObject* GetNewMushroom(std::string name);
+	static GameObject* GetNewRandomTree(std::string name);
+	static GameObject* GetNewWheel(std::string name);
 };
 
 

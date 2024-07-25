@@ -252,7 +252,7 @@ void GoDrawble3d::DrawObject()
 	int text_id_size = texture_ids.size();
 	for (const auto& vertex : *ModelVector) {
 		auto mat = Loaded_Materials[vertex.material_id];
-		if (text_id_size > vertex.material_id && texture_ids.at(vertex.material_id) != CurrentTexture)
+		if (text_id_size > vertex.material_id&& vertex.material_id>=0 && texture_ids.at(vertex.material_id) != CurrentTexture)
 		{
 			CurrentTexture = texture_ids.at(vertex.material_id);
 			glEnd();

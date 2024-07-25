@@ -121,46 +121,13 @@ Scene* GetWorldScene()
 	auto d_surface = Prefabs::GetReadyDynamicSurface2d("dynamic_surface2d");
 	ret_scene->AddGameObjectTree(d_surface);
 
-	////rotating teapot
-	//auto TeapotObj = Prefabs::GetNewRotatingteapot("teapot");
-	//TeapotObj->GetTransform()->setPosition(0, 10, 0);
-	//ret_scene->AddGameObjectTree(TeapotObj);
+	auto robo_obj = Prefabs::GetNewRobot("player");
+	PlayerAndCameraHolder->addChildObject(robo_obj);
 
-	//Add sphere in middle of scen to test specular light
-	GameObject* player_go = new GameObject(PlayerAndCameraHolder, "player", nullptr);
-	player_go->GetTransform()->setPosition(0, 5, 0);
-	GameObject* player_object = Prefabs::GetNewHead("player_head");
-	player_go->addChildObject(player_object);
-	player_object->GetTransform()->setPosition(0, 0, 0);
+	auto tree_ob1 = Prefabs::GetNewRandomTree("tree1");
 
-
-	GameObject* player_torso = Prefabs::GetNewTorso("player_torso");
-	player_go->addChildObject(player_torso);
-	player_torso->GetTransform()->setPosition(0, -3, 0);
-
-	for (int i = 0; i < 0; i++)
-	{
-		GameObject* player_torso1 = Prefabs::GetNewTorso("player_torso");
-		ret_scene->AddGameObjectTree(player_torso1);
-		player_torso1->GetTransform()->setPosition(i * 2, i * 2, i * 2); player_torso1->AttachScript(new BasicAxisRotateScript());
-	}
-
-	GameObject* player_leg_left = Prefabs::GetNewRobotLeg("player_leg_left");
-	player_go->addChildObject(player_leg_left);
-	player_leg_left->GetTransform()->setPosition(0, -3, 0);
-
-	GameObject* player_leg_right = Prefabs::GetNewRobotLeg("player_leg_left");
-	player_go->addChildObject(player_leg_right);
-	player_leg_right->GetTransform()->setPosition(0, -3, -1.5);
-
-	/*GameObject* cube2 = Prefabs::GetNewRotatingCube("rotaty");
-	cube2->GetTransform()->setPosition(-3, 3, 0);
-	cube2->GetTransform()->setRotation(30, 30, 30);
-	ret_scene->AddGameObjectTree(cube2);*/
-
-
-	auto tree_ob1 = Prefabs::GetNewTree1("tree1");
-	ret_scene->AddGameObjectTree(tree_ob1);
+	auto mush = Prefabs::GetNewMushroom("mushy");
+	ret_scene->AddGameObjectTree(mush);
 
 	return ret_scene;
 }
