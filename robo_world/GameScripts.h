@@ -52,6 +52,7 @@ private:
 	float speed;
 	bool ThirdPersonCamera = true;// input #1
 	void SSetup(Scene* CurrScene);
+	bool lock_mouse = false;
 public:
 	//virtual inherited
 	void SLoop();

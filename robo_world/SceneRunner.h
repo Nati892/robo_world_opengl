@@ -11,7 +11,7 @@
 
 static int x_last;
 static int y_last;
-
+static bool lock_mouse;
 class SceneRunner {
 private:
 	//window sizing and aspect ration
@@ -42,7 +42,6 @@ private:
 	void LoopScene();
 
 	//glut callbacks
-
 	static SceneRunner* CurrentRegisteredSceneRunner;
 	static void DisplayCallback();
 	static void ReshapeCallback(int w, int h);

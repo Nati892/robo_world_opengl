@@ -43,6 +43,42 @@ void SceneRunner::LoopScene()
 	if (currentScene == nullptr)
 		return;
 
+	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplGLUT_NewFrame();
+	ImGuiIO& io = ImGui::GetIO();
+	io.DisplaySize.x = 1600;
+	io.DisplaySize.y = 900;
+
+	bool show_demo_window = true;
+	bool show_another_window = true;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	ImGui::NewFrame();
+	//ImGuiIO& io = ImGui::GetIO();
+	{
+
+		static float f = 0.0f;
+		static int counter = 0;
+
+		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+		ImGui::Checkbox("Another Window", &show_another_window);
+
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+			counter++;
+		ImGui::SameLine();
+		ImGui::Text("counter = %d", counter);
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+		ImGui::End();
+	}
+
+	ImGui::Render();
+	glViewport(0, 0, (GLsizei)io.DisplaySize.x, (GLsizei)io.DisplaySize.y);
 	currentScene->UpdateTime();
 
 	//run scripts
@@ -181,7 +217,11 @@ void SceneRunner::LoopScene()
 	}
 	else
 	{
+
 	}
+
+	//draw gui
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 }
 
 //Redraw callback
@@ -212,33 +252,36 @@ void SceneRunner::ReshapeCallback(int w, int h)
 //Mouse events
 void SceneRunner::MouseEventCallback(int button, int state, int x, int y)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureKeyboard)
+	{
+		ImGui_ImplGLUT_MouseFunc(button,state,x, y);
+		return;
+	}
 	if (state == 0 || CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
 
 	auto input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
 
-	//float converted_x = ((float)x - ((float)CurrentRegisteredSceneRunner->currentWindowWidth - (float)CurrentRegisteredSceneRunner->CurrentSceneWidth) / 2) / (float)CurrentRegisteredSceneRunner->CurrentSceneWidth;
-	//float converted_y = 1.0f - (((float)y - ((float)CurrentRegisteredSceneRunner->currentWindowHeight - (float)CurrentRegisteredSceneRunner->CurrentSceneHeight) / 2) / (float)CurrentRegisteredSceneRunner->CurrentSceneHeight);
-
-	if (state == GLUT_UP)
-	{
-		//input_sys->EnterMouseButtonUp(button);
-	}
-	else
-	{
-		//input_sys->EnterMouseButtonDown(button);
-	}
 }
 
 void SceneRunner::MouseMotionCallback(int x, int y)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureKeyboard)
+	{
+		ImGui_ImplGLUT_MotionFunc(x, y);
+		return;
+	}
 	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
 
 	int x_motion = x - CurrentRegisteredSceneRunner->currentWindowWidth / 2;
 
 	int y_motion = y - CurrentRegisteredSceneRunner->currentWindowHeight / 2;
-	glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
+	if (lock_mouse) {
+		glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
+	}
 
 	GOInputSystem* input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
 
@@ -248,15 +291,21 @@ void SceneRunner::MouseMotionCallback(int x, int y)
 
 void SceneRunner::MousePassiveMotionCallback(int x, int y)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureKeyboard)
+	{
+		ImGui_ImplGLUT_MotionFunc(x, y);
+		return;
+	}
 	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
-
 
 	int x_motion = x - CurrentRegisteredSceneRunner->currentWindowWidth / 2;
 
 	int y_motion = y - CurrentRegisteredSceneRunner->currentWindowHeight / 2;
-	glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
-
+	if (lock_mouse) {
+		glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
+	}
 	GOInputSystem* input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
 
 	input_sys->EnterAxisMovement(GOInputSystem::axis::X_AXIS, x_motion);
@@ -266,9 +315,29 @@ void SceneRunner::MousePassiveMotionCallback(int x, int y)
 //Keybard events
 void SceneRunner::KeyboardEventCallback(unsigned char c, int x, int y)
 {
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureKeyboard) 
+	{
+		ImGui_ImplGLUT_KeyboardFunc(c,x,y);
+		return;
+	}
+
+
 	if (CurrentRegisteredSceneRunner == nullptr)
 		return;
 
+	if (c == 'e' || c == 'E')
+	{
+		lock_mouse = !lock_mouse;
+		if (lock_mouse)
+		{
+			glutSetCursor(GLUT_CURSOR_NONE);
+		}
+		else
+		{
+			glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+		}
+	}
 	CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem()->EnterCharInput(c, true);
 }
 
@@ -294,19 +363,36 @@ SceneRunner::~SceneRunner()
 
 void SceneRunner::SceneRunnerInit(int argc, char** argv)
 {
+	lock_mouse = true;
 	//call init on glut
 	glutInit(&argc, argv);
 
 	//window stuff
-	CurrentSceneWidth = 1920;
-	CurrentSceneHeight = 1080;
+	CurrentSceneWidth = 1600;
+	CurrentSceneHeight = 900;
 	currentWindowWidth = CurrentSceneWidth;
 	currentWindowHeight = CurrentSceneHeight;
 
 	AspectRatioNumerator = CurrentSceneWidth / std::_Gcd(CurrentSceneWidth, CurrentSceneHeight);
 	AspectRatioDenominator = CurrentSceneHeight / std::_Gcd(CurrentSceneWidth, CurrentSceneHeight);
 
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+
+	//imgui init
+	if (!IMGUI_CHECKVERSION())
+	{
+		std::cout << "imgui is not supported! for some reason..." << std::endl;
+		return;
+	}
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	ImGui::StyleColorsDark();
+	ImGui_ImplGLUT_Init();
+	ImGui_ImplOpenGL2_Init();
+	ImGui_ImplGLUT_InstallFuncs();
+
+	//glut window
 	glutInitWindowSize(CurrentSceneWidth, CurrentSceneHeight);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(MY_HEADER);
@@ -315,7 +401,6 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 	{
 		currentScene->StartScene();
 	}
-	glutSetCursor(GLUT_CURSOR_NONE);
 
 	glEnable(GL_DEPTH_TEST);  // Enable depth testing for 3D rendering
 	glEnable(GL_LIGHTING);
@@ -344,6 +429,12 @@ bool SceneRunner::RunScene(int argc, char** argv, Scene* scene_to_run)
 	this->SceneRunnerInit(argc, argv);
 	this->SetEvents();
 	glutMainLoop();
+
+	//cleanup imgui
+	ImGui_ImplOpenGL2_Shutdown();
+	ImGui_ImplGLUT_Shutdown();
+	ImGui::DestroyContext();
+
 	return true;
 }
 

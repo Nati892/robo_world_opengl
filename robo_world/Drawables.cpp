@@ -220,15 +220,9 @@ void GoDrawble3d::DrawObject()
 		index++;
 	}
 
-	if (obj_model_name == "realistic_tree.obj")//todo debug point
-	{
-		int a = 1;
-	}
-
 	if (this->display_list_initialized)
 	{
 		glCallList(displayList_id);
-		//std::cout << "calling list of " << this->obj_model_name << std::endl;
 		return;
 	}
 
@@ -236,17 +230,12 @@ void GoDrawble3d::DrawObject()
 	this->displayList_id = glGenLists(1);
 	glNewList(this->displayList_id, GL_COMPILE);
 
-	//if (texture_name != "")
 	{
 		glEnable(GL_TEXTURE_2D);        // Enable texturing
 		glBindTexture(GL_TEXTURE_2D, this->model_texture); // Bind the texture
 		std::cout << "binding " << obj_model_name << " with " << model_texture << std::endl;
 	}
-	//else
-		//if (texture_ids.size() > 0)
-		//{
-		//	glEnable(GL_TEXTURE_2D);        // Enable texturing
-		//}
+
 	glBegin(GL_TRIANGLES);
 	GLuint CurrentTexture = model_texture;
 	int text_id_size = texture_ids.size();

@@ -7,8 +7,8 @@
 //Adding this like renia asked for cross platform support
 #ifdef _WIN32
 
-#include "glut.h"
-#pragma comment(lib, "glut32.lib")
+#include <GL/freeglut.h>
+#pragma comment(lib, "freeglut.lib")
 
 #else
 
@@ -36,6 +36,10 @@
 #include "tiny_obj_loader.h"
 #include "Loaders.h"
 #include <filesystem>
+#include "imgui.h"
+#include "imgui_impl_glut.h"
+#include "imgui_impl_opengl2.h"
+
 
 //macros
 #define LIGHT_SOURCES_NUM 8
