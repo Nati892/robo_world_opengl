@@ -7,7 +7,7 @@ struct GOMaterial
 	GOvec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
 	GOvec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
 	GLfloat Shininess[1] = { 0 }; // Shininess factor
-	static void SetActiveMaterial(GOMaterial,int);
+	static void SetActiveMaterial(GOMaterial, int);
 
 	bool operator==(GOMaterial other)
 	{

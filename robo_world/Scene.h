@@ -8,6 +8,7 @@
 #include "GameScripts.h"
 #include "Prefabs.h"
 #include "GOInputSystem.h"
+#include "GameGUI.h"
 
 class Scene
 {
@@ -17,6 +18,7 @@ private:
 	GameObject* SceneMasterParent=nullptr;
 	GameObject* LightSourcesArray[LIGHT_SOURCES_NUM] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	GOInputSystem* SceneInputSystem = nullptr;
+	std::vector<GOGuiWindow*> gui_windows;
 public:
 	Scene();
 	~Scene();
@@ -37,7 +39,10 @@ public:
 	/// </summary>
 	/// <returns> a list of all the special game objects found in scene</returns>
 	std::vector<GameObject*> GetSpecialGameObjects();
-
+	std::vector<GOGuiWindow*> GetGuiWindows();
+	void SetGuiWindows(std::vector<GOGuiWindow*>);
+	void AddGuiWindow(GOGuiWindow* new_win);
+	void RemoveGuiWindow(GOGuiWindow* new_win);
 	GOInputSystem* GetSceneInputSystem();
 	float GetDeltaTime();
 };

@@ -110,7 +110,6 @@ void GOMaterial::SetActiveMaterial(GOMaterial mat,int id)
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, params);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat.Shininess);
-
 }
 
 

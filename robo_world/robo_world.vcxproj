@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Drawables.cpp" />
+    <ClCompile Include="GameGUI.cpp" />
     <ClCompile Include="GameScripts.cpp" />
     <ClCompile Include="GOInputSystem.cpp" />
     <ClCompile Include="GOScript.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="tiny_obj_loader.cc" />
+    <ClInclude Include="GameGUI.h" />
     <ClInclude Include="GOInputSystem.h" />
     <ClInclude Include="GOLightSourceData.h" />
     <ClInclude Include="GOScript.h" />

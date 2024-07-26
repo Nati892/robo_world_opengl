@@ -88,7 +88,7 @@ Scene* GetWorldScene()
 	LightsHolder->addChildObject(light2);
 	LightsHolder->addChildObject(light3);
 
-	light2->GetTransform()->setPosition(10,10,10);
+	light2->GetTransform()->setPosition(10, 10, 10);
 
 	GameObject* PlayerAndCameraHolder = new GameObject(nullptr, "player_holder", nullptr);
 
@@ -131,6 +131,8 @@ Scene* GetWorldScene()
 	auto mush = Prefabs::GetNewMushroom("mushy");
 	ret_scene->AddGameObjectTree(mush);
 
+	ret_scene->AddGuiWindow(new MainGuiWinodw());
+
 	return ret_scene;
 }
 
@@ -149,6 +151,33 @@ GameObject* Scene::FindObjectByName(std::string object_name)
 GOInputSystem* Scene::GetSceneInputSystem()
 {
 	return this->SceneInputSystem;
+}
+
+std::vector<GOGuiWindow*> Scene::GetGuiWindows()
+{
+	return this->gui_windows;
+}
+
+void Scene::AddGuiWindow(GOGuiWindow* new_win)
+{
+	this->gui_windows.push_back(new_win);
+}
+
+void Scene::RemoveGuiWindow(GOGuiWindow* new_win)
+{
+	auto it = std::find(this->gui_windows.begin(), this->gui_windows.end(),
+		new_win);
+
+	// If element is found found, erase it 
+	if (it != this->gui_windows.end()) {
+		it[0]->CleanUp();
+		this->gui_windows.erase(it);
+	}
+}
+
+void Scene::SetGuiWindows(std::vector<GOGuiWindow*> new_windows)
+{
+	this->gui_windows = new_windows;
 }
 
 float Scene::GetDeltaTime()

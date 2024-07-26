@@ -28,6 +28,9 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{3fd617f7-5ef6-4b12-97ce-979067acedcf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{fbf95fc1-d2b8-43a9-b99d-e82fea52a018}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="include\imgui\imgui_tables.cpp">
       <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameGUI.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="include\imgui\imconfig.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGUI.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

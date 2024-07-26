@@ -183,6 +183,7 @@ void GoDrawble3d::DrawObject()
 	}
 	if (ModelVector == nullptr)
 		return;
+
 	if (this->model_texture == 0 && texture_name != "")
 	{
 		auto text = TextureLoader::loadTexture(this->texture_name, &(this->model_texture));
@@ -190,15 +191,13 @@ void GoDrawble3d::DrawObject()
 		{
 			std::cout << "texture failed" << this->texture_name << std::endl;
 			std::cout << ">>" << this->texture_name << " <|||" << std::endl;
+			this->hasTexture = false;
 		}
 		else
 		{
 			std::cout << "texture loaded " << this->texture_name << " <|||" << std::endl;
 			std::cout << " <|||" << std::endl;
-		}
-		if (!text)
-		{
-			this->model_texture = 1;
+			this->hasTexture = true;
 		}
 	}
 
@@ -216,7 +215,7 @@ void GoDrawble3d::DrawObject()
 		{
 			std::cout << "texture loaded" << this->texture_names.at(index) << std::endl;
 		}
-		texture_ids.push_back(text_id);
+		texture_ids.push_back(std::pair<bool, GLuint>{text, text_id});
 		index++;
 	}
 
@@ -230,10 +229,23 @@ void GoDrawble3d::DrawObject()
 	this->displayList_id = glGenLists(1);
 	glNewList(this->displayList_id, GL_COMPILE);
 
+	if (texture_ids.size() <= 0 && !this->hasTexture)
+	{
+		glDisable(GL_TEXTURE_2D);        // Enable texturing
+	}
+	else
 	{
 		glEnable(GL_TEXTURE_2D);        // Enable texturing
+	}
+	if (this->hasTexture)
+	{
 		glBindTexture(GL_TEXTURE_2D, this->model_texture); // Bind the texture
-		std::cout << "binding " << obj_model_name << " with " << model_texture << std::endl;
+	}
+	std::cout << "binding " << obj_model_name << " with " << model_texture << std::endl;
+
+	if (Loaded_Materials.size() > 0)
+	{
+		glEnable(GL_COLOR_MATERIAL);
 	}
 
 	glBegin(GL_TRIANGLES);
@@ -241,9 +253,9 @@ void GoDrawble3d::DrawObject()
 	int text_id_size = texture_ids.size();
 	for (const auto& vertex : *ModelVector) {
 		auto mat = Loaded_Materials[vertex.material_id];
-		if (text_id_size > vertex.material_id&& vertex.material_id>=0 && texture_ids.at(vertex.material_id) != CurrentTexture)
+		if (text_id_size > vertex.material_id && vertex.material_id >= 0 && texture_ids.at(vertex.material_id).second != CurrentTexture && texture_ids.at(vertex.material_id).first)
 		{
-			CurrentTexture = texture_ids.at(vertex.material_id);
+			CurrentTexture = texture_ids.at(vertex.material_id).second;
 			glEnd();
 
 			glBindTexture(GL_TEXTURE_2D, CurrentTexture);
@@ -251,14 +263,16 @@ void GoDrawble3d::DrawObject()
 			glBegin(GL_TRIANGLES);
 			std::cout << "binding " << obj_model_name << " with " << CurrentTexture << std::endl;
 		}
-		GOMaterial::SetActiveMaterial(mat, vertex.material_id);
+
+		GOMaterial::SetActiveMaterial(mat, vertex.material_id);////todo: can be optimized further
+
 		glTexCoord2fv((float*)(&(vertex.texCoord)));
 		glNormal3fv((float*)(&(vertex.normal)));
 		glVertex3fv((float*)(&(vertex.position)));
 	}
 	glEnd();
 	glEndList();
-			glDisable(GL_TEXTURE_2D);        // Enable texturing
+	glDisable(GL_TEXTURE_2D);        // Enable texturing
 }
 
 GoDrawble3d::GoDrawble3d(std::string obj_model_name, std::string texture_name, std::vector<std::string> mat_textures)
@@ -267,7 +281,6 @@ GoDrawble3d::GoDrawble3d(std::string obj_model_name, std::string texture_name, s
 	this->obj_model_name = obj_model_name;
 	this->texture_name = texture_name;
 	this->texture_names = mat_textures;
-
 }
 
 void DrawWheel::DrawObject()

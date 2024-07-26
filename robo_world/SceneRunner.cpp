@@ -43,38 +43,21 @@ void SceneRunner::LoopScene()
 	if (currentScene == nullptr)
 		return;
 
+	//run scnee gui
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplGLUT_NewFrame();
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize.x = 1600;
 	io.DisplaySize.y = 900;
 
-	bool show_demo_window = true;
-	bool show_another_window = true;
+	//static bool show_demo_window = true;
+	//static bool show_another_window = true;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
 	ImGui::NewFrame();
-	//ImGuiIO& io = ImGui::GetIO();
+	for (auto win : currentScene->GetGuiWindows())
 	{
-
-		static float f = 0.0f;
-		static int counter = 0;
-
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &show_another_window);
-
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
-
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
+		win->ShowGUI(currentScene);
 	}
 
 	ImGui::Render();
@@ -253,11 +236,12 @@ void SceneRunner::ReshapeCallback(int w, int h)
 void SceneRunner::MouseEventCallback(int button, int state, int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplGLUT_MouseFunc(button, state, x, y);
 	if (io.WantCaptureKeyboard)
 	{
-		ImGui_ImplGLUT_MouseFunc(button,state,x, y);
 		return;
 	}
+
 	if (state == 0 || CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
 
@@ -268,9 +252,9 @@ void SceneRunner::MouseEventCallback(int button, int state, int x, int y)
 void SceneRunner::MouseMotionCallback(int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplGLUT_MotionFunc(x, y);
 	if (io.WantCaptureKeyboard)
 	{
-		ImGui_ImplGLUT_MotionFunc(x, y);
 		return;
 	}
 	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
@@ -292,9 +276,9 @@ void SceneRunner::MouseMotionCallback(int x, int y)
 void SceneRunner::MousePassiveMotionCallback(int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplGLUT_MotionFunc(x, y);
 	if (io.WantCaptureKeyboard)
 	{
-		ImGui_ImplGLUT_MotionFunc(x, y);
 		return;
 	}
 	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
@@ -316,9 +300,9 @@ void SceneRunner::MousePassiveMotionCallback(int x, int y)
 void SceneRunner::KeyboardEventCallback(unsigned char c, int x, int y)
 {
 	ImGuiIO& io = ImGui::GetIO();
-	if (io.WantCaptureKeyboard) 
+	ImGui_ImplGLUT_KeyboardFunc(c, x, y);
+	if (io.WantCaptureKeyboard)
 	{
-		ImGui_ImplGLUT_KeyboardFunc(c,x,y);
 		return;
 	}
 
@@ -404,6 +388,7 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 
 	glEnable(GL_DEPTH_TEST);  // Enable depth testing for 3D rendering
 	glEnable(GL_LIGHTING);
+	glShadeModel(GL_SMOOTH);
 	glDepthFunc(GL_LESS);
 	glDisable(GL_BLEND);
 }

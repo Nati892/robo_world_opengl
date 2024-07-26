@@ -61,7 +61,7 @@ public:
 class GoDrawble3d :public GODrawable {
 	std::string obj_model_name;
 	std::string texture_name;
-
+	bool hasTexture = false;
 	std::vector<Vertex>* ModelVector;
 
 	std::map<int, GOMaterial> Loaded_Materials;
@@ -71,8 +71,8 @@ class GoDrawble3d :public GODrawable {
 	GLuint displayList_id = 0;
 	static GLuint id_giver;
 	std::vector<std::string> texture_names;
-	std::vector<GLuint> texture_ids;
+	std::vector<std::pair<bool, GLuint>> texture_ids;
 public:
 	void DrawObject();
-	GoDrawble3d(std::string obj_model_name, std::string texture_name,std::vector<std::string> mat_textures=std::vector<std::string>());
+	GoDrawble3d(std::string obj_model_name, std::string texture_name, std::vector<std::string> mat_textures = std::vector<std::string>());
 };
