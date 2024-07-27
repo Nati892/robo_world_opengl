@@ -11,9 +11,9 @@ Scene* GetWorldScene()
 	auto diffuse_light_source_0 = Prefabs::GetReadyDiffuseLightSource("secondery_light_source0");
 	auto diffuse_light_source_1 = Prefabs::GetReadyDiffuseLightSource("secondery_light_source1");
 
-	LightsHolder->addChildObject(main_light);
-	LightsHolder->addChildObject(diffuse_light_source_0);
-	LightsHolder->addChildObject(diffuse_light_source_1);
+	LightsHolder->AddChildObject(main_light);
+	LightsHolder->AddChildObject(diffuse_light_source_0);
+	LightsHolder->AddChildObject(diffuse_light_source_1);
 
 	main_light->GetTransform()->setPosition(0, 1, 1);
 
@@ -46,30 +46,30 @@ Scene* GetWorldScene()
 	CamLookAtTrans->setPosition(0, 2, 0);
 	CamLookAt->SetGOType(GOCamLookAt);
 
-	CameraHolder->addChildObject(MainCam);
-	CameraHolder->addChildObject(CamLookAt);
+	CameraHolder->AddChildObject(MainCam);
+	CameraHolder->AddChildObject(CamLookAt);
 
 	//set script to camera holder
 	CameraHolder->SetGOScript(new Camera3rdPerson());
 
-	PlayerAndCameraHolder->addChildObject(CameraHolder);
+	PlayerAndCameraHolder->AddChildObject(CameraHolder);
 	PlayerAndCameraHolder->GetTransform()->setPosition(0, 5.6, 0);
 	ret_scene->AddGameObjectTree(PlayerAndCameraHolder);
 
 	auto Box = Prefabs::GetReadySkyBox("Skybox", "player_holder");
 	ret_scene->AddGameObjectTree(Box);
-	Box->addChildObject(LightsHolder);
+	Box->AddChildObject(LightsHolder);
 
 	auto d_surface = Prefabs::GetReadyCheckBoardDynamicSurface2d("dynamic_surface2d");
 	ret_scene->AddGameObjectTree(d_surface);
 
 	auto robo_obj = Prefabs::GetNewRobot("player");
-	PlayerAndCameraHolder->addChildObject(robo_obj);
+	PlayerAndCameraHolder->AddChildObject(robo_obj);
 
 	auto tree_ob1 = Prefabs::GetNewRandomTree("tree1");
 
 	//add mushrooms
-	for (int i = 0; i < 100; i++)//add mushrooms for each tree
+	for (int i = 0; i < 200; i++)//add mushrooms for each tree
 	{
 		int randomXoffset = (rand() % 300) - 150;//pick tree bark
 		int randoZoffset = (rand() % 300) - 150;//pick tree bark
@@ -109,7 +109,8 @@ Scene* GetWorldScene()
 
 void Scene::AddGameObjectTree(GameObject* obj)
 {
-	SceneMasterParent->addChildObject(obj);
+	obj->SetParent(SceneMasterParent);
+	SceneMasterParent->AddChildObject(obj);
 }
 
 //note: I know this could be implemented in a lot more efficient manner, but this is true for much of this. I just want this to work well for now, in the future I might revamp this project

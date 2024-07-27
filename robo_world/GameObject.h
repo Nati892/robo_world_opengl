@@ -82,7 +82,9 @@ public:
 
 	// children get/add
 	std::vector<GameObject*>& getChildren();
-	void addChildObject(GameObject* child);
+	void AddChildObject(GameObject* child);
+
+	void RemoveChildObject(GameObject* child);
 
 	/// <summary>
 	/// old ones get deleted!
@@ -103,5 +105,6 @@ public:
 	void AttachTransform(GOTransform* new_attach);
 
 	GameObject* GetParent();
+	void SetParent(GameObject* parent);
 	void CalculateWorldPosition();
 };

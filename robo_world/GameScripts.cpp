@@ -215,7 +215,7 @@ void DynamicSurfaceScript::SSetup(Scene* CurrScene)
 					new_surface->GetTransform()->setScale(GOvec3{ _Scale.x, 1 ,_Scale.z });
 
 					// Add to scene tree
-					this->GetGameObject()->addChildObject(new_surface);
+					this->GetGameObject()->AddChildObject(new_surface);
 				}
 
 			}
@@ -238,7 +238,7 @@ void DynamicSurfaceScript::SSetup(Scene* CurrScene)
 					new_surface->GetTransform()->setScale(GOvec3{ _Scale.x, 1 ,_Scale.z });
 
 					// Add to scene tree
-					this->GetGameObject()->addChildObject(new_surface);
+					this->GetGameObject()->AddChildObject(new_surface);
 				}
 
 			}

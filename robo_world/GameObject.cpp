@@ -7,7 +7,7 @@ GameObject::GameObject(GameObject* parent, std::string NewName, GOTransform* tra
 {
 	this->_parent = parent;
 	if (this->_parent != nullptr)
-		this->_parent->addChildObject(this);
+		this->_parent->AddChildObject(this);
 	this->_name = NewName;
 	//this->_transoform = transoform;
 	if (transoform == nullptr)
@@ -265,8 +265,37 @@ GameObject* GameObject::GetParent()
 	return this->_parent;
 }
 
-void GameObject::addChildObject(GameObject* child)
+void GameObject::SetParent(GameObject* parent)
 {
+	//if (parent == nullptr || this->_parent == parent)
+	//	return;
+
+	this->_parent = parent;
+}
+
+void GameObject::AddChildObject(GameObject* child)
+{
+	if (child == nullptr)
+		return;
+
 	this->children.push_back(child);
+	if (child->_parent != nullptr&&child->_parent!=this)
+	{
+		child->_parent->RemoveChildObject(child);
+	}
 	child->_parent = this;
+}
+
+void GameObject::RemoveChildObject(GameObject* child)
+{
+	if (child == nullptr)
+		return;
+	auto it = std::find(this->children.begin(), this->children.end(),
+		child);
+
+	// If element is found found, erase it 
+	if (it != this->children.end()) {
+		this->children.erase(it);
+	}
+
 }

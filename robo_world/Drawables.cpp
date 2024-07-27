@@ -62,8 +62,6 @@ void DrawTeapot::DrawObject()
 
 	glDisable(GL_TEXTURE_2D);       // Disable texturing
 	glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CCW);
-
 }
 
 DrawTeapot::DrawTeapot()
@@ -116,7 +114,7 @@ void DrawSurface2d::DrawObject() {
 
 	glEnd();
 
-	//	glDisable(GL_TEXTURE_2D);       // Disable texturing
+	glDisable(GL_TEXTURE_2D);       // Disable texturing
 }
 
 
@@ -181,6 +179,7 @@ void DrawMonkey::DrawObject()
 		glVertex3fv((float*)(&(vertex.position)));
 	}
 	glEnd();
+	glDisable(GL_TEXTURE_2D);       // Disable texturing
 }
 
 void GoDrawble3d::DrawObject()
@@ -345,7 +344,7 @@ void DrawCheckBoardSurface2d::DrawObject()
 	float xleft = -0.5, xright = 0.5, yup = 0.5, ydown = -0.5;
 	int interval = 8;
 	float step = (xright - xleft) / ((float)interval);
-	
+
 	SetActiveMat();
 	glBegin(GL_QUADS);
 

@@ -27,11 +27,11 @@ GameObject* Prefabs::GetNewRobot(std::string name)
 {
 	GameObject* player_go = new GameObject(nullptr, name, nullptr);
 	GameObject* player_object = Prefabs::GetNewHead("player_head");
-	player_go->addChildObject(player_object);
+	player_go->AddChildObject(player_object);
 	player_object->GetTransform()->setPosition(0, -1, 0);
 
 	GameObject* player_torso = Prefabs::GetNewTorso("player_torso");
-	player_go->addChildObject(player_torso);
+	player_go->AddChildObject(player_torso);
 	player_torso->GetTransform()->setPosition(0, -3, 0);
 
 	GameObject* WheelsHolder = new GameObject(player_go, "wheels_holder", nullptr);
@@ -44,11 +44,11 @@ GameObject* Prefabs::GetNewRobot(std::string name)
 	auto wheel = Prefabs::GetNewWheel("left_wheel");
 	wheel->GetTransform()->setRotation(0, 90, 0);
 	wheel->GetTransform()->setPosition(0, 0, -0.8);
-	WheelsHolder->addChildObject(wheel);
+	WheelsHolder->AddChildObject(wheel);
 
 	//create and add right wheel to holder
 	wheel = Prefabs::GetNewWheel("right_wheel");
-	WheelsHolder->addChildObject(wheel);
+	WheelsHolder->AddChildObject(wheel);
 	wheel->GetTransform()->setRotation(0, 270, 0);
 	wheel->GetTransform()->setPosition(0, 0, 0.8);
 
@@ -57,7 +57,7 @@ GameObject* Prefabs::GetNewRobot(std::string name)
 
 	auto right_hand = Prefabs::GetNewRobotArm("right_hand");
 
-	right_hand_holder->addChildObject(right_hand);
+	right_hand_holder->AddChildObject(right_hand);
 	right_hand_holder->GetTransform()->setPosition(-0.3, -2.3, 1.3);
 	right_hand_holder->GetTransform()->setRotation(90, 0, 0);
 	right_hand_holder->GetTransform()->setScale(1, 1, -1);
@@ -122,9 +122,9 @@ GameObject* Prefabs::GetNewRobotArm(std::string name)
 	hand_go->GetTransform()->setPosition(-0.63, 0, 0.04);
 	hand_holder2->GetTransform()->setScale(-1, 1, 1);
 
-	hand_holder2->addChildObject(arm_go);
-	arm_go->addChildObject(forarm_go);
-	forarm_go->addChildObject(hand_go);
+	hand_holder2->AddChildObject(arm_go);
+	arm_go->AddChildObject(forarm_go);
+	forarm_go->AddChildObject(hand_go);
 
 	return hand_holder;
 }
@@ -141,7 +141,7 @@ GameObject* Prefabs::GetNewRandomTree(std::string name)
 	std::string tree_l_texture = "tree_l_texture" + std::to_string(randomIndex) + ".jpg";
 
 	auto tree_go = Prefabs::GetNewSimpleModel("tree", "tree1.obj", std::vector<std::string> { tree_bark_texture, tree_l_texture });
-	go->addChildObject(tree_go);
+	go->AddChildObject(tree_go);
 
 	return go;
 }
@@ -313,11 +313,11 @@ GameObject* Prefabs::GetReadySkyBox(std::string name, std::string FollowObject)
 	auto wall4 = Prefabs::GetReadySurface2d("middle", "middle.jpg");
 	auto wall5 = Prefabs::GetReadySurface2d("up", "up.jpg");
 
-	Box->addChildObject(wall1);
-	Box->addChildObject(wall2);
-	Box->addChildObject(wall3);
-	Box->addChildObject(wall4);
-	Box->addChildObject(wall5);
+	Box->AddChildObject(wall1);
+	Box->AddChildObject(wall2);
+	Box->AddChildObject(wall3);
+	Box->AddChildObject(wall4);
+	Box->AddChildObject(wall5);
 
 	wall1->GetTransform()->setRotation(90, 0, 270);
 	wall1->GetTransform()->setPosition(0, 40, -100);
@@ -359,7 +359,7 @@ GameObject* Prefabs::GetNewMushroom(std::string name)
 {
 	GameObject* go = new GameObject(nullptr, name, nullptr);
 	auto muhs_obj = Prefabs::GetNewSimpleModel(name, "mushroom1.obj", "mushroom_texture.jpg");
-	go->addChildObject(muhs_obj);
+	go->AddChildObject(muhs_obj);
 
 	muhs_obj->GetTransform()->setPosition(5, 0.4, 5);
 	muhs_obj->GetTransform()->setRotation(-90, 0, 0);
