@@ -16,6 +16,7 @@ public:
 	//lights
 	static GameObject* GetReadyLightSource(std::string name);
 	static GameObject* GetReadyAmbiantLightSource(std::string name);
+	static GameObject* GetReadySunLightSource(std::string name);
 	static GameObject* GetReadyDiffuseLightSource(std::string name);
 	static GameObject* GetReadySpecularLightSource(std::string name);
 

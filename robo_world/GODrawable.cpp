@@ -1,6 +1,8 @@
 #include "GODrawable.h"
 
-GODrawable::GODrawable() {
+GODrawable::GODrawable()
+{
+	this->material.Emission = { 0,0,0,0 };
 }
 
 GODrawable::~GODrawable()
@@ -29,7 +31,7 @@ void GODrawable::DrawObject()
 
 void GODrawable::SetActiveMat() const
 {
-	GOMaterial::SetActiveMaterial(this->material,-1);
+	GOMaterial::SetActiveMaterial(this->material, -1);
 }
 
 GameObject* GODrawable::GetGameObject()
@@ -65,6 +67,14 @@ void GODrawable::setSpecularColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
 	material.SpecularColor.w = a;
 }
 
+void GODrawable::setEmission(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+	material.Emission.x = r;
+	material.Emission.y = g;
+	material.Emission.z = b;
+	material.Emission.w = a;
+}
+
 void GODrawable::setShininess(GLfloat shininess) {
 	material.Shininess[0] = shininess;
 }
@@ -85,16 +95,22 @@ GLfloat GODrawable::getShininess() {
 	return material.Shininess[0];
 }
 
-
-void GOMaterial::SetActiveMaterial(GOMaterial mat,int id)
+GOvec4 GODrawable::getEmission()
 {
-	static int last_id=-1;
+	return material.Emission;
+}
+
+
+void GOMaterial::SetActiveMaterial(GOMaterial mat, int id)
+{
+	static int last_id = -1;
 	if (id != -1 && id == last_id)
 	{
 		return;
 	}
 	last_id = id;
 	float params[4] = { mat.AmbientColor.x,mat.AmbientColor.y,mat.AmbientColor.z,mat.AmbientColor.w };
+
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, params);
 
 	params[0] = mat.DiffuseColor.x;
@@ -108,6 +124,12 @@ void GOMaterial::SetActiveMaterial(GOMaterial mat,int id)
 	params[2] = mat.SpecularColor.z;
 	params[3] = mat.SpecularColor.w;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, params);
+
+	params[0] = mat.Emission.x;
+	params[1] = mat.Emission.y;
+	params[2] = mat.Emission.z;
+	params[3] = mat.Emission.w;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, params);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat.Shininess);
 }

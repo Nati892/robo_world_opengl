@@ -1,11 +1,13 @@
 #pragma once
 #include "stdafx.h"
 #include "GameObject.h"
+
 struct GOMaterial
 {
 	GOvec4 AmbientColor = { 1,1,1,1 }; // Ambient color (RGBA)
 	GOvec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
 	GOvec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
+	GOvec4 Emission = { 0,0,0,1 }; //Basic emission color (RGBA)
 	GLfloat Shininess[1] = { 0 }; // Shininess factor
 	static void SetActiveMaterial(GOMaterial, int);
 
@@ -15,6 +17,7 @@ struct GOMaterial
 			this->AmbientColor == other.AmbientColor &&
 			this->DiffuseColor == other.DiffuseColor &&
 			this->SpecularColor == other.SpecularColor &&
+			this->Emission == other.Emission &&
 			this->Shininess == other.Shininess
 			);
 	}
@@ -42,9 +45,11 @@ public:
 	void setAmbientColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void setDiffuseColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void setSpecularColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+	void setEmission(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void setShininess(GLfloat shininess);
 	GOvec4 getAmbientColor();
 	GOvec4 getDiffuseColor();
 	GOvec4 getSpecularColor();
 	GLfloat getShininess();
+	GOvec4 getEmission();
 };

@@ -123,22 +123,29 @@ DrawSurface2d::DrawSurface2d(std::string texture)
 {
 	this->texture_name = texture;
 
-	this->material.AmbientColor.x = 0.8;
-	this->material.AmbientColor.y = 0.8;
-	this->material.AmbientColor.z = 0.8;
-	this->material.AmbientColor.w = 0.8;
+	this->material.AmbientColor.x = 0.3;
+	this->material.AmbientColor.y = 0.3;
+	this->material.AmbientColor.z = 0.3;
+	this->material.AmbientColor.w = 0.3;
 
-	this->material.DiffuseColor.x = 0.8;
-	this->material.DiffuseColor.y = 0.8;
-	this->material.DiffuseColor.z = 0.8;
-	this->material.DiffuseColor.w = 0.8;
+	this->material.DiffuseColor.x = 1;
+	this->material.DiffuseColor.y = 1;
+	this->material.DiffuseColor.z = 1;
+	this->material.DiffuseColor.w = 1;
 
-	this->material.SpecularColor.x = 0.8;
-	this->material.SpecularColor.y = 0.8;
-	this->material.SpecularColor.z = 0.8;
-	this->material.SpecularColor.w = 0.8;
+	this->material.SpecularColor.y = 1;
+	this->material.SpecularColor.z = 1;
+	this->material.SpecularColor.w = 1;
+	this->material.SpecularColor.x = 1;
 
-	this->material.Shininess[0] = 1;
+
+
+	this->material.Emission.y = 0;
+	this->material.Emission.z = 0;
+	this->material.Emission.w = 0;
+	this->material.Emission.x = 0;
+
+	this->material.Shininess[0] = 128;
 
 }
 

@@ -136,7 +136,6 @@ void SceneRunner::LoopScene()
 			{
 
 			case GOLightSource:
-				//todo: run the light
 				auto ls_data = curr_special_obj->GetLightSourceData();
 				auto curr_light_source_num = GL_LIGHT0 + ls_data->light_source_number;
 				float in_arr[4] = { 0,0,0,0 };
@@ -391,6 +390,18 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 	glShadeModel(GL_SMOOTH);
 	glDepthFunc(GL_LESS);
 	glDisable(GL_BLEND);
+
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHT2);
+	glDisable(GL_LIGHT3);
+	glDisable(GL_LIGHT4);
+	glDisable(GL_LIGHT5);
+	glDisable(GL_LIGHT6);
+	glDisable(GL_LIGHT7);
+
+	GLfloat globalAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 }
 
 void SceneRunner::SetEvents()

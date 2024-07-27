@@ -1,13 +1,7 @@
 #include "Loaders.h"
+#include  "GODrawable.h"
 
 std::map<std::string, std::vector<Vertex>*> OBJLoader::loaded_objects; // Definition
-struct GOMaterial
-{
-	GOvec4 AmbientColor = { 1,1,1,1 }; // Ambient color (RGBA)
-	GOvec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
-	GOvec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
-	GLfloat Shininess[1] = { 0 }; // Shininess factor};
-};
 
 bool OBJLoader::MyLoadOBJ(std::string path, std::vector<Vertex>** out_vertices)
 {
@@ -148,7 +142,12 @@ bool OBJLoader::MyLoadOBJ(std::string path, std::vector<Vertex>** out_vertices, 
 	for (int i = 0; i < materials.size(); i++)
 	{
 		auto a = materials[i];
-		auto b = GOMaterial{ GOvec4{a.ambient[0],a.ambient[1],a.ambient[2],1},GOvec4{a.diffuse[0],a.diffuse[1],a.diffuse[2],1} ,GOvec4{a.specular[0],a.specular[1],a.specular[2],1} ,a.shininess };
+		auto b = GOMaterial();
+		b.AmbientColor = GOvec4{a.ambient[0],a.ambient[1],a.ambient[2],1 };
+		b.DiffuseColor = GOvec4{a.diffuse[0],a.diffuse[1],a.diffuse[2],1 };
+		b.SpecularColor = GOvec4{a.specular[0],a.specular[1],a.specular[2],1 };
+		b.Emission = GOvec4{a.emission[0],a.emission[1],a.emission[2],1 };
+		b.Shininess[0] = a.shininess;
 		(*materials_out)[i] = b;
 	}
 	*out_vertices = new_vec;

@@ -78,17 +78,13 @@ Scene* GetWorldScene()
 	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder");
 	ret_scene->AddGameObjectTree(LightsHolder);
 
-	GameObject* main_light = Prefabs::GetReadyLightSource("main_light");
-	GameObject* light1 = Prefabs::GetReadyDiffuseLightSource("light1");
-	GameObject* light2 = Prefabs::GetReadySpecularLightSource("light2");
-	GameObject* light3 = Prefabs::GetReadyDiffuseLightSource("light3");
+	GameObject* main_light = Prefabs::GetReadyAmbiantLightSource("main_ambiant_light");
+	GameObject* sun_light = Prefabs::GetReadySunLightSource("sun_light");
 
 	LightsHolder->addChildObject(main_light);
-	LightsHolder->addChildObject(light1);
-	LightsHolder->addChildObject(light2);
-	LightsHolder->addChildObject(light3);
-
-	light2->GetTransform()->setPosition(10, 10, 10);
+	LightsHolder->addChildObject(sun_light);
+	main_light->GetTransform()->setPosition(0,1,1);
+	sun_light->GetTransform()->setPosition(10,10,10);
 
 	GameObject* PlayerAndCameraHolder = new GameObject(nullptr, "player_holder", nullptr);
 

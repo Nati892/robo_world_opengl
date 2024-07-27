@@ -183,9 +183,24 @@ GameObject* Prefabs::GetReadyAmbiantLightSource(std::string name)
 	GameObject* ret = new GameObject(nullptr, name, light_trans);
 	ret->SetGOType(GOLightSource);
 	auto ldata = ret->GetLightSourceData();
-	ldata->_light_ambient = { 0.4,0.4,0.4,1 };
-	ldata->_light_diffuse = { 0.0,0.0,0.0,1 };
+	ldata->_light_ambient = { 0.6,0.6,0.6,1 };
+	ldata->_light_diffuse = { 0,0,0,1 };
 	ldata->_light_specular = { 0,0,0,1 };
+	return ret;
+}
+
+GameObject* Prefabs::GetReadySunLightSource(std::string name)
+{
+	GOTransform* light_trans = new GOTransform();
+	GameObject* ret = new GameObject(nullptr, name, light_trans);
+	ret->SetGOType(GOLightSource);
+	auto ldata = ret->GetLightSourceData();
+	ldata->_light_ambient = { 0,0,0,1 };
+	ldata->_light_diffuse = { 0.8,0.8,0.8,1 };
+	ldata->_light_specular = { 1,1,1,1 };
+	ldata->_spot_direction = {-1,-1,-1};
+	ldata->_GL_SPOT_CUTOFF = {180};
+	ldata->_shininess = 64;
 	return ret;
 }
 
@@ -223,7 +238,7 @@ GameObject* Prefabs::GetReadyLightSource(std::string name)
 	ret->SetGOType(GOLightSource);
 	auto ldata = ret->GetLightSourceData();
 	ldata->_light_ambient = { 0.4,0.4,0.4,1 };
-	ldata->_light_diffuse = { 0.6,0.6,0.6,1 };
+	ldata->_light_diffuse = { 0,0.6,0.6,1 };
 	ldata->_light_specular = { 0.5,0.5,0.5,1 };
 	ldata->_GL_SPOT_CUTOFF = 180;
 	ldata->_shininess = 1;
