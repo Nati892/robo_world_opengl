@@ -365,7 +365,7 @@ void DrawCheckBoardSurface2d::DrawObject()
 			}
 			else
 			{
-				glColor3f(0.4, 0.4, 0.4);
+				glColor3f(0.1, 0.1, 0.1);
 			}
 			glVertex3f(i, 0, j);
 			glVertex3f(i, 0, j + step);

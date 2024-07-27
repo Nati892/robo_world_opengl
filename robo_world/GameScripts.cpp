@@ -56,6 +56,12 @@ void BasicAxisRotateScript::SCleanUp()
 	delete this->color_timer;
 }
 
+void BasicAxisRotateScript::SetSpeed(float speed)
+{
+	if (this->rotate_timer != nullptr)
+		this->rotate_timer->SetSpeed(speed);
+}
+
 void BasicAxisRotateScript::SetRotationAxis(axis a)
 {
 	switch (a)

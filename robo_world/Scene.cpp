@@ -1,75 +1,4 @@
 #include "Scene.h"
-Scene* GetSampleScene()
-{
-	//create scene
-	Scene* ret_scene = new Scene();
-
-	GameObject* Base = Prefabs::GetNewRotatingCube("Papa1");
-	Base->GetTransform()->setPosition(2, 0, 0);
-	dynamic_cast<BasicAxisRotateScript*>(Base->GetRunningScript())->SetRotationAxis(axis_z);
-
-	GameObject* child1 = Prefabs::GetNewRotatingSphere("child1");
-	child1->GetTransform()->setPosition(1, 1, 1);
-
-	Base->addChildObject(child1);
-
-	GameObject* Base2 = Prefabs::GetNewRotatingSphere("Papa2");
-	Base2->GetTransform()->setPosition(-2, 0, 0);
-
-	GameObject* child2 = Prefabs::GetNewRotatingCube("child2");
-	child2->GetTransform()->setPosition(1, 1, -1);
-	Base2->addChildObject(child2);
-
-	ret_scene->AddGameObjectTree(Base);
-	ret_scene->AddGameObjectTree(Base2);
-
-
-	GOTransform* MainTrans = new GOTransform();
-	GameObject* CameraHolder = new GameObject(nullptr, "CamHead", MainTrans);
-
-	GOTransform* CamTrans = new GOTransform();
-	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
-	CamTrans->setPosition(0, 0, 5);
-	MainCam->SetGOType(GOCamPoint);
-
-	GOTransform* CamLookAtTrans = new GOTransform();
-	GameObject* CamLookAt = new GameObject(nullptr, "MainCamLookAt", CamLookAtTrans);
-	CamLookAtTrans->setPosition(0, 1, 0);
-	CamLookAt->SetGOType(GOCamLookAt);
-
-	CameraHolder->addChildObject(MainCam);
-	CameraHolder->addChildObject(CamLookAt);
-	ret_scene->AddGameObjectTree(CameraHolder);
-
-	//test light source
-	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder", nullptr);
-	ret_scene->AddGameObjectTree(LightsHolder);
-
-	GameObject* light0 = Prefabs::GetReadyLightSource("light0");
-	GameObject* light1 = Prefabs::GetReadyLightSource("light1");
-	GameObject* light2 = Prefabs::GetReadyLightSource("light2");
-	GameObject* light3 = Prefabs::GetReadyLightSource("light3");
-
-	LightsHolder->addChildObject(light0);
-	LightsHolder->addChildObject(light1);
-	LightsHolder->addChildObject(light2);
-	LightsHolder->addChildObject(light3);
-
-	auto l_trans = light0->GetTransform();
-	l_trans->setPosition(0, 10, 0);
-
-	l_trans = light1->GetTransform();
-	l_trans->setPosition(20, 0, 0);
-
-	l_trans = light2->GetTransform();
-	l_trans->setPosition(0, 20, 10);
-
-	l_trans = light3->GetTransform();
-	l_trans->setPosition(0, -20, 10);
-
-	return ret_scene;
-}
-
 Scene* GetWorldScene()
 {
 	Scene* ret_scene = new Scene();
@@ -79,12 +8,26 @@ Scene* GetWorldScene()
 	ret_scene->AddGameObjectTree(LightsHolder);
 
 	GameObject* main_light = Prefabs::GetReadyAmbiantLightSource("main_ambiant_light");
-	GameObject* sun_light = Prefabs::GetReadySunLightSource("sun_light");
+	auto diffuse_light_source_0 = Prefabs::GetReadyDiffuseLightSource("secondery_light_source0");
+	auto diffuse_light_source_1 = Prefabs::GetReadyDiffuseLightSource("secondery_light_source1");
 
 	LightsHolder->addChildObject(main_light);
-	LightsHolder->addChildObject(sun_light);
-	main_light->GetTransform()->setPosition(0,1,1);
-	sun_light->GetTransform()->setPosition(10,10,10);
+	LightsHolder->addChildObject(diffuse_light_source_0);
+	LightsHolder->addChildObject(diffuse_light_source_1);
+
+	main_light->GetTransform()->setPosition(0, 1, 1);
+
+	diffuse_light_source_0->GetTransform()->setPosition(10, 10, 10);
+	diffuse_light_source_0->GetLightSourceData()->_spot_direction = { 1,0,1 };
+	diffuse_light_source_0->GetLightSourceData()->_light_specular = { 0.35,0.35,0.35,1 };
+	diffuse_light_source_0->GetLightSourceData()->_exponent = 5;
+	diffuse_light_source_0->GetLightSourceData()->_shininess = 40;
+
+	diffuse_light_source_1->GetTransform()->setPosition(-10, 10, -10);
+	diffuse_light_source_1->GetLightSourceData()->_spot_direction = { -1,0,-1 };
+	diffuse_light_source_1->GetLightSourceData()->_light_specular = { 0.35,0.35,0.35,1 };
+	diffuse_light_source_1->GetLightSourceData()->_exponent = 5;
+	diffuse_light_source_1->GetLightSourceData()->_shininess = 127;
 
 	GameObject* PlayerAndCameraHolder = new GameObject(nullptr, "player_holder", nullptr);
 
@@ -110,11 +53,12 @@ Scene* GetWorldScene()
 	CameraHolder->SetGOScript(new Camera3rdPerson());
 
 	PlayerAndCameraHolder->addChildObject(CameraHolder);
-	PlayerAndCameraHolder->GetTransform()->setPosition(0, 12, 0);
+	PlayerAndCameraHolder->GetTransform()->setPosition(0, 5.6, 0);
 	ret_scene->AddGameObjectTree(PlayerAndCameraHolder);
 
 	auto Box = Prefabs::GetReadySkyBox("Skybox", "player_holder");
 	ret_scene->AddGameObjectTree(Box);
+	Box->addChildObject(LightsHolder);
 
 	auto d_surface = Prefabs::GetReadyCheckBoardDynamicSurface2d("dynamic_surface2d");
 	ret_scene->AddGameObjectTree(d_surface);
@@ -124,9 +68,40 @@ Scene* GetWorldScene()
 
 	auto tree_ob1 = Prefabs::GetNewRandomTree("tree1");
 
-	auto mush = Prefabs::GetNewMushroom("mushy");
-	ret_scene->AddGameObjectTree(mush);
+	//add mushrooms
+	for (int i = 0; i < 100; i++)//add mushrooms for each tree
+	{
+		int randomXoffset = (rand() % 300) - 150;//pick tree bark
+		int randoZoffset = (rand() % 300) - 150;//pick tree bark
 
+		auto mush = Prefabs::GetNewMushroom("mushy" + i);
+		mush->GetTransform()->setPosition(randomXoffset, 0, randoZoffset);
+		ret_scene->AddGameObjectTree(mush);
+	}
+
+	//add trees
+	for (int i = -5; i < 5; i++)
+	{
+		for (int j = -5; j < 5; j++)
+		{
+			int randomYRotationOffset = (rand() % 360);//pick tree bark
+			auto tree = Prefabs::GetNewRandomTree("tree0" + i + '|' + j);
+			tree->GetTransform()->setPosition(i * 30, 0, j * 30);
+			tree->GetTransform()->setRotation(0,randomYRotationOffset,0);
+			ret_scene->AddGameObjectTree(tree);
+		}
+	}
+
+
+	for (int i = 0; i < 50; i++)
+	{
+		int randomXoffset = (rand() % 150) - 75;//pick tree bark
+		int randomZoffset = (rand() % 150) - 75;//pick tree bark
+		int randomYoffset = (rand() % 20) + 20;//pick tree bark
+		auto rotaty = Prefabs::GetNewRotatingteapot("teapot" + i);
+		rotaty->GetTransform()->setPosition(randomXoffset, randomYoffset, randomZoffset);
+		ret_scene->AddGameObjectTree(rotaty);
+	}
 	ret_scene->AddGuiWindow(new MainGuiWinodw());
 
 	return ret_scene;

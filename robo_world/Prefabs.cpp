@@ -135,11 +135,9 @@ GameObject* Prefabs::GetNewRandomTree(std::string name)
 	GameObject* go = new GameObject(nullptr, name, nullptr);
 
 	int randomIndex = (rand() % 6) + 1;//pick tree bark
-	randomIndex = 1;
 	std::string tree_bark_texture = "tree_bark_texture" + std::to_string(randomIndex) + ".jpg";
 
 	randomIndex = (rand() % 8) + 1;//pick tree bark
-	randomIndex = 1;
 	std::string tree_l_texture = "tree_l_texture" + std::to_string(randomIndex) + ".jpg";
 
 	auto tree_go = Prefabs::GetNewSimpleModel("tree", "tree1.obj", std::vector<std::string> { tree_bark_texture, tree_l_texture });
@@ -172,7 +170,9 @@ GameObject* Prefabs::GetNewRotatingteapot(std::string name)
 {
 	auto ret = Prefabs::GetReadyTeapot(name);
 
-	GOScript* scripty = new BasicAxisRotateScript();
+	BasicAxisRotateScript* scripty = new BasicAxisRotateScript();
+	int rand_speed = (rand() % 18) +2;//pick tree bark
+	scripty->SetSpeed(rand_speed);
 	ret->AttachScript(scripty);
 	return ret;
 }
@@ -211,7 +211,7 @@ GameObject* Prefabs::GetReadyDiffuseLightSource(std::string name)
 	ret->SetGOType(GOLightSource);
 	auto ldata = ret->GetLightSourceData();
 	ldata->_light_ambient = { 0,0,0,1 };
-	ldata->_light_diffuse = { 0.6,0.6,0.6,1 };
+	ldata->_light_diffuse = { 0.3,0.3,0.3,1 };
 	ldata->_light_specular = { 0,0,0,1 };
 	return ret;
 }

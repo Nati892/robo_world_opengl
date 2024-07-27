@@ -21,6 +21,7 @@ class BasicAxisRotateScript :public GOScript
 private:
 	AnimationTimer* rotate_timer;
 	AnimationTimer* color_timer;
+	float speed = 1;
 	axis _rotation_axis = axis_x;
 	//virtual inherited
 	void SSetup(Scene* CurrScene);
@@ -28,7 +29,7 @@ public:
 	//virtual inherited
 	void SLoop();
 	void SCleanUp();
-
+	void SetSpeed(float speed);
 	void SetRotationAxis(axis a);
 };
 
