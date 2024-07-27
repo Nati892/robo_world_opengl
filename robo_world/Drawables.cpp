@@ -85,6 +85,7 @@ DrawTeapot::DrawTeapot()
 }
 
 
+
 void DrawSurface2d::DrawObject() {
 	if (!texture_loaded)
 	{
@@ -117,6 +118,9 @@ void DrawSurface2d::DrawObject() {
 
 	//	glDisable(GL_TEXTURE_2D);       // Disable texturing
 }
+
+
+
 
 
 DrawSurface2d::DrawSurface2d(std::string texture)
@@ -177,7 +181,6 @@ void DrawMonkey::DrawObject()
 		glVertex3fv((float*)(&(vertex.position)));
 	}
 	glEnd();
-	//glDisable(GL_TEXTURE_2D);
 }
 
 void GoDrawble3d::DrawObject()
@@ -335,4 +338,64 @@ DrawWheel::DrawWheel(std::string texutre_name)
 
 	this->material.Shininess[0] = 0;
 	this->texture_name = texutre_name;
+}
+
+void DrawCheckBoardSurface2d::DrawObject()
+{
+	float xleft = -0.5, xright = 0.5, yup = 0.5, ydown = -0.5;
+	int interval = 8;
+	float step = (xright - xleft) / ((float)interval);
+	
+	SetActiveMat();
+	glBegin(GL_QUADS);
+
+	glNormal3f(0, 1, 0);  // Normal is constant for the entire surface
+
+	// Specify texture coordinates and vertex positions
+	bool is_color_white = true;
+	for (float i = xleft; i < xright; i += step)
+	{
+		bool is_color_white_copy = is_color_white;
+
+		for (float j = ydown; j < yup; j += step)
+		{
+			if (is_color_white_copy)
+			{
+				glColor3f(1, 1, 1);
+			}
+			else
+			{
+				glColor3f(0.4, 0.4, 0.4);
+			}
+			glVertex3f(i, 0, j);
+			glVertex3f(i, 0, j + step);
+			glVertex3f(i + step, 0, j + step);
+			glVertex3f(i + step, 0, j);
+			is_color_white_copy = !is_color_white_copy;
+
+		}
+		is_color_white = !is_color_white;
+	}
+	glEnd();
+}
+
+DrawCheckBoardSurface2d::DrawCheckBoardSurface2d()
+{
+
+	this->material.AmbientColor.x = 0.4;
+	this->material.AmbientColor.y = 0.4;
+	this->material.AmbientColor.z = 0.4;
+	this->material.AmbientColor.w = 1;
+
+	this->material.DiffuseColor.x = 0.8;
+	this->material.DiffuseColor.y = 0.8;
+	this->material.DiffuseColor.z = 0.8;
+	this->material.DiffuseColor.w = 1;
+
+	this->material.SpecularColor.x = 0.25;
+	this->material.SpecularColor.y = 0.25;
+	this->material.SpecularColor.z = 0.25;
+	this->material.SpecularColor.w = 1;
+
+	this->material.Shininess[0] = 128;
 }

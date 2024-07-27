@@ -49,6 +49,15 @@ public:
 	DrawSurface2d(std::string texture);
 };
 
+class DrawCheckBoardSurface2d : public GODrawable
+{
+
+private:
+public:
+	void DrawObject();
+	DrawCheckBoardSurface2d();
+};
+
 class DrawMonkey :public GODrawable
 {
 	std::vector<Vertex>* ModelVector;

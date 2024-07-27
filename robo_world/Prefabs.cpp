@@ -276,6 +276,16 @@ GameObject* Prefabs::GetReadySurface2d(std::string name, std::string texture)
 	return surface2d_obj;
 }
 
+GameObject* Prefabs::GetReadyCheckboardSurface2d(std::string name)
+{
+	GOTransform* surface2d_trans = new GOTransform();
+	GameObject* surface2d_obj = new GameObject(nullptr, "surface2d", surface2d_trans);
+
+	DrawCheckBoardSurface2d* surface2d_drawable = new DrawCheckBoardSurface2d();
+	surface2d_obj->AttachDrawable(surface2d_drawable);
+	return surface2d_obj;
+}
+
 GameObject* Prefabs::GetReadyDynamicSurface2d(std::string name)
 {
 	GOTransform* surface2d_trans = new GOTransform();
@@ -285,6 +295,14 @@ GameObject* Prefabs::GetReadyDynamicSurface2d(std::string name)
 	return surface2d_obj;
 }
 
+GameObject* Prefabs::GetReadyCheckBoardDynamicSurface2d(std::string name)
+{
+	GOTransform* surface2d_trans = new GOTransform();
+	GameObject* surface2d_obj = new GameObject(nullptr, name, surface2d_trans);
+
+	surface2d_obj->AttachScript(new DynamicSurfaceScript(GOvec3{ 10, 0, 10 }, GOvec3{ 20,0,20 },false));
+	return surface2d_obj;
+}
 
 GameObject* Prefabs::GetReadySkyBox(std::string name, std::string FollowObject)
 {

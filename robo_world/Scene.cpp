@@ -116,7 +116,7 @@ Scene* GetWorldScene()
 	auto Box = Prefabs::GetReadySkyBox("Skybox", "player_holder");
 	ret_scene->AddGameObjectTree(Box);
 
-	auto d_surface = Prefabs::GetReadyDynamicSurface2d("dynamic_surface2d");
+	auto d_surface = Prefabs::GetReadyCheckBoardDynamicSurface2d("dynamic_surface2d");
 	ret_scene->AddGameObjectTree(d_surface);
 
 	auto robo_obj = Prefabs::GetNewRobot("player");

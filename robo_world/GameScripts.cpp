@@ -193,33 +193,57 @@ void Camera3rdPerson::SCleanUp()
 
 void DynamicSurfaceScript::SSetup(Scene* CurrScene)
 {
-
-	for (int i = -_Count.x / 2; i < _Count.x / 2; i++)
-	{
-		for (int j = -_Count.z / 2; j < _Count.z / 2; j++)
+	if (is_textured) {
+		for (int i = -_Count.x / 2; i < _Count.x / 2; i++)
 		{
-			auto new_surface = Prefabs::GetReadySurface2d("surface" + i + j, "surface_board_texture.jpg");
-			if (new_surface != nullptr && new_surface->GetTransform() != nullptr)
+			for (int j = -_Count.z / 2; j < _Count.z / 2; j++)
 			{
-				// Calculate new position
-				auto new_pos = GOvec3{ ((float)i) * _Scale.x, 0 ,((float)j) * _Scale.z };
-				new_surface->GetTransform()->setPosition(new_pos);
+				auto new_surface = Prefabs::GetReadySurface2d("surface" + i + j, "surface_board_texture.jpg");
+				if (new_surface != nullptr && new_surface->GetTransform() != nullptr)
+				{
+					// Calculate new position
+					auto new_pos = GOvec3{ ((float)i) * _Scale.x, 0 ,((float)j) * _Scale.z };
+					new_surface->GetTransform()->setPosition(new_pos);
 
-				// Set the scale of the tile
-				new_surface->GetTransform()->setScale(GOvec3{ _Scale.x, 1 ,_Scale.z });
+					// Set the scale of the tile
+					new_surface->GetTransform()->setScale(GOvec3{ _Scale.x, 1 ,_Scale.z });
 
-				// Add to scene tree
-				this->GetGameObject()->addChildObject(new_surface);
+					// Add to scene tree
+					this->GetGameObject()->addChildObject(new_surface);
+				}
+
 			}
+		}
+	}
+	else
+	{
+		for (int i = -_Count.x / 2; i < _Count.x / 2; i++)
+		{
+			for (int j = -_Count.z / 2; j < _Count.z / 2; j++)
+			{
+				auto new_surface = Prefabs::GetReadyCheckboardSurface2d("surface" + i + j);
+				if (new_surface != nullptr && new_surface->GetTransform() != nullptr)
+				{
+					// Calculate new position
+					auto new_pos = GOvec3{ ((float)i) * _Scale.x, 0 ,((float)j) * _Scale.z };
+					new_surface->GetTransform()->setPosition(new_pos);
 
+					// Set the scale of the tile
+					new_surface->GetTransform()->setScale(GOvec3{ _Scale.x, 1 ,_Scale.z });
+
+					// Add to scene tree
+					this->GetGameObject()->addChildObject(new_surface);
+				}
+
+			}
 		}
 	}
 }
 
 
-DynamicSurfaceScript::DynamicSurfaceScript(GOvec3 Scale, GOvec3 Count)
+DynamicSurfaceScript::DynamicSurfaceScript(GOvec3 Scale, GOvec3 Count, bool is_textured)
 {
-
+	this->is_textured = is_textured;
 	this->_Scale = Scale;
 	this->_Count = Count;
 }

@@ -69,11 +69,12 @@ private:
 	GOvec3 _Scale;
 	GOvec3 _Count;
 	GOvec3 _Position;
+	bool is_textured;
 
 	void SSetup(Scene* CurrScene);
 public:
 	//virtual inherited
-	DynamicSurfaceScript(GOvec3 _Scale,GOvec3 _Count);
+	DynamicSurfaceScript(GOvec3 _Scale,GOvec3 _Count,bool is_textured=true);
 	void SLoop();
 	void UpdatePosition(GOvec3 new_pos);
 	void SCleanUp();

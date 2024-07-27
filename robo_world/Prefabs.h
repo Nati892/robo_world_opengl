@@ -24,7 +24,9 @@ public:
 	static GameObject* GetReadyCubeGameObject(std::string name);
 	static GameObject* GetReadyTeapot(std::string name);
 	static GameObject* GetReadySurface2d( std::string name, std::string texture);
+	static GameObject* GetReadyCheckboardSurface2d( std::string name);
 	static GameObject* GetReadyDynamicSurface2d(std::string name);
+	static GameObject* GetReadyCheckBoardDynamicSurface2d(std::string name);
 	static GameObject* GetReadySkyBox( std::string name,std::string FollowObject );
 	static GameObject* GetNewSphere(std::string name);
 
