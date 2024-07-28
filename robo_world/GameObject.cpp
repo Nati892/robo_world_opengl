@@ -92,10 +92,8 @@ void GameObject::CalculateWorldPosition()
 	glm::mat4 ResultMatrixTransformation = glm::mat4(1.0f);
 
 	GameObject* obj = this;
-	while (obj->GetParent() != nullptr)
+	while (obj != nullptr)
 	{
-		obj = obj->GetParent();
-
 		// Get the scale, rotation, and position of the current GameObject
 		if (obj->GetTransform() != nullptr)
 		{
@@ -104,37 +102,42 @@ void GameObject::CalculateWorldPosition()
 			glm::vec3 objPosition = tempTransform->GetPosition();
 			glm::vec3 objRotation = tempTransform->GetRotation();
 
-			glm::vec3 scale = glm::vec3(objScale.x, objScale.y, objScale.z);
-			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
+			// Convert rotation to radians
 			glm::vec3 rotation = glm::vec3(glm::radians(objRotation.x), glm::radians(objRotation.y), glm::radians(objRotation.z));
 
 			// Create transformation matrices
-			glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), scale);
+			glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), objScale);
 			glm::mat4 rotateXMatrix = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 			glm::mat4 rotateYMatrix = glm::rotate(glm::mat4(1.0f), rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 			glm::mat4 rotateZMatrix = glm::rotate(glm::mat4(1.0f), rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-			glm::mat4 translateMatrix = glm::translate(glm::mat4(1.0f), position);
+			glm::mat4 translateMatrix = glm::translate(glm::mat4(1.0f), objPosition);
 
 			// Combine the transformations in the correct order: scale, rotate, then translate
 			glm::mat4 transformMatrix = translateMatrix * rotateZMatrix * rotateYMatrix * rotateXMatrix * scaleMatrix;
 
-			// Multiply with the ResultMatrixTransformation and store in ResultMatrixTransformation
+			// Pre-multiply the ResultMatrixTransformation by the transformMatrix
 			ResultMatrixTransformation = transformMatrix * ResultMatrixTransformation;
 		}
 
+		// Move up to the parent GameObject
+		obj = obj->GetParent();
 	}
+
+	// If this GameObject has a transform, calculate its world position
 	if (this->GetTransform() != nullptr)
 	{
 		GOTransform* tempTransform = this->GetTransform();
-		glm::vec3 objPosition = tempTransform->GetPosition();
-		glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
+		glm::vec3 localPosition = tempTransform->GetPosition();
+
 		// Convert the local position to a 4D homogeneous coordinate
-		glm::vec4 localPosition4D = glm::vec4(position, 1.0f);
+		glm::vec4 localPosition4D = glm::vec4(localPosition, 1.0f);
 
-		glm::vec3 claculated_position = ResultMatrixTransformation * localPosition4D;
-		glm::vec3 res = { claculated_position.x, claculated_position.y, claculated_position.z };
+		// Calculate the world position by multiplying with the accumulated transformation matrix
+		glm::vec4 worldPosition4D = ResultMatrixTransformation * localPosition4D;
+		glm::vec3 worldPosition = glm::vec3(worldPosition4D);
 
-		this->SetCalculatedPosition(res);
+		// Set the calculated world position
+		this->SetCalculatedPosition(worldPosition);
 	}
 }
 
@@ -142,7 +145,7 @@ bool GameObject::SetGOType(GOType new_type)
 {
 	bool res = true;
 	static GameObject* CurrentLookAt = nullptr;
-	if (new_type == GOCamLookAt)//Make sure there is only one lookat
+	if (new_type == GOCamLookAtPoint)//Make sure there is only one lookat
 	{
 		if (CurrentLookAt != nullptr)
 		{

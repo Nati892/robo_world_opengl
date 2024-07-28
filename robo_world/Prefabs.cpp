@@ -319,20 +319,20 @@ GameObject* Prefabs::GetReadySkyBox(std::string name, std::string FollowObject)
 	Box->AddChildObject(wall4);
 	Box->AddChildObject(wall5);
 
-	wall1->GetTransform()->setRotation(90, 0, 270);
+	wall1->GetTransform()->setRotation(90, 270, 0);
 	wall1->GetTransform()->setPosition(0, 40, -100);
 	wall1->GetTransform()->setScale(100, 1, 200);
 	wall1->GetDrawableObject()->setAmbientColor(1, 1, 1, 1);
 	wall1->GetDrawableObject()->setDiffuseColor(0, 0, 0, 1);
 	wall1->GetDrawableObject()->setSpecularColor(0, 0, 0, 1);
 
-	wall2->GetTransform()->setRotation(270, 0, 270);
+	wall2->GetTransform()->setRotation(270, 90,0);
 	wall2->GetTransform()->setPosition(0, 40, 100);
 	wall2->GetTransform()->setScale(100, 1, 200);
 	wall2->GetDrawableObject()->setDiffuseColor(0, 0, 0, 1);
 	wall2->GetDrawableObject()->setSpecularColor(0, 0, 0, 1);
 
-	wall3->GetTransform()->setRotation(180, 0, 270);
+	wall3->GetTransform()->setRotation(180, 0, 90);
 	wall3->GetTransform()->setPosition(100, 40, 0);
 	wall3->GetTransform()->setScale(100, 1, 200);
 	wall3->GetDrawableObject()->setDiffuseColor(0, 0, 0, 1);

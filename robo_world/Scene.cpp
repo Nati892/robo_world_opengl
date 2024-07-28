@@ -44,7 +44,7 @@ Scene* GetWorldScene()
 	GOTransform* CamLookAtTrans = new GOTransform();
 	GameObject* CamLookAt = new GameObject(nullptr, "MainCamLookAt", CamLookAtTrans);
 	CamLookAtTrans->setPosition(0, 0, 0);
-	CamLookAt->SetGOType(GOCamLookAt);
+	CamLookAt->SetGOType(GOCamLookAtPoint);
 
 	CameraHolder->AddChildObject(MainCam);
 	CameraHolder->AddChildObject(CamLookAt);
@@ -87,7 +87,7 @@ Scene* GetWorldScene()
 			int randomYRotationOffset = (rand() % 360);//pick tree bark
 			auto tree = Prefabs::GetNewRandomTree("tree0" + i + '|' + j);
 			tree->GetTransform()->setPosition(i * 30, 0, j * 30);
-			tree->GetTransform()->setRotation(0,randomYRotationOffset,0);
+			tree->GetTransform()->setRotation(0, randomYRotationOffset, 0);
 			ret_scene->AddGameObjectTree(tree);
 		}
 	}
@@ -230,7 +230,12 @@ void Scene::RunSceneScripts()
 
 void Scene::DrawScene()
 {
+	glm::mat4 viewMatrix = glm::lookAt(cameraPosition, cameraTarget, cameraUp);
+	GOTransform::matrixStack.push(glm::mat4(1.0f)); // Start with the identity matrix
+
+	GOTransform::matrixStack.push(viewMatrix); // Start with the identity matrix
 	RunGameObjectsForFrame(SceneMasterParent);
+	GOTransform::matrixStack.pop();
 }
 
 
@@ -316,7 +321,7 @@ void SetupScriptsForGameObjectHead(Scene* CurrScene, GameObject* GOHead)
 
 
 
-void InitGameObjects(Scene* CurrScene, GameObject* GOHead) 
+void InitGameObjects(Scene* CurrScene, GameObject* GOHead)
 {
 	if (GOHead == nullptr)
 		return;

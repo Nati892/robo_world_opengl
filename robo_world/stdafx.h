@@ -25,6 +25,7 @@
 #endif
 
 #define GLM_ENABLE_EXPERIMENTAL
+//std
 #include <string>
 #include <iostream>
 #include <chrono>
@@ -32,19 +33,26 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <filesystem>
+#include <stack>
+
+//glm
 #include "glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include <glm/gtc/type_ptr.hpp>
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtc/constants.hpp"
 #include <glm/gtx/quaternion.hpp>
 #include "glm/gtx/euler_angles.hpp"
 #include "tiny_obj_loader.h"
-#include "Loaders.h"
-#include <filesystem>
+
+//imgui
 #include "imgui.h"
 #include "imgui_impl_glut.h"
 #include "imgui_impl_opengl2.h"
 
+//self 
+#include "Loaders.h"
 
 //macros
 #define LIGHT_SOURCES_NUM 8

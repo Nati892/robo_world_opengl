@@ -10,7 +10,7 @@ void BasicAxisRotateScript::SSetup(Scene* CurrScene)
 	GameObject* my_go = this->GetGameObject();
 	if (my_go->GetName() == "child2")
 	{
-		my_go->SetGOType(GOCamLookAt);
+		my_go->SetGOType(GOCamLookAtPoint);
 	}
 }
 

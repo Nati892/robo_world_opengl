@@ -15,11 +15,15 @@ class Scene
 private:
 	float DeltaTime = 0;
 	AnimationTimer SceneTimer;
-	GameObject* SceneMasterParent=nullptr;
+	GameObject* SceneMasterParent = nullptr;
 	GameObject* LightSourcesArray[LIGHT_SOURCES_NUM] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	GOInputSystem* SceneInputSystem = nullptr;
 	std::vector<GOGuiWindow*> gui_windows;
+
 public:
+	glm::vec3 cameraPosition = glm::vec3(0, 0, 0);
+	glm::vec3 cameraTarget = glm::vec3(0, 0, 0);
+	glm::vec3 cameraUp = glm::vec3(0, 1, 0);
 
 	Scene();
 	~Scene();

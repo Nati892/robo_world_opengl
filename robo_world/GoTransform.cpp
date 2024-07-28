@@ -1,33 +1,18 @@
 #include "GOTransform.h"
-GOTransform::GOTransform()
-{
-	Position.x = 0;
-	Position.y = 0;
-	Position.z = 0;
+MatrixStack GOTransform::matrixStack;
 
-	Rotation.x = 0;
-	Rotation.y = 0;
-	Rotation.z = 0;
 
-	Scale.x = 1;
-	Scale.y = 1;
-	Scale.z = 1;
+GOTransform::GOTransform() {
+	Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
-GOTransform::GOTransform(GameObject* parent)
-{
+GOTransform::GOTransform(GameObject* parent) {
 	this->_GameObject = parent;
-	Position.x = 0;
-	Position.y = 0;
-	Position.z = 0;
-
-	Rotation.x = 0;
-	Rotation.y = 0;
-	Rotation.z = 0;
-
-	Scale.x = 1;
-	Scale.y = 1;
-	Scale.z = 1;
+	Position = glm::vec3(0.0f, 0.0f, 0.0f);
+	Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+	Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
 void GOTransform::CleanUp()
@@ -49,33 +34,39 @@ void GOTransform::setPosition(GLfloat x, GLfloat y, GLfloat z) {
 	Position.x = x;
 	Position.y = y;
 	Position.z = z;
+	TransMatCahnged = true;
 }
 
 void GOTransform::setRotation(GLfloat x, GLfloat y, GLfloat z) {
 	Rotation.x = x;
 	Rotation.y = y;
 	Rotation.z = z;
+	TransMatCahnged = true;
 }
 
 void GOTransform::setScale(GLfloat x, GLfloat y, GLfloat z) {
 	Scale.x = x;
 	Scale.y = y;
 	Scale.z = z;
+	TransMatCahnged = true;
 }
 
 void GOTransform::setPosition(glm::vec3 vec)
 {
 	this->Position = vec;
+	TransMatCahnged = true;
 }
 
 void GOTransform::setRotation(glm::vec3 vec)
 {
 	this->Rotation = vec;
+	TransMatCahnged = true;
 }
 
 void GOTransform::setScale(glm::vec3 vec)
 {
 	this->Scale = vec;
+	TransMatCahnged = true;
 }
 
 void GOTransform::setValues(GOTransform* from_other)
@@ -109,17 +100,34 @@ void GOTransform::SetGameObjectOnce(GameObject* go_head)
 		this->_GameObject = go_head;
 }
 
-void GOTransform::PushObjectTransformMatrix()
-{
-	glPushMatrix();
-	glTranslatef(this->Position.x, this->Position.y, this->Position.z);
-	glRotatef(this->Rotation.z, 0, 0, 1);
-	glRotatef(this->Rotation.y, 0, 1, 0);
-	glRotatef(this->Rotation.x, 1, 0, 0);
-	glScalef(this->Scale.x, this->Scale.y, this->Scale.z);
+glm::mat4 GOTransform::getTransformMatrix() {
+	glm::mat4 transform;
+	if (TransMatCahnged) {//Only calculate if have to!
+		transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, Position);
+		transform = glm::rotate(transform, glm::radians(Rotation.x), glm::vec3(1, 0, 0));
+		transform = glm::rotate(transform, glm::radians(Rotation.y), glm::vec3(0, 1, 0));
+		transform = glm::rotate(transform, glm::radians(Rotation.z), glm::vec3(0, 0, 1));
+		transform = glm::scale(transform, Scale);
+		TransMatCahnged = false;
+		last_transformMatrix = transform;
+	}
+	else
+	{
+		transform = last_transformMatrix;
+	}
+	return transform;
 }
 
-void GOTransform::PopObjectTransformMatrix()
-{
-	glPopMatrix();
+
+void GOTransform::PushObjectTransformMatrix() {
+	glm::mat4 transform = getTransformMatrix();
+	glm::mat4 currentMatrix = matrixStack.top();
+	matrixStack.push(currentMatrix * transform);
+	glLoadMatrixf(glm::value_ptr(matrixStack.top()));
+}
+
+void GOTransform::PopObjectTransformMatrix() {
+	matrixStack.pop();
+	glLoadMatrixf(glm::value_ptr(matrixStack.top()));
 }

@@ -15,7 +15,7 @@ enum GOType
 {
 	regular,
 	GOCamPoint,
-	GOCamLookAt,
+	GOCamLookAtPoint,
 	GOLightSource
 };
 

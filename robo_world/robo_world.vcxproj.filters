@@ -188,5 +188,8 @@
     <ClInclude Include="GameGUI.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="MatrixStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

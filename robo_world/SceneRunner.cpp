@@ -99,6 +99,7 @@ void SceneRunner::LoopScene()
 				CamPos.x = pos.x;
 				CamPos.y = pos.y;
 				CamPos.z = pos.z;
+				std::cout << "cam vec:" << CamPos.x << "|" << CamPos.y << "|" << CamPos.z << std::endl;
 				break;
 
 			case GOCamLookAtPoint:
@@ -106,6 +107,7 @@ void SceneRunner::LoopScene()
 				LookAtCenter.x = pos.x;
 				LookAtCenter.y = pos.y;
 				LookAtCenter.z = pos.z;
+				std::cout << "lookat vec:" << LookAtCenter.x << "|" << LookAtCenter.y << "|" << LookAtCenter.z << std::endl;
 				break;
 			}
 		}
@@ -118,6 +120,12 @@ void SceneRunner::LoopScene()
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
+	currentScene->cameraPosition = CamPos;
+	currentScene->cameraTarget = LookAtCenter;
+	currentScene->cameraUp = LookAtUp;
+
+	//Todo delete
 	gluLookAt(
 		CamPos.x, CamPos.y, CamPos.z,
 		LookAtCenter.x, LookAtCenter.y, LookAtCenter.z,

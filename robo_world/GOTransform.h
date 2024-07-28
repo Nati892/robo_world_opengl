@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "GameObject.h"
+#include "MatrixStack.h"
 class GameObject;
 
 class GOTransform {
@@ -9,7 +10,11 @@ private:
 	glm::vec3 Position = { 0,0,0 }; // x, y, z location
 	glm::vec3 Rotation = { 0,0,0 }; // rotation around x, y, z axis
 	glm::vec3 Scale = { 1,1,1 };
+	bool TransMatCahnged = true;
+	glm::mat4 last_transformMatrix;
 public:
+	static MatrixStack matrixStack;
+
 	GOTransform();
 	GOTransform(GameObject* parent);
 	void CleanUp();
@@ -17,6 +22,7 @@ public:
 	void SetGameObjectOnce(GameObject*);
 
 	void PushObjectTransformMatrix();
+	glm::mat4 getTransformMatrix();
 	void PopObjectTransformMatrix();
 
 	// Setters and getters for Position, Rotation, Scale
