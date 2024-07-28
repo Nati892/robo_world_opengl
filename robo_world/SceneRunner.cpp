@@ -125,13 +125,6 @@ void SceneRunner::LoopScene()
 	currentScene->cameraTarget = LookAtCenter;
 	currentScene->cameraUp = LookAtUp;
 
-	//Todo delete
-	gluLookAt(
-		CamPos.x, CamPos.y, CamPos.z,
-		LookAtCenter.x, LookAtCenter.y, LookAtCenter.z,
-		LookAtUp.x, LookAtUp.y, LookAtUp.z
-	);
-
 	//enable lights
 	currentScene->TraverseLightSources();
 
@@ -411,7 +404,6 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 
 void SceneRunner::SetEvents()
 {
-	//todo change to my callbacks
 	glutDisplayFunc(SceneRunner::DisplayCallback);
 	glutReshapeFunc(SceneRunner::ReshapeCallback);
 	glutMouseFunc(SceneRunner::MouseEventCallback);

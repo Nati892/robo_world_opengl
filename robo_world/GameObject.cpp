@@ -247,7 +247,6 @@ void GameObject::SetName(std::string new_name)
 
 std::vector<GameObject*>& GameObject::getChildren()
 {
-	// TODO: insert return statement here
 	return this->children;
 }
 
@@ -282,7 +281,7 @@ void GameObject::SetParent(GameObject* parent)
 
 void GameObject::AddChildObject(GameObject* child)
 {
-	if (child == nullptr || child->_parent == this)//todo add if child parent then dont allow loop
+	if (child == nullptr || child->_parent == this)
 		return;
 
 	this->children.push_back(child);

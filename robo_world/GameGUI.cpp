@@ -111,7 +111,11 @@ void LightSettingsGuiWindow::ShowGUI(Scene* current_scene)
 			if (light_source_obj != nullptr && light_source_obj->IsLightSource() && light_source_obj->GetLightSourceData() != nullptr)
 			{
 				this->p_light_data = light_source_obj->GetLightSourceData();
-
+				this->original_light_data = p_light_data->_light_ambient;
+			}
+			else
+			{
+				std::cout << "LightSettingsGuiWindow: error finding light in scene" << std::endl;
 			}
 		}
 	}
@@ -124,6 +128,12 @@ void LightSettingsGuiWindow::ShowGUI(Scene* current_scene)
 		return;
 	}
 
+	if (reset_light_clicked)
+	{
+		this->p_light_data->_light_ambient = original_light_data;
+		this->quit_clicked = false;
+	}
+
 	//run frame
 	ImGui::Begin("Light settings");
 	{
@@ -132,10 +142,8 @@ void LightSettingsGuiWindow::ShowGUI(Scene* current_scene)
 			ImGui::Text("Please set the following values for the main light source at the center of scene");
 			ImGui::SliderFloat3("R|G|B", (float*)&(this->p_light_data->_light_ambient), 0.0, 1.0f);
 
-			if (ImGui::Button("OK!"))
-			{
-				quit_clicked = true;
-			}
+			reset_light_clicked = ImGui::Button("reset light");
+			quit_clicked = ImGui::Button("OK!");
 		}
 		else
 			ImGui::Text("Couldnt find the ambiant light object, so this ui is now just a bit different");

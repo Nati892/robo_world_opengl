@@ -25,17 +25,18 @@ GameObject* Prefabs::GetNewRotatingCube(std::string name)
 
 GameObject* Prefabs::GetNewRobot(std::string name)
 {
-	GameObject* player_go = new GameObject(nullptr, name, nullptr);
+	GameObject* player_go = new GameObject(nullptr, name);
+	GameObject* body_container = new GameObject(player_go,"flip_container");
 	GameObject* player_object = Prefabs::GetNewHead("player_head");
-	player_go->AddChildObject(player_object);
+	body_container->AddChildObject(player_object);
 	player_object->GetTransform()->setPosition(0, -1, 0);
 
 	GameObject* player_torso = Prefabs::GetNewTorso("player_torso");
-	player_go->AddChildObject(player_torso);
+	body_container->AddChildObject(player_torso);
 	player_torso->GetTransform()->setPosition(0, -3, 0);
 
-	GameObject* WheelsHolder = new GameObject(player_go, "wheels_holder", nullptr);
-	WheelsHolder->GetTransform()->setPosition(-0.5, -4.7, 0);
+	GameObject* WheelsHolder = new GameObject(body_container, "wheels_holder");
+	WheelsHolder->GetTransform()->setPosition(0.4, -4.5, 0);
 	auto scripty = new BasicAxisRotateScript();
 	scripty->SetRotationAxis(axis_z);
 	WheelsHolder->AttachScript(scripty);
@@ -43,23 +44,23 @@ GameObject* Prefabs::GetNewRobot(std::string name)
 	//create and add left wheel to holder
 	auto wheel = Prefabs::GetNewWheel("left_wheel");
 	wheel->GetTransform()->setRotation(0, 90, 0);
-	wheel->GetTransform()->setPosition(0, 0, -0.8);
+	wheel->GetTransform()->setPosition(0, 0, -0.7);
 	WheelsHolder->AddChildObject(wheel);
 
 	//create and add right wheel to holder
 	wheel = Prefabs::GetNewWheel("right_wheel");
 	WheelsHolder->AddChildObject(wheel);
 	wheel->GetTransform()->setRotation(0, 270, 0);
-	wheel->GetTransform()->setPosition(0, 0, 0.8);
+	wheel->GetTransform()->setPosition(0, 0, 0.7);
 
 	//create and add arms
-	GameObject* right_hand_holder = new GameObject(player_go, "robot_right_arm_holder", nullptr);
+	GameObject* right_hand_holder = new GameObject(body_container, "robot_right_arm_holder");
 
 	auto right_hand = Prefabs::GetNewRobotArm("right_hand");
 
 	right_hand_holder->AddChildObject(right_hand);
-	right_hand_holder->GetTransform()->setPosition(-0.3, -2.3, 1.3);
-	right_hand_holder->GetTransform()->setRotation(90, 0, 0);
+	right_hand_holder->GetTransform()->setPosition(0.4, -2.3, -1.3);
+	right_hand_holder->GetTransform()->setRotation(0, 180, 0);
 	right_hand_holder->GetTransform()->setScale(1, 1, -1);
 
 	return player_go;

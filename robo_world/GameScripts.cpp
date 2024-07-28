@@ -130,11 +130,11 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 	}
 
 	//fps
-	this->FirstPersonCamHeadTransfrom.setPosition(2, 0, 0);
+	this->FirstPersonCamHeadTransfrom.setPosition(-1, 0, 0);
 	this->FirstPersonCamHeadTransfrom.setRotation(0, 0, 0);
 	this->FirstPersonCamHeadTransfrom.setScale(1, 1, 1);
 
-	this->FirstPersonLookAtTransfrom.setPosition(3, 0, 0);
+	this->FirstPersonLookAtTransfrom.setPosition(-1, 0, 0);
 	this->FirstPersonLookAtTransfrom.setRotation(0, 0, 0);
 	this->FirstPersonLookAtTransfrom.setScale(1, 1, 1);
 
@@ -142,7 +142,7 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 	this->FirstPersonCamTransfrom.setRotation(0, 0, 0);
 	this->FirstPersonCamTransfrom.setScale(1, 1, 1);
 
-	//3ps
+	//tps
 	this->ThirdPersonCamHeadTransfrom.setPosition(0, 0, 0);
 	this->ThirdPersonCamHeadTransfrom.setRotation(0, 0, 0);
 	this->ThirdPersonCamHeadTransfrom.setScale(1, 1, 1);
@@ -151,25 +151,28 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 	this->ThirdPersonLookAtTransfrom.setRotation(0, 0, 0);
 	this->ThirdPersonLookAtTransfrom.setScale(1, 1, 1);
 
-	this->ThirdPersonCamTransfrom.setPosition(-3, 0, 0);
+	this->ThirdPersonCamTransfrom.setPosition(3, 3, 0);
 	this->ThirdPersonCamTransfrom.setRotation(0, 0, 0);
 	this->ThirdPersonCamTransfrom.setScale(1, 1, 1);
 
-	//free roam
-	this->FreeRoamCamHeadTransfrom.setPosition(3, 3, 3);
-	this->FreeRoamCamHeadTransfrom.setRotation(0, 0, 0);
-	this->FreeRoamCamHeadTransfrom.setScale(1, 1, 1);
+	////free roam
+	//this->FreeRoamCamHeadTransfrom.setPosition(3, 3, 3);
+	//this->FreeRoamCamHeadTransfrom.setRotation(0, 0, 0);
+	//this->FreeRoamCamHeadTransfrom.setScale(1, 1, 1);
 
-	this->FreeRoamLookAtTransfrom.setPosition(1, 0, 0);
-	this->FreeRoamLookAtTransfrom.setRotation(0, 0, 0);
-	this->FreeRoamLookAtTransfrom.setScale(1, 1, 1);
+	//this->FreeRoamLookAtTransfrom.setPosition(1, 0, 0);
+	//this->FreeRoamLookAtTransfrom.setRotation(0, 0, 0);
+	//this->FreeRoamLookAtTransfrom.setScale(1, 1, 1);
 
-	this->FreeRoamCamTransfrom.setPosition(0, 0, 0);
-	this->FreeRoamCamTransfrom.setRotation(0, 0, 0);
-	this->FreeRoamCamTransfrom.setScale(1, 1, 1);
+	//this->FreeRoamCamTransfrom.setPosition(0, 0, 0);
+	//this->FreeRoamCamTransfrom.setRotation(0, 0, 0);
+	//this->FreeRoamCamTransfrom.setScale(1, 1, 1);
 
-	this->RobotHeadObject->AddChildObject(CamHeadObject);//make camera child of robot
-	HeadObjectTrans->setValues(&(this->ThirdPersonCamHeadTransfrom));//add the deafult transform
+	this->curr_cam_mode = cam_mode_tps;
+	this->RobotHeadObject->AddChildObject(this->CamHeadObject);
+	HeadObjectTrans->setValues(&(this->ThirdPersonCamHeadTransfrom));
+	CamObjectTrans->setValues(&(this->ThirdPersonCamTransfrom));
+	LookAtObjectTrans->setValues(&(this->ThirdPersonLookAtTransfrom));
 
 }
 
@@ -185,7 +188,7 @@ void CameraControllerScript::SLoop()
 	{
 		exit(0);
 	}
-	if (this_input_sys->IsKeyPressed('v') || this_input_sys->IsKeyPressed('v'))//if press v many times, scene goes wonky, todo FIX this!
+	if (this_input_sys->IsKeyPressed('v') || this_input_sys->IsKeyPressed('v'))
 	{
 		switch (this->curr_cam_mode)
 		{
@@ -197,177 +200,56 @@ void CameraControllerScript::SLoop()
 			LookAtObjectTrans->setValues(&(this->ThirdPersonLookAtTransfrom));
 			break;
 		case cam_mode_tps:
-			this->curr_cam_mode = cam_mode_free_mode;
-			this->this_scene->AddGameObjectTree(this->CamHeadObject);
-			HeadObjectTrans->setValues(&(this->FreeRoamCamHeadTransfrom));
-			CamObjectTrans->setValues(&(this->FreeRoamCamTransfrom));
-			LookAtObjectTrans->setValues(&(this->FreeRoamLookAtTransfrom));
-			break;
-		case cam_mode_free_mode:
 			this->curr_cam_mode = cam_mode_fps;
 			this->RobotHeadObject->AddChildObject(this->CamHeadObject);
 			HeadObjectTrans->setValues(&(this->FirstPersonCamHeadTransfrom));
-			CamObjectTrans->setValues(&(this->ThirdPersonCamTransfrom));
+			CamObjectTrans->setValues(&(this->FirstPersonCamTransfrom));
 			LookAtObjectTrans->setValues(&(this->FirstPersonLookAtTransfrom));
 			break;
-		default:
-			this->curr_cam_mode = cam_mode_free_mode;
-			this->this_scene->AddGameObjectTree(this->CamHeadObject);
-			CamObjectTrans->setValues(&(this->FreeRoamCamTransfrom));
-			HeadObjectTrans->setValues(&(this->FreeRoamCamHeadTransfrom));
-			LookAtObjectTrans->setValues(&(this->FreeRoamLookAtTransfrom));
-			break;
+
 		}
 	}
-
 
 	int x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
 	int y_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::Y_AXIS);
 	glm::vec3 total_movement;
 	glm::vec3 movement_vec;
-
+	auto step = LookAtObject->GetCalculatedLocation() - CamObject->GetCalculatedLocation();
+	step.y = 0;
+	auto norm_step = glm::normalize(step);
+	norm_step *= this_scene->GetDeltaTime();
+	std::cout << "step: " << norm_step.x << "|" << norm_step.y << "|" << norm_step.z << std::endl;
 	switch (this->curr_cam_mode)
 	{
 	case cam_mode_fps:
+		
+			if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
+			{
+				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
+			}
+			if (this_input_sys->IsKeyPressed('s') || this_input_sys->IsKeyPressed('S'))
+			{
+				norm_step *= -1;
+				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
+			}
+
 		break;
 
 	case cam_mode_tps:
-		if (x_movement != 0 || y_movement != 0) {
-			// Get current rotation in Euler angles
-			glm::vec3 currentEulerRotation = HeadObjectTrans->GetRotation();
+		
 
-			// Convert current Euler angles to quaternion
-			glm::quat currentQuat = EulerToQuaternion(currentEulerRotation);
+			if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
+			{
+				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
+			}
+			if (this_input_sys->IsKeyPressed('s') || this_input_sys->IsKeyPressed('S'))
+			{
+				norm_step *= -1;
+				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
+			}
 
-			// Calculate the quaternion representing the mouse movement
-			glm::quat xQuat = glm::angleAxis(glm::radians(static_cast<float>(x_movement * -1)), glm::vec3(0, 1, 0));
-			glm::quat yQuat = glm::angleAxis(glm::radians(static_cast<float>(y_movement * -1)), glm::vec3(1, 0, 0));
-
-			// Apply the rotations
-			glm::quat newQuat = xQuat * currentQuat * yQuat;
-
-			// Convert the resulting quaternion back to Euler angles
-			glm::vec3 newEulerRotation = QuaternionToEuler(newQuat);
-
-			// Set the new rotation
-			HeadObjectTrans->setRotation(newEulerRotation);
-		}
-		break;
-
-
-	case cam_mode_free_mode:
-		glm::vec3 movement = this->LookAtObject->GetCalculatedLocation() - this->CamObject->GetCalculatedLocation();
-		auto res = glm::normalize(movement);
-		movement = glm::vec3{ res.x,res.y,res.z };
-		movement *= 0.2f;
-		if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
-		{
-			this->HeadObjectTrans->setPosition(this->HeadObjectTrans->GetPosition() + movement);
-		}
-		if (this_input_sys->IsKeyPressed('s') || this_input_sys->IsKeyPressed('S'))
-		{
-			movement *= -1;
-			this->HeadObjectTrans->setPosition(this->HeadObjectTrans->GetPosition() + movement);
-		}
-		if (this_input_sys->IsKeyPressed('a') || this_input_sys->IsKeyPressed('A'))
-		{
-
-			this->HeadObjectTrans->setPosition(this->HeadObjectTrans->GetPosition() + movement);
-		}
-		if (this_input_sys->IsKeyPressed('d') || this_input_sys->IsKeyPressed('D'))
-		{
-			this->HeadObjectTrans->setPosition(this->HeadObjectTrans->GetPosition() + movement);
-		}
-
-		movement_vec = glm::vec3{ 0,0,0 };
-		if (x_movement != 0)
-		{
-			movement_vec += glm::vec3{ 0,static_cast<float>(x_movement * -1),0 };
-		}
-		if (y_movement != 0)
-		{
-			movement_vec += glm::vec3{ static_cast<float>(y_movement * -1),0,0 };
-		}
-		// Scale the movement vector by the delta time
-		if (y_movement != 0 || x_movement != 0)
-		{
-			movement_vec *= this->this_scene->GetDeltaTime();
-
-			//// Get the current rotation in Euler angles (assuming in degrees)
-			glm::vec3 current_rotation_euler = this->HeadObjectTrans->GetRotation();
-			//glm::vec3 current_rotation_euler_glm = glm::vec3(current_rotation_euler.x, current_rotation_euler.y, current_rotation_euler.z);
-
-			//// Convert current Euler angles to radians
-			//glm::vec3 current_rotation_radians = glm::radians(current_rotation_euler_glm);
-
-			//// Create rotation matrices for the pitch and yaw rotations
-			//glm::mat4 yaw_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(movement_vec.x), glm::vec3(1.0f, 0.0f, 0.0f));
-			//glm::mat4 pitch_matrix = glm::rotate(glm::mat4(1.0f), glm::radians(movement_vec.y), glm::vec3(0.0f, 1.0f, 0.0f));
-
-			//// Create a rotation matrix from the current rotation
-			//glm::mat4 current_rotation_matrix = glm::eulerAngleXYZ(current_rotation_radians.x, current_rotation_radians.y, current_rotation_radians.z);
-
-			//// Apply the new pitch and yaw rotations to the current rotation matrix
-			//glm::mat4 new_rotation_matrix = current_rotation_matrix*(yaw_matrix * pitch_matrix) ;
-
-			//// Extract the new rotation as a quaternion
-			//glm::quat new_rotation_quat = glm::quat_cast(new_rotation_matrix);
-
-			//// Extract the new Euler angles from the quaternion
-			//glm::vec3 new_rotation_euler = glm::degrees(glm::eulerAngles(new_rotation_quat));
-
-			//// Set the new rotation
-			//this->HeadObjectTrans->setRotation(glm::vec3{ new_rotation_euler.x, new_rotation_euler.y, new_rotation_euler.z });
-
-
-		}
 		break;
 	}
-
-	////check foword motion 'w' key
-
-
-
-	//	CurrDynamicSurfaceScript->UpdatePosition(MoveObjectTrans->GetPosition());
-
-	//	auto rot = FollowObjectTrans->GetRotation();
-	//	rot.y = my_trans->GetRotation().y;
-	//	FollowObjectTrans->setRotation(rot + glm::vec3{ 0,90,0 });
-	//}
-
-	//int x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
-	//int y_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::Y_AXIS);
-	//auto movement_vec = glm::vec3{ 0,0,0 };
-	//if (x_movement != 0)
-	//{
-	//	movement_vec += glm::vec3{ 0,static_cast<float>(x_movement * -1),0 };
-	//}
-	//if (y_movement != 0)
-	//{
-	//	movement_vec += glm::vec3{ static_cast<float>(y_movement * -1),0,0 };
-	//}
-
-	//movement_vec *= this->this_scene->GetDeltaTime();
-
-	//auto total_movement = my_trans->GetRotation() + movement_vec;
-
-	////cutoff
-	//if (total_movement.x < -30)
-	//{
-	//	total_movement.x = -30;
-	//}
-	//if (total_movement.x > 60)
-	//{
-	//	total_movement.x = 60;
-	//}
-
-	//my_trans->setRotation(total_movement);
-
-	//if (!this->ThirdPersonCamera) {
-	//	auto rot = FollowObjectTrans->GetRotation();
-	//	rot.y = my_trans->GetRotation().y;
-	//	FollowObjectTrans->setRotation(rot + glm::vec3{ 0,90,0 });
-	//}
 
 }
 

@@ -46,9 +46,11 @@ class LightSettingsGuiWindow :public GOGuiWindow
 	bool light_source_searched = false;
 	GOLightSourceData* p_light_data = nullptr;
 	glm::vec3 light_data;
+	glm::vec4 original_light_data;
 
 private:
 	bool quit_clicked = false;
+	bool reset_light_clicked = false;
 
 public:
 	virtual void CleanUp();

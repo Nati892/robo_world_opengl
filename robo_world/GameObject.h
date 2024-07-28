@@ -7,9 +7,6 @@ class GODrawable;
 class GOScript;
 class GOTransform;
 class Scene;
-//this enum - GOCamPoint, GOCamLookAtPoint, GOLightSource// todo add all of them
-//are helpers and basci opengl 1.1 doesnt allow to calculate my own matrices, only with some gltransform... or something like that
-//this attach to objects and then get their location calculated to set normally in the scene
 
 enum GOType
 {

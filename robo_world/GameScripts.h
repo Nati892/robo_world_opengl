@@ -37,7 +37,6 @@ enum cam_mode
 {
 	cam_mode_fps,
 	cam_mode_tps,
-	cam_mode_free_mode,
 };
 
 class CameraControllerScript :public GOScript
