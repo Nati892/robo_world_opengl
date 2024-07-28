@@ -5,9 +5,12 @@
 
 GameObject::GameObject(GameObject* parent, std::string NewName, GOTransform* transoform)
 {
-	this->_parent = parent;
-	if (this->_parent != nullptr)
-		this->_parent->AddChildObject(this);
+	this->_parent = nullptr;
+	if (parent != nullptr)
+	{
+		parent->AddChildObject(this);
+	}
+	//set parent but object is null
 	this->_name = NewName;
 	//this->_transoform = transoform;
 	if (transoform == nullptr)
@@ -97,9 +100,9 @@ void GameObject::CalculateWorldPosition()
 		if (obj->GetTransform() != nullptr)
 		{
 			GOTransform* tempTransform = obj->GetTransform();
-			GOvec3 objScale = tempTransform->GetScale();
-			GOvec3 objPosition = tempTransform->GetPosition();
-			GOvec3 objRotation = tempTransform->GetRotation();
+			glm::vec3 objScale = tempTransform->GetScale();
+			glm::vec3 objPosition = tempTransform->GetPosition();
+			glm::vec3 objRotation = tempTransform->GetRotation();
 
 			glm::vec3 scale = glm::vec3(objScale.x, objScale.y, objScale.z);
 			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
@@ -123,13 +126,13 @@ void GameObject::CalculateWorldPosition()
 	if (this->GetTransform() != nullptr)
 	{
 		GOTransform* tempTransform = this->GetTransform();
-		GOvec3 objPosition = tempTransform->GetPosition();
+		glm::vec3 objPosition = tempTransform->GetPosition();
 		glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
 		// Convert the local position to a 4D homogeneous coordinate
 		glm::vec4 localPosition4D = glm::vec4(position, 1.0f);
 
 		glm::vec3 claculated_position = ResultMatrixTransformation * localPosition4D;
-		GOvec3 res = { claculated_position.x, claculated_position.y, claculated_position.z };
+		glm::vec3 res = { claculated_position.x, claculated_position.y, claculated_position.z };
 
 		this->SetCalculatedPosition(res);
 	}
@@ -189,12 +192,12 @@ bool GameObject::IsLightSource()
 	return this->_GO_object_type == GOLightSource;
 }
 
-GOvec3 GameObject::GetCalculatedLocation()
+glm::vec3 GameObject::GetCalculatedLocation()
 {
 	return this->_claculated_world_position;
 }
 
-void GameObject::SetCalculatedPosition(GOvec3 new_calc_pos)
+void GameObject::SetCalculatedPosition(glm::vec3 new_calc_pos)
 {
 	this->_claculated_world_position = new_calc_pos;
 }
@@ -267,19 +270,20 @@ GameObject* GameObject::GetParent()
 
 void GameObject::SetParent(GameObject* parent)
 {
-	//if (parent == nullptr || this->_parent == parent)
-	//	return;
-
-	this->_parent = parent;
+	if (this->GetParent() != nullptr)
+	{
+		this->GetParent()->RemoveChildObject(this);
+	}
+	parent->AddChildObject(this);
 }
 
 void GameObject::AddChildObject(GameObject* child)
 {
-	if (child == nullptr)
+	if (child == nullptr || child->_parent == this)//todo add if child parent then dont allow loop
 		return;
 
 	this->children.push_back(child);
-	if (child->_parent != nullptr&&child->_parent!=this)
+	if (child->_parent != nullptr && child->_parent != this)
 	{
 		child->_parent->RemoveChildObject(child);
 	}

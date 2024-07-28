@@ -24,6 +24,7 @@
 
 #endif
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <string>
 #include <iostream>
 #include <chrono>
@@ -33,6 +34,10 @@
 #include <map>
 #include "glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtc/constants.hpp"
+#include <glm/gtx/quaternion.hpp>
+#include "glm/gtx/euler_angles.hpp"
 #include "tiny_obj_loader.h"
 #include "Loaders.h"
 #include <filesystem>
@@ -43,132 +48,3 @@
 
 //macros
 #define LIGHT_SOURCES_NUM 8
-
-struct GOvec3 {
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
-
-	GOvec3& operator+=(GOvec3 other)
-	{
-		this->x += other.x;
-		this->y += other.y;
-		this->z += other.z;
-		return *this;
-	}
-
-	bool operator==(GOvec3 other)
-	{
-		return	(
-			this->x == other.x &&
-			this->y == other.y &&
-			this->z == other.z
-			);
-	}
-
-	GOvec3& operator-=(GOvec3 other)
-	{
-		this->x -= other.x;
-		this->y -= other.y;
-		this->z -= other.z;
-		return *this;
-	}
-
-	GOvec3& operator*=(float a)
-	{
-		this->x *= a;
-		this->y *= a;
-		this->z *= a;
-		return *this;
-	}
-
-	GOvec3& operator+=(float a)
-	{
-		this->x += a;
-		this->y += a;
-		this->z += a;
-		return *this;
-	}
-
-	GOvec3& operator-=(float a)
-	{
-		this->x -= a;
-		this->y -= a;
-		this->z -= a;
-		return *this;
-	}
-
-
-	GOvec3 operator+(GOvec3 other)
-	{
-		GOvec3 ret = { this->x, this->y, this->z };
-		ret += other;
-		return ret;
-	}
-
-	GOvec3 operator-(GOvec3 other)
-	{
-		GOvec3 ret = { this->x, this->y, this->z };
-		ret -= other;
-		return ret;
-	}
-
-	GOvec3 operator+(float a)
-	{
-		GOvec3 ret = { this->x, this->y, this->z };
-		ret += a;
-		return *this;
-	}
-
-	GOvec3 operator-(float a)
-	{
-		GOvec3 ret = { this->x, this->y, this->z };
-		ret -= a;
-		return *this;
-	}
-};
-
-struct GOvec4 {
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
-	float w = 0.0f;
-
-	GOvec4& operator+=(GOvec4 other)
-	{
-		this->x += other.x;
-		this->y += other.y;
-		this->z += other.z;
-		this->w += other.w;
-		return *this;
-	}
-
-	GOvec4& operator-=(GOvec4 other)
-	{
-		this->x -= other.x;
-		this->y -= other.y;
-		this->z -= other.z;
-		this->w -= other.w;
-		return *this;
-	}
-
-	GOvec4& operator*=(float a)
-	{
-		this->x *= a;
-		this->y *= a;
-		this->z *= a;
-		this->w *= a;
-		return *this;
-	}
-
-	bool operator==(GOvec4 other)
-	{
-		return	(
-			this->x == other.x &&
-			this->y == other.y &&
-			this->z == other.z &&
-			this->w == other.w
-
-			);
-	}
-};

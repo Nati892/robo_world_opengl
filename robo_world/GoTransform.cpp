@@ -1,5 +1,4 @@
 #include "GOTransform.h"
-
 GOTransform::GOTransform()
 {
 	Position.x = 0;
@@ -64,30 +63,37 @@ void GOTransform::setScale(GLfloat x, GLfloat y, GLfloat z) {
 	Scale.z = z;
 }
 
-void GOTransform::setPosition(GOvec3 vec)
+void GOTransform::setPosition(glm::vec3 vec)
 {
 	this->Position = vec;
 }
 
-void GOTransform::setRotation(GOvec3 vec)
+void GOTransform::setRotation(glm::vec3 vec)
 {
 	this->Rotation = vec;
 }
 
-void GOTransform::setScale(GOvec3 vec)
+void GOTransform::setScale(glm::vec3 vec)
 {
 	this->Scale = vec;
 }
 
-GOvec3 GOTransform::GetPosition() {
+void GOTransform::setValues(GOTransform* from_other)
+{
+	this->setPosition(from_other->GetPosition());
+	this->setRotation(from_other->GetRotation());
+	this->setScale(from_other->GetScale());
+}
+
+glm::vec3 GOTransform::GetPosition() {
 	return Position;
 }
 
-GOvec3 GOTransform::GetRotation() {
+glm::vec3 GOTransform::GetRotation() {
 	return Rotation;
 }
 
-GOvec3 GOTransform::GetScale() {
+glm::vec3 GOTransform::GetScale() {
 	return Scale;
 }
 

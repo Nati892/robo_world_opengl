@@ -38,22 +38,22 @@ Scene* GetWorldScene()
 
 	GOTransform* CamTrans = new GOTransform();
 	GameObject* MainCam = new GameObject(nullptr, "MainCam", CamTrans);
-	CamTrans->setPosition(0, 7, 3);
+	CamTrans->setPosition(-1, 0, 0);
 	MainCam->SetGOType(GOCamPoint);
 
 	GOTransform* CamLookAtTrans = new GOTransform();
 	GameObject* CamLookAt = new GameObject(nullptr, "MainCamLookAt", CamLookAtTrans);
-	CamLookAtTrans->setPosition(0, 2, 0);
+	CamLookAtTrans->setPosition(0, 0, 0);
 	CamLookAt->SetGOType(GOCamLookAt);
 
 	CameraHolder->AddChildObject(MainCam);
 	CameraHolder->AddChildObject(CamLookAt);
 
 	//set script to camera holder
-	CameraHolder->SetGOScript(new Camera3rdPerson());
+	CameraHolder->SetGOScript(new CameraControllerScript());
 
 	PlayerAndCameraHolder->AddChildObject(CameraHolder);
-	PlayerAndCameraHolder->GetTransform()->setPosition(0, 5.6, 0);
+	PlayerAndCameraHolder->GetTransform()->setPosition(5, 5.6, 5);
 	ret_scene->AddGameObjectTree(PlayerAndCameraHolder);
 
 	auto Box = Prefabs::GetReadySkyBox("Skybox", "player_holder");
@@ -69,7 +69,7 @@ Scene* GetWorldScene()
 	auto tree_ob1 = Prefabs::GetNewRandomTree("tree1");
 
 	//add mushrooms
-	for (int i = 0; i < 200; i++)//add mushrooms for each tree
+	for (int i = 0; i < 500; i++)//add mushrooms for each tree
 	{
 		int randomXoffset = (rand() % 300) - 150;//pick tree bark
 		int randoZoffset = (rand() % 300) - 150;//pick tree bark
@@ -219,6 +219,7 @@ Scene::~Scene()
 
 void Scene::StartScene()
 {
+	InitGameObjects(this, SceneMasterParent);
 	SetupScriptsForGameObjectHead(this, SceneMasterParent);
 }
 
@@ -313,6 +314,20 @@ void SetupScriptsForGameObjectHead(Scene* CurrScene, GameObject* GOHead)
 	}
 }
 
+
+
+void InitGameObjects(Scene* CurrScene, GameObject* GOHead) 
+{
+	if (GOHead == nullptr)
+		return;
+
+	auto children = GOHead->getChildren();
+	for (int i = 0; i < children.size(); i++)
+	{
+		GameObject* curr_child = children.at(i);
+		InitGameObjects(CurrScene, curr_child);
+	}
+}
 /// <summary>
 /// calculates the world position for GameObject relative to the parents
 /// </summary>
@@ -331,9 +346,9 @@ void CaculateWorldPosition(GameObject* GO_in)
 		if (obj->GetTransform() != nullptr)
 		{
 			GOTransform* tempTransform = obj->GetTransform();
-			GOvec3 objScale = tempTransform->GetScale();
-			GOvec3 objPosition = tempTransform->GetPosition();
-			GOvec3 objRotation = tempTransform->GetRotation();
+			glm::vec3 objScale = tempTransform->GetScale();
+			glm::vec3 objPosition = tempTransform->GetPosition();
+			glm::vec3 objRotation = tempTransform->GetRotation();
 
 			glm::vec3 scale = glm::vec3(objScale.x, objScale.y, objScale.z);
 			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
@@ -356,7 +371,7 @@ void CaculateWorldPosition(GameObject* GO_in)
 		{
 			//finally calculate and update the world position
 			GOTransform* tempTransform = GO_in->GetTransform();
-			GOvec3 objPosition = tempTransform->GetPosition();
+			glm::vec3 objPosition = tempTransform->GetPosition();
 			glm::vec3 position = glm::vec3(objPosition.x, objPosition.y, objPosition.z);
 			// Convert the local position to a 4D homogeneous coordinate
 			glm::vec4 localPosition4D = glm::vec4(position, 1.0f);

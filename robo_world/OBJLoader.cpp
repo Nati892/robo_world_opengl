@@ -143,10 +143,10 @@ bool OBJLoader::MyLoadOBJ(std::string path, std::vector<Vertex>** out_vertices, 
 	{
 		auto a = materials[i];
 		auto b = GOMaterial();
-		b.AmbientColor = GOvec4{a.ambient[0],a.ambient[1],a.ambient[2],1 };
-		b.DiffuseColor = GOvec4{a.diffuse[0],a.diffuse[1],a.diffuse[2],1 };
-		b.SpecularColor = GOvec4{a.specular[0],a.specular[1],a.specular[2],1 };
-		b.Emission = GOvec4{a.emission[0],a.emission[1],a.emission[2],1 };
+		b.AmbientColor = glm::vec4{a.ambient[0],a.ambient[1],a.ambient[2],1 };
+		b.DiffuseColor = glm::vec4{a.diffuse[0],a.diffuse[1],a.diffuse[2],1 };
+		b.SpecularColor = glm::vec4{a.specular[0],a.specular[1],a.specular[2],1 };
+		b.Emission = glm::vec4{a.emission[0],a.emission[1],a.emission[2],1 };
 		b.Shininess[0] = a.shininess;
 		(*materials_out)[i] = b;
 	}

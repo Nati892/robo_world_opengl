@@ -4,10 +4,10 @@
 
 struct GOMaterial
 {
-	GOvec4 AmbientColor = { 1,1,1,1 }; // Ambient color (RGBA)
-	GOvec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
-	GOvec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
-	GOvec4 Emission = { 0,0,0,1 }; //Basic emission color (RGBA)
+	glm::vec4 AmbientColor = { 1,1,1,1 }; // Ambient color (RGBA)
+	glm::vec4 DiffuseColor = { 0,0,0,1 }; // Diffuse color (RGBA)
+	glm::vec4 SpecularColor = { 0,0,0,1 }; // Specular color (RGBA)
+	glm::vec4 Emission = { 0,0,0,1 }; //Basic emission color (RGBA)
 	GLfloat Shininess[1] = { 0 }; // Shininess factor
 	static void SetActiveMaterial(GOMaterial, int);
 
@@ -47,9 +47,9 @@ public:
 	void setSpecularColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void setEmission(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
 	void setShininess(GLfloat shininess);
-	GOvec4 getAmbientColor();
-	GOvec4 getDiffuseColor();
-	GOvec4 getSpecularColor();
+	glm::vec4 getAmbientColor();
+	glm::vec4 getDiffuseColor();
+	glm::vec4 getSpecularColor();
 	GLfloat getShininess();
-	GOvec4 getEmission();
+	glm::vec4 getEmission();
 };

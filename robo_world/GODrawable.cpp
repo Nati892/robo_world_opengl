@@ -79,15 +79,15 @@ void GODrawable::setShininess(GLfloat shininess) {
 	material.Shininess[0] = shininess;
 }
 
-GOvec4 GODrawable::getAmbientColor() {
+glm::vec4 GODrawable::getAmbientColor() {
 	return material.AmbientColor;
 }
 
-GOvec4 GODrawable::getDiffuseColor() {
+glm::vec4 GODrawable::getDiffuseColor() {
 	return material.DiffuseColor;
 }
 
-GOvec4 GODrawable::getSpecularColor() {
+glm::vec4 GODrawable::getSpecularColor() {
 	return material.SpecularColor;
 }
 
@@ -95,7 +95,7 @@ GLfloat GODrawable::getShininess() {
 	return material.Shininess[0];
 }
 
-GOvec4 GODrawable::getEmission()
+glm::vec4 GODrawable::getEmission()
 {
 	return material.Emission;
 }

@@ -68,9 +68,9 @@ void SceneRunner::LoopScene()
 	currentScene->RunSceneScripts();
 
 	//setup camera
-	GOvec3 CamPos = GOvec3();
-	GOvec3 LookAtCenter = GOvec3();
-	GOvec3 LookAtUp = GOvec3();
+	glm::vec3 CamPos = glm::vec3();
+	glm::vec3 LookAtCenter = glm::vec3();
+	glm::vec3 LookAtUp = glm::vec3();
 
 	CamPos.x = 0;
 	CamPos.y = 0;
@@ -85,7 +85,7 @@ void SceneRunner::LoopScene()
 	LookAtUp.z = 0;
 
 	std::vector<GameObject*> SpecialObjects;
-	GOvec3 pos;
+	glm::vec3 pos;
 	if (currentScene != nullptr)
 	{
 		SpecialObjects = currentScene->GetSpecialGameObjects();
@@ -101,7 +101,7 @@ void SceneRunner::LoopScene()
 				CamPos.z = pos.z;
 				break;
 
-			case GOCamLookAt:
+			case GOCamLookAtPoint:
 				pos = curr_special_obj->GetCalculatedLocation();
 				LookAtCenter.x = pos.x;
 				LookAtCenter.y = pos.y;
@@ -195,12 +195,9 @@ void SceneRunner::LoopScene()
 	GLenum err;
 	if ((err = glGetError()) != GL_NO_ERROR)
 	{
-		//std::cout<<err<<std::endl;
+		std::cout << "err:" << err << std::endl;
 	}
-	else
-	{
 
-	}
 
 	//draw gui
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

@@ -20,6 +20,7 @@ private:
 	GOInputSystem* SceneInputSystem = nullptr;
 	std::vector<GOGuiWindow*> gui_windows;
 public:
+
 	Scene();
 	~Scene();
 	/// <summary>
@@ -46,6 +47,8 @@ public:
 	GOInputSystem* GetSceneInputSystem();
 	float GetDeltaTime();
 };
+
+
 
 //Scene* GetTestScene();
 Scene* GetWorldScene();
@@ -75,7 +78,7 @@ void SetupScriptForGameObject(GameObject*);
 void StartScript(GameObject*);
 
 void SetupScriptsForGameObjectHead(Scene* CurrScene, GameObject* GOHead);
-
+void InitGameObjects(Scene* CurrScene, GameObject* GOHead);
 //TODO: add functions to run from ambient light to parent, and get parent list, and then calculate the camera location.
 //	also to calculate the lookat, we do the same for a "lookat" object, where the object is relative to player, is where we look to.
 

@@ -291,7 +291,7 @@ GameObject* Prefabs::GetReadyDynamicSurface2d(std::string name)
 	GOTransform* surface2d_trans = new GOTransform();
 	GameObject* surface2d_obj = new GameObject(nullptr, name, surface2d_trans);
 
-	surface2d_obj->AttachScript(new DynamicSurfaceScript(GOvec3{ 10, 0, 10 }, GOvec3{ 20,0,20 }));
+	surface2d_obj->AttachScript(new DynamicSurfaceScript(glm::vec3{ 10, 0, 10 }, glm::vec3{ 20,0,20 }));
 	return surface2d_obj;
 }
 
@@ -300,7 +300,7 @@ GameObject* Prefabs::GetReadyCheckBoardDynamicSurface2d(std::string name)
 	GOTransform* surface2d_trans = new GOTransform();
 	GameObject* surface2d_obj = new GameObject(nullptr, name, surface2d_trans);
 
-	surface2d_obj->AttachScript(new DynamicSurfaceScript(GOvec3{ 10, 0, 10 }, GOvec3{ 20,0,20 },false));
+	surface2d_obj->AttachScript(new DynamicSurfaceScript(glm::vec3{ 10, 0, 10 }, glm::vec3{ 20,0,20 },false));
 	return surface2d_obj;
 }
 

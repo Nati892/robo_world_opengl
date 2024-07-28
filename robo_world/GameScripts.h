@@ -9,13 +9,13 @@
 
 class GOInputSystem;
 class DynamicSurfaceScript;
+
 enum axis
 {
 	axis_x,
 	axis_y,
 	axis_z,
 };
-
 class BasicAxisRotateScript :public GOScript
 {
 private:
@@ -33,7 +33,14 @@ public:
 	void SetRotationAxis(axis a);
 };
 
-class Camera3rdPerson :public GOScript
+enum cam_mode
+{
+	cam_mode_fps,
+	cam_mode_tps,
+	cam_mode_free_mode,
+};
+
+class CameraControllerScript :public GOScript
 {
 private:
 	Scene* this_scene;
@@ -42,23 +49,43 @@ private:
 	GameObject* LookAtObject;
 	GameObject* DynamicSurface;
 	GameObject* FollowObject;
-	GOTransform* FollowObjectTrans;	
+	GOTransform* FollowObjectTrans;
 	GameObject* CamHeadObject;
 	GameObject* RobotHeadObject;
 	GOTransform* HeadObjectTrans;
-	GameObject* MoveObject;
+	GOTransform* LookAtObjectTrans;
+	GOTransform* CamObjectTrans;
+	GameObject* PlayerHolderObject;
 	GOTransform* MoveObjectTrans;
 	DynamicSurfaceScript* CurrDynamicSurfaceScript;
+
+	//cam head transform modes
+	GOTransform FirstPersonCamHeadTransfrom;
+	GOTransform ThirdPersonCamHeadTransfrom;
+	GOTransform FreeRoamCamHeadTransfrom;
+
+	//cam lookat transform modes
+	GOTransform ThirdPersonLookAtTransfrom;
+	GOTransform FreeRoamLookAtTransfrom;
+	GOTransform FirstPersonLookAtTransfrom;
+
+	//cam transfrom modes
+	GOTransform ThirdPersonCamTransfrom;
+	GOTransform FreeRoamCamTransfrom;
+	GOTransform FirstPersonCamTransfrom;
+
 	float y_axis_limit = 50.0f;
 	float speed;
 	bool ThirdPersonCamera = true;// input #1
-	void SSetup(Scene* CurrScene);
 	bool lock_mouse = false;
+	cam_mode curr_cam_mode = cam_mode_tps;
+
+	void SSetup(Scene* CurrScene);
+
 public:
 	//virtual inherited
 	void SLoop();
 	void SCleanUp();
-
 };
 
 
@@ -66,18 +93,18 @@ public:
 class DynamicSurfaceScript :public GOScript
 {
 private:
-	
-	GOvec3 _Scale;
-	GOvec3 _Count;
-	GOvec3 _Position;
+
+	glm::vec3 _Scale;
+	glm::vec3 _Count;
+	glm::vec3 _Position;
 	bool is_textured;
 
 	void SSetup(Scene* CurrScene);
 public:
 	//virtual inherited
-	DynamicSurfaceScript(GOvec3 _Scale,GOvec3 _Count,bool is_textured=true);
+	DynamicSurfaceScript(glm::vec3 _Scale, glm::vec3 _Count, bool is_textured = true);
 	void SLoop();
-	void UpdatePosition(GOvec3 new_pos);
+	void UpdatePosition(glm::vec3 new_pos);
 	void SCleanUp();
 
 };

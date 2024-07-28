@@ -45,7 +45,7 @@ class LightSettingsGuiWindow :public GOGuiWindow
 {
 	bool light_source_searched = false;
 	GOLightSourceData* p_light_data = nullptr;
-	GOvec3 light_data;
+	glm::vec3 light_data;
 
 private:
 	bool quit_clicked = false;

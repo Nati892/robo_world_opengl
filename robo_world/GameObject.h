@@ -30,7 +30,7 @@ protected:
 	std::vector<GameObject*> children; // Vector to hold pointers to child objects
 	GOType _GO_object_type = regular;
 	GOLightSourceData* _light_source_data = nullptr;
-	GOvec3 _claculated_world_position;
+	glm::vec3 _claculated_world_position;
 	Scene* _attached_scene;
 public:
 	GameObject(GameObject* parent, std::string NewName, GOTransform* transform);
@@ -77,8 +77,8 @@ public:
 	bool IsLightSource();
 
 	//calculatedLoc
-	GOvec3 GetCalculatedLocation();
-	void SetCalculatedPosition(GOvec3);
+	glm::vec3 GetCalculatedLocation();
+	void SetCalculatedPosition(glm::vec3);
 
 	// children get/add
 	std::vector<GameObject*>& getChildren();

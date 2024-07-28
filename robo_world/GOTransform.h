@@ -6,9 +6,9 @@ class GameObject;
 class GOTransform {
 private:
 	GameObject* _GameObject = nullptr;
-	GOvec3 Position = { 0,0,0 }; // x, y, z location
-	GOvec3 Rotation = { 0,0,0 }; // rotation around x, y, z axis
-	GOvec3 Scale = { 1,1,1 };
+	glm::vec3 Position = { 0,0,0 }; // x, y, z location
+	glm::vec3 Rotation = { 0,0,0 }; // rotation around x, y, z axis
+	glm::vec3 Scale = { 1,1,1 };
 public:
 	GOTransform();
 	GOTransform(GameObject* parent);
@@ -23,10 +23,11 @@ public:
 	void setPosition(GLfloat x, GLfloat y, GLfloat z);
 	void setRotation(GLfloat x, GLfloat y, GLfloat z);
 	void setScale(GLfloat x, GLfloat y, GLfloat z);
-	void setPosition(GOvec3);
-	void setRotation(GOvec3);
-	void setScale(GOvec3);
-	GOvec3 GetPosition();
-	GOvec3 GetRotation();
-	GOvec3 GetScale();
+	void setPosition(glm::vec3);
+	void setRotation(glm::vec3);
+	void setScale(glm::vec3);
+	void setValues(GOTransform*);
+	glm::vec3 GetPosition();
+	glm::vec3 GetRotation();
+	glm::vec3 GetScale();
 };
