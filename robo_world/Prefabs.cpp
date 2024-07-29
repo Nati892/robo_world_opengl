@@ -115,9 +115,9 @@ GameObject* Prefabs::GetNewRobotArm(std::string name)
 	GameObject* hand_holder = new GameObject(nullptr, name);
 	GameObject* hand_holder2 = new GameObject(hand_holder, "hand_fix_transform");
 
-	GameObject* arm_go = Prefabs::GetNewSimpleModel("left_robot_arm", "robot_arm.obj", "");
-	GameObject* forarm_go = Prefabs::GetNewSimpleModel("left_robot_arm", "robot_forarm.obj", "metal_texture.jpg");
-	GameObject* hand_go = Prefabs::GetNewSimpleModel("left_robot_arm", "robot_hand.obj", "metal_texture.jpg");
+	GameObject* arm_go = Prefabs::GetNewSimpleModel("robo_arm", "robot_arm.obj", "");
+	GameObject* forarm_go = Prefabs::GetNewSimpleModel("robo_forarm", "robot_forarm.obj", "metal_texture.jpg");
+	GameObject* hand_go = Prefabs::GetNewSimpleModel("robo_hand", "robot_hand.obj", "metal_texture.jpg");
 
 	forarm_go->GetTransform()->setPosition(-0.575, 0, 0);
 	hand_go->GetTransform()->setPosition(-0.63, 0, 0.04);

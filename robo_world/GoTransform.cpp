@@ -34,39 +34,39 @@ void GOTransform::setPosition(GLfloat x, GLfloat y, GLfloat z) {
 	Position.x = x;
 	Position.y = y;
 	Position.z = z;
-	TransMatCahnged = true;
+	TransMatChanged = true;
 }
 
 void GOTransform::setRotation(GLfloat x, GLfloat y, GLfloat z) {
 	Rotation.x = x;
 	Rotation.y = y;
 	Rotation.z = z;
-	TransMatCahnged = true;
+	TransMatChanged = true;
 }
 
 void GOTransform::setScale(GLfloat x, GLfloat y, GLfloat z) {
 	Scale.x = x;
 	Scale.y = y;
 	Scale.z = z;
-	TransMatCahnged = true;
+	TransMatChanged = true;
 }
 
 void GOTransform::setPosition(glm::vec3 vec)
 {
 	this->Position = vec;
-	TransMatCahnged = true;
+	TransMatChanged = true;
 }
 
 void GOTransform::setRotation(glm::vec3 vec)
 {
 	this->Rotation = vec;
-	TransMatCahnged = true;
+	TransMatChanged = true;
 }
 
 void GOTransform::setScale(glm::vec3 vec)
 {
 	this->Scale = vec;
-	TransMatCahnged = true;
+	TransMatChanged = true;
 }
 
 void GOTransform::setValues(GOTransform* from_other)
@@ -102,14 +102,14 @@ void GOTransform::SetGameObjectOnce(GameObject* go_head)
 
 glm::mat4 GOTransform::getTransformMatrix() {
 	glm::mat4 transform;
-	if (TransMatCahnged) {//Only calculate if have to!
+	if (TransMatChanged) {//Only calculate if have to!
 		transform = glm::mat4(1.0f);
 		transform = glm::translate(transform, Position);
 		transform = glm::rotate(transform, glm::radians(Rotation.x), glm::vec3(1, 0, 0));
 		transform = glm::rotate(transform, glm::radians(Rotation.y), glm::vec3(0, 1, 0));
 		transform = glm::rotate(transform, glm::radians(Rotation.z), glm::vec3(0, 0, 1));
 		transform = glm::scale(transform, Scale);
-		TransMatCahnged = false;
+		TransMatChanged = false;
 		last_transformMatrix = transform;
 	}
 	else

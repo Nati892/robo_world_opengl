@@ -10,7 +10,7 @@ private:
 	glm::vec3 Position = { 0,0,0 }; // x, y, z location
 	glm::vec3 Rotation = { 0,0,0 }; // rotation around x, y, z axis
 	glm::vec3 Scale = { 1,1,1 };
-	bool TransMatCahnged = true;
+	bool TransMatChanged = true;
 	glm::mat4 last_transformMatrix;
 public:
 	static MatrixStack matrixStack;
