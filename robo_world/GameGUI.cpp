@@ -99,7 +99,7 @@ void HelpGuiWindow::ShowGUI(Scene* current_scene)
 	//run frame
 	ImGui::Begin("Help");
 	{
-		ImGui::Text("Controls:\n v/V to move from robot view, to third person view to free view.\n e/E to lock/unlock mouse curser\n q/Q to quit"
+		ImGui::Text("Controls:\nV/v to move from robot view, to third person view.\nE/e to lock/unlock mouse curser\nQ/q to quit\nWASD\\wasd to move robot around\nMouse movement:\n\tTPS - moves point view\n\t\FPS - moves robo head and the camera with him"
 		);
 		if (ImGui::Button("OK!"))
 		{
@@ -210,7 +210,7 @@ void ArmControlSettingsGuiWindow::ShowGUI(Scene* current_scene)
 		this->quit_clicked = false;
 		return;
 	}
-
+	ImGui::SetNextWindowSize(ImVec2(280, 200), ImGuiCond_Always);
 	ImGui::Begin("robot arm control");
 	{
 		if (this->ArmTrans != nullptr && this->ForarmTrans != nullptr && this->HandTrans != nullptr)

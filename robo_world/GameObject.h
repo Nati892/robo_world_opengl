@@ -39,7 +39,7 @@ public:
 	//when called it destroys the script,transform and drawable.
 	// if you want to keep the properties, you must first do a set...(nullptr)
 	// but then it is your responsibility to destroy the objects!
-	//when deep is set then it does so for all children
+	//when deep is set then it deletes all the children down the tree
 	void Destroy(bool deep);
 
 	//name get/set
