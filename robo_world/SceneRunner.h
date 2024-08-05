@@ -11,7 +11,7 @@
 
 static int x_last;
 static int y_last;
-static bool lock_mouse;
+static bool lock_mouse_to_scene;
 class SceneRunner {
 private:
 	//window sizing and aspect ration

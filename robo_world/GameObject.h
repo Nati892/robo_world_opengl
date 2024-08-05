@@ -13,7 +13,8 @@ enum GOType
 	regular,
 	GOCamPoint,
 	GOCamLookAtPoint,
-	GOLightSource
+	GOLightSource,
+	GOSpecialGeneral
 };
 
 class GameObject {

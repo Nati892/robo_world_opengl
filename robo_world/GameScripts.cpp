@@ -99,18 +99,21 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 		this->CamObject = this_scene->FindObjectByName("MainCam");
 		this->LookAtObject = this_scene->FindObjectByName("MainCamLookAt");
 		this->DynamicSurface = this_scene->FindObjectByName("dynamic_surface2d");
-		this->FollowObject = this_scene->FindObjectByName("player");
+		this->PlayerObject = this_scene->FindObjectByName("player");
 		this->PlayerHolderObject = this_scene->FindObjectByName("player_holder");
 		this->CamHeadObject = this_scene->FindObjectByName("CamHead");
 		this->RobotHeadObject = this_scene->FindObjectByName("player_head");
+
+		this->MoveVecStart = this_scene->FindObjectByName("MoveVecStart");
+		this->MoveVecEnd = this_scene->FindObjectByName("MoveVecEnd");
 	}
 	if (DynamicSurface != nullptr)
 	{
 		CurrDynamicSurfaceScript = dynamic_cast<DynamicSurfaceScript*>(DynamicSurface->GetRunningScript());
 	}
-	if (FollowObject != nullptr)
+	if (PlayerObject != nullptr)
 	{
-		FollowObjectTrans = FollowObject->GetTransform();
+		PlayerObjectTrans = PlayerObject->GetTransform();
 	}
 	if (PlayerHolderObject != nullptr)
 	{
@@ -122,11 +125,19 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 	}
 	if (CamHeadObject != nullptr)
 	{
-		HeadObjectTrans = CamHeadObject->GetTransform();
+		CamHeadObjectTrans = CamHeadObject->GetTransform();
 	}
 	if (LookAtObject != nullptr)
 	{
 		LookAtObjectTrans = LookAtObject->GetTransform();
+	}
+	if (this->MoveVecStart != nullptr)
+	{
+		MoveVecStartTrans = MoveVecStart->GetTransform();
+	}
+	if (this->MoveVecEnd != nullptr)
+	{
+		MoveVecEndTrans = MoveVecEnd->GetTransform();
 	}
 
 	//fps
@@ -142,7 +153,7 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 	this->FirstPersonCamTransfrom.setRotation(0, 0, 0);
 	this->FirstPersonCamTransfrom.setScale(1, 1, 1);
 
-	//tps
+	////tps mock
 	this->ThirdPersonCamHeadTransfrom.setPosition(0, 0, 0);
 	this->ThirdPersonCamHeadTransfrom.setRotation(0, 0, 0);
 	this->ThirdPersonCamHeadTransfrom.setScale(1, 1, 1);
@@ -151,29 +162,17 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 	this->ThirdPersonLookAtTransfrom.setRotation(0, 0, 0);
 	this->ThirdPersonLookAtTransfrom.setScale(1, 1, 1);
 
-	this->ThirdPersonCamTransfrom.setPosition(3, 3, 0);
+	this->ThirdPersonCamTransfrom.setPosition(2, 2, 0);
 	this->ThirdPersonCamTransfrom.setRotation(0, 0, 0);
 	this->ThirdPersonCamTransfrom.setScale(1, 1, 1);
 
-	////free roam
-	//this->FreeRoamCamHeadTransfrom.setPosition(3, 3, 3);
-	//this->FreeRoamCamHeadTransfrom.setRotation(0, 0, 0);
-	//this->FreeRoamCamHeadTransfrom.setScale(1, 1, 1);
-
-	//this->FreeRoamLookAtTransfrom.setPosition(1, 0, 0);
-	//this->FreeRoamLookAtTransfrom.setRotation(0, 0, 0);
-	//this->FreeRoamLookAtTransfrom.setScale(1, 1, 1);
-
-	//this->FreeRoamCamTransfrom.setPosition(0, 0, 0);
-	//this->FreeRoamCamTransfrom.setRotation(0, 0, 0);
-	//this->FreeRoamCamTransfrom.setScale(1, 1, 1);
-
 	this->curr_cam_mode = cam_mode_tps;
 	this->RobotHeadObject->AddChildObject(this->CamHeadObject);
-	HeadObjectTrans->setValues(&(this->ThirdPersonCamHeadTransfrom));
+	CamHeadObjectTrans->setValues(&(this->ThirdPersonCamHeadTransfrom));
 	CamObjectTrans->setValues(&(this->ThirdPersonCamTransfrom));
 	LookAtObjectTrans->setValues(&(this->ThirdPersonLookAtTransfrom));
-
+	this->speed = 5;
+	this->rotation_speed = 15;
 }
 
 void CameraControllerScript::SLoop()
@@ -194,15 +193,15 @@ void CameraControllerScript::SLoop()
 		{
 		case cam_mode_fps:
 			this->curr_cam_mode = cam_mode_tps;
-			this->RobotHeadObject->AddChildObject(this->CamHeadObject);
-			HeadObjectTrans->setValues(&(this->ThirdPersonCamHeadTransfrom));
+			this->PlayerHolderObject->AddChildObject(this->CamHeadObject);
+			CamHeadObjectTrans->setValues(&(this->ThirdPersonCamHeadTransfrom));
 			CamObjectTrans->setValues(&(this->ThirdPersonCamTransfrom));
 			LookAtObjectTrans->setValues(&(this->ThirdPersonLookAtTransfrom));
 			break;
 		case cam_mode_tps:
 			this->curr_cam_mode = cam_mode_fps;
 			this->RobotHeadObject->AddChildObject(this->CamHeadObject);
-			HeadObjectTrans->setValues(&(this->FirstPersonCamHeadTransfrom));
+			CamHeadObjectTrans->setValues(&(this->FirstPersonCamHeadTransfrom));
 			CamObjectTrans->setValues(&(this->FirstPersonCamTransfrom));
 			LookAtObjectTrans->setValues(&(this->FirstPersonLookAtTransfrom));
 			break;
@@ -210,44 +209,75 @@ void CameraControllerScript::SLoop()
 		}
 	}
 
-	int x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
-	int y_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::Y_AXIS);
+	int mouse_x_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::X_AXIS);
+	int mouse_y_movement = this_input_sys->GetMouseAxisMovement(GOInputSystem::axis::Y_AXIS);
 	glm::vec3 total_movement;
 	glm::vec3 movement_vec;
-	auto step = LookAtObject->GetCalculatedLocation() - CamObject->GetCalculatedLocation();
+	auto step = MoveVecEnd->GetCalculatedLocation() - MoveVecStart->GetCalculatedLocation();
+
 	step.y = 0;
 	auto norm_step = glm::normalize(step);
 	norm_step *= this_scene->GetDeltaTime();
-	std::cout << "step: " << norm_step.x << "|" << norm_step.y << "|" << norm_step.z << std::endl;
+	//general movement control
+
+	if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
+	{
+		PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step * speed);
+		CurrDynamicSurfaceScript->UpdatePosition(PlayerHolderObject->GetTransform()->GetPosition());
+	}
+	if (this_input_sys->IsKeyPressed('s') || this_input_sys->IsKeyPressed('S'))
+	{
+		norm_step *= -1;
+		PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step * speed);
+		CurrDynamicSurfaceScript->UpdatePosition(PlayerHolderObject->GetTransform()->GetPosition());
+	}
+	if (this_input_sys->IsKeyPressed('a') || this_input_sys->IsKeyPressed('A'))//left
+	{
+		MoveObjectTrans->setRotation(MoveObjectTrans->GetRotation() + glm::vec3(0, rotation_speed * this_scene->GetDeltaTime(), 0));
+	}
+	if (this_input_sys->IsKeyPressed('d') || this_input_sys->IsKeyPressed('D'))//right
+	{
+		MoveObjectTrans->setRotation(MoveObjectTrans->GetRotation() + glm::vec3(0, rotation_speed * this_scene->GetDeltaTime() * -1, 0));
+	}
+
+
 	switch (this->curr_cam_mode)
 	{
 	case cam_mode_fps:
-		
-			if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
-			{
-				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
-			}
-			if (this_input_sys->IsKeyPressed('s') || this_input_sys->IsKeyPressed('S'))
-			{
-				norm_step *= -1;
-				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
-			}
-
 		break;
 
 	case cam_mode_tps:
-		
+		if (mouse_x_movement != 0)
+		{
+			auto new_rot = CamHeadObjectTrans->GetRotation();
+			new_rot.y -= mouse_x_movement / 10.0f;
+			this->CamHeadObjectTrans->setRotation(new_rot);
+		}
+		if (mouse_y_movement != 0)
+		{
+			auto old_pos = CamObjectTrans->GetPosition();
+			auto new_pos = old_pos;
+			new_pos.y += mouse_y_movement / 100.0f;
+			if (new_pos.y < 1)
+				new_pos.y = 1;
 
-			if (this_input_sys->IsKeyPressed('w') || this_input_sys->IsKeyPressed('W'))
-			{
-				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
-			}
-			if (this_input_sys->IsKeyPressed('s') || this_input_sys->IsKeyPressed('S'))
-			{
-				norm_step *= -1;
-				PlayerHolderObject->GetTransform()->setPosition(PlayerHolderObject->GetTransform()->GetPosition() + norm_step);
-			}
+			if (new_pos.y > 4)
+				new_pos.y = 4;
 
+			//Pitmagoras for uniform distance from cam to robo body
+			auto in_sqrt_res = 5 - powf(new_pos.y, 2);
+			if (in_sqrt_res <= 0)
+			{
+				new_pos.x = 0.1;
+				new_pos.y = old_pos.y;
+			}
+			else
+			{
+				new_pos.x = sqrtf(in_sqrt_res);
+			}
+			
+			this->CamObjectTrans->setPosition(new_pos);
+		}
 		break;
 	}
 

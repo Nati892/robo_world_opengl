@@ -50,8 +50,6 @@ void SceneRunner::LoopScene()
 	io.DisplaySize.x = 1600;
 	io.DisplaySize.y = 900;
 
-	//static bool show_demo_window = true;
-	//static bool show_another_window = true;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	ImGui::NewFrame();
@@ -242,6 +240,9 @@ void SceneRunner::MouseEventCallback(int button, int state, int x, int y)
 	if (state == 0 || CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
 
+	if (!lock_mouse_to_scene)
+		return;
+
 	auto input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
 
 }
@@ -257,10 +258,13 @@ void SceneRunner::MouseMotionCallback(int x, int y)
 	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
 
+	if (!lock_mouse_to_scene)
+		return;
+
 	int x_motion = x - CurrentRegisteredSceneRunner->currentWindowWidth / 2;
 
 	int y_motion = y - CurrentRegisteredSceneRunner->currentWindowHeight / 2;
-	if (lock_mouse) {
+	if (lock_mouse_to_scene) {
 		glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
 	}
 
@@ -281,10 +285,13 @@ void SceneRunner::MousePassiveMotionCallback(int x, int y)
 	if (CurrentRegisteredSceneRunner == nullptr || CurrentRegisteredSceneRunner->currentScene == nullptr || CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem() == nullptr)
 		return;
 
+	if (!lock_mouse_to_scene)
+		return;
+	
 	int x_motion = x - CurrentRegisteredSceneRunner->currentWindowWidth / 2;
 
 	int y_motion = y - CurrentRegisteredSceneRunner->currentWindowHeight / 2;
-	if (lock_mouse) {
+	if (lock_mouse_to_scene) {
 		glutWarpPointer(CurrentRegisteredSceneRunner->currentWindowWidth / 2, CurrentRegisteredSceneRunner->currentWindowHeight / 2);
 	}
 	GOInputSystem* input_sys = CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem();
@@ -296,6 +303,19 @@ void SceneRunner::MousePassiveMotionCallback(int x, int y)
 //Keybard events
 void SceneRunner::KeyboardEventCallback(unsigned char c, int x, int y)
 {
+	if (c == 'e' || c == 'E')
+	{
+		lock_mouse_to_scene = !lock_mouse_to_scene;
+		if (lock_mouse_to_scene)
+		{
+			glutSetCursor(GLUT_CURSOR_NONE);
+		}
+		else
+		{
+			glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+		}
+	}
+
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplGLUT_KeyboardFunc(c, x, y);
 	if (io.WantCaptureKeyboard)
@@ -307,18 +327,7 @@ void SceneRunner::KeyboardEventCallback(unsigned char c, int x, int y)
 	if (CurrentRegisteredSceneRunner == nullptr)
 		return;
 
-	if (c == 'e' || c == 'E')
-	{
-		lock_mouse = !lock_mouse;
-		if (lock_mouse)
-		{
-			glutSetCursor(GLUT_CURSOR_NONE);
-		}
-		else
-		{
-			glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
-		}
-	}
+	
 	CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem()->EnterCharInput(c, true);
 }
 
@@ -332,7 +341,7 @@ SceneRunner::SceneRunner()
 {
 	//good enough for this project.
 	//if I upgrade in the future I wont be using glut... 
-	//I'll be using glfw or my own input manger using ll api using something like user32
+	//I'll be using glfw or my own input manger using some low level api like user32 ot linux window api
 	SceneRunner::CurrentRegisteredSceneRunner = this;
 }
 
@@ -344,7 +353,7 @@ SceneRunner::~SceneRunner()
 
 void SceneRunner::SceneRunnerInit(int argc, char** argv)
 {
-	lock_mouse = true;
+
 	//call init on glut
 	glutInit(&argc, argv);
 
@@ -400,6 +409,8 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 
 	GLfloat globalAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
+
+	lock_mouse_to_scene = false;
 }
 
 void SceneRunner::SetEvents()

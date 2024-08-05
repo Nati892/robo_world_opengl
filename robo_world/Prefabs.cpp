@@ -11,7 +11,7 @@ GameObject* Prefabs::GetNewRotatingCube(std::string name)
 	//create transform for game object
 	GOTransform* trans = new GOTransform();
 	ret->AttachTransform(trans);
-
+	
 	//attach drawable
 	DrawCube* cube = new DrawCube();
 	ret->AttachDrawable(cube);
@@ -34,6 +34,14 @@ GameObject* Prefabs::GetNewRobot(std::string name)
 	GameObject* player_torso = Prefabs::GetNewTorso("player_torso");
 	body_container->AddChildObject(player_torso);
 	player_torso->GetTransform()->setPosition(0, -3, 0);
+
+	//Add MoveVecStartTrans and MoveVecEndTrans to torso
+	auto MoveVecStart = new GameObject(player_torso,"MoveVecStart");
+	auto MoveVecEnd = new GameObject(player_torso,"MoveVecEnd");
+	MoveVecStart->SetGOType(GOSpecialGeneral);
+	MoveVecEnd->SetGOType(GOSpecialGeneral);
+	MoveVecStart->GetTransform()->setPosition(0,0,0);
+	MoveVecEnd->GetTransform()->setPosition(-1,0,0);
 
 	GameObject* WheelsHolder = new GameObject(body_container, "wheels_holder");
 	WheelsHolder->GetTransform()->setPosition(0.4, -4.5, 0);

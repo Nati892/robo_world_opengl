@@ -5,11 +5,13 @@
 #include "GameObject.h"
 #include "GOTransform.h"
 #include "GODrawable.h"
-//write game script headers here
 
 class GOInputSystem;
 class DynamicSurfaceScript;
 
+/// <summary>
+/// a basic script that demonstrates general rotation
+/// </summary>
 enum axis
 {
 	axis_x,
@@ -33,12 +35,19 @@ public:
 	void SetRotationAxis(axis a);
 };
 
+
+/// <summary>
+/// used in the CameraControllerScript
+/// </summary>
 enum cam_mode
 {
 	cam_mode_fps,
 	cam_mode_tps,
 };
 
+/// <summary>
+/// The main camera and player control script
+/// </summary>
 class CameraControllerScript :public GOScript
 {
 private:
@@ -47,15 +56,22 @@ private:
 	GameObject* CamObject;
 	GameObject* LookAtObject;
 	GameObject* DynamicSurface;
-	GameObject* FollowObject;
-	GOTransform* FollowObjectTrans;
+	GameObject* PlayerObject;
 	GameObject* CamHeadObject;
 	GameObject* RobotHeadObject;
-	GOTransform* HeadObjectTrans;
+	GameObject* PlayerHolderObject;
+	
+	GameObject* MoveVecStart;
+	GameObject* MoveVecEnd;
+
+	GOTransform* PlayerObjectTrans;
+	GOTransform* CamHeadObjectTrans;
 	GOTransform* LookAtObjectTrans;
 	GOTransform* CamObjectTrans;
-	GameObject* PlayerHolderObject;
 	GOTransform* MoveObjectTrans;
+	GOTransform* MoveVecStartTrans;
+	GOTransform* MoveVecEndTrans;
+
 	DynamicSurfaceScript* CurrDynamicSurfaceScript;
 
 	//cam head transform modes
@@ -75,6 +91,7 @@ private:
 
 	float y_axis_limit = 50.0f;
 	float speed;
+	float rotation_speed;
 	bool ThirdPersonCamera = true;// input #1
 	bool lock_mouse = false;
 	cam_mode curr_cam_mode = cam_mode_tps;
@@ -88,7 +105,9 @@ public:
 };
 
 
-
+/// <summary>
+/// A script to generate many surfaces that go with the player seamlesly in intervals
+/// </summary>
 class DynamicSurfaceScript :public GOScript
 {
 private:
@@ -109,6 +128,9 @@ public:
 };
 
 
+/// <summary>
+/// script for sky box that makes it go with the player endlessly
+/// </summary>
 class SkyBoxScript :public GOScript
 {
 private:
