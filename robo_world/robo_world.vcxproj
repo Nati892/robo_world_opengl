@@ -148,6 +148,7 @@
     <ClCompile Include="GameGUI.cpp" />
     <ClCompile Include="GameScripts.cpp" />
     <ClCompile Include="GOInputSystem.cpp" />
+    <ClCompile Include="GOLightSourceData.cpp" />
     <ClCompile Include="GOScript.cpp" />
     <ClCompile Include="GoTexture.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />

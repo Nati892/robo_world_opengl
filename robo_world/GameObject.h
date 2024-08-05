@@ -7,6 +7,7 @@ class GODrawable;
 class GOScript;
 class GOTransform;
 class Scene;
+class GOLightSourceData;
 
 enum GOType
 {
@@ -51,6 +52,7 @@ public:
 
 	//transform get/set
 	GOTransform* GetTransform();
+	GOTransform* GetTransformSafe();
 	void SetTransform(GOTransform* set_trans);
 
 	//drawable get/set

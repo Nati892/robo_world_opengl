@@ -398,3 +398,27 @@ DrawCheckBoardSurface2d::DrawCheckBoardSurface2d()
 
 	this->material.Shininess[0] = 128;
 }
+
+void DrawLightSphere::DrawObject()
+{
+	glutSolidDodecahedron();
+}
+
+DrawLightSphere::DrawLightSphere()
+{
+	this->material.AmbientColor.x = 0.8;
+	this->material.AmbientColor.y = 0.4;
+	this->material.AmbientColor.z = 0.6;
+	this->material.AmbientColor.w = 1;
+
+	this->material.DiffuseColor.x = 0.6;
+	this->material.DiffuseColor.y = 0.3;
+	this->material.DiffuseColor.z = 4.5;
+	this->material.DiffuseColor.w = 1;
+
+	this->material.SpecularColor.x = 0.35f;
+	this->material.SpecularColor.y = 0.35f;
+	this->material.SpecularColor.z = 0.35f;
+	this->material.SpecularColor.w = 1;
+	this->material.Shininess[0] = 120;
+}

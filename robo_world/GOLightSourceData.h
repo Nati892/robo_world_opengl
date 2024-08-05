@@ -10,7 +10,9 @@ public:
 	glm::vec4 _light_diffuse = { 1.0f,  1.0f,  1.0f, 1.0 };  // Diffuse light
 	glm::vec4 _light_specular = { 1.0f,  1.0f,  1.0f, 1.0 };  // Diffuse light
 	glm::vec3 _spot_direction = { 0.0f, 0.0f, 0.0f };
-	GLfloat _GL_SPOT_CUTOFF = 180.0f;
+	GLfloat _spotlight_cuttoff = 180.0f;
 	GLfloat _shininess = 0.0f;
 	GLfloat _exponent = 3;
+
+	void SetData(GOLightSourceData* other);
 };

@@ -62,6 +62,14 @@ GOTransform* GameObject::GetTransform()
 	return this->_transoform;
 }
 
+GOTransform* GameObject::GetTransformSafe()
+{
+	if (this != nullptr)
+		return this->GetTransform();
+	else
+		return nullptr;
+}
+
 void GameObject::AttachDrawable(GODrawable* new_attach)
 {
 	if (this->_DrawableObject != nullptr && this->_DrawableObject != new_attach)

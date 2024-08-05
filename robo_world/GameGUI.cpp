@@ -32,8 +32,14 @@ void MainGuiWinodw::ShowGUI(Scene* CurrentScene)
 
 	if (set_ambiant_light_clicked)
 	{
-		CurrentScene->AddGuiWindow(new LightSettingsGuiWindow());
+		CurrentScene->AddGuiWindow(new AmbiantLightSettingsGuiWindow());
 		this->set_ambiant_light_clicked = false;
+		return;
+	}
+	if (set_point_light_sources_clicked)
+	{
+		CurrentScene->AddGuiWindow(new PointLightSettingsGuiWindow());
+		this->set_point_light_sources_clicked = false;
 		return;
 	}
 	if (robot_arm_controls_clicked)
@@ -42,7 +48,7 @@ void MainGuiWinodw::ShowGUI(Scene* CurrentScene)
 		CurrentScene->AddGuiWindow(new ArmControlSettingsGuiWindow());
 		return;
 	}
-	ImGui::SetNextWindowSize( ImVec2(300, 180),ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(300, 180), ImGuiCond_Always);
 	//run frame
 	ImGui::Begin("Main settings");
 	{
@@ -60,6 +66,10 @@ void MainGuiWinodw::ShowGUI(Scene* CurrentScene)
 		if (ImGui::Button("Adjust ambiant light"))
 		{
 			set_ambiant_light_clicked = true;
+		}
+		if (ImGui::Button("Adjust point light sources"))
+		{
+			set_point_light_sources_clicked = true;
 		}
 		if (ImGui::Button("control robot arm rotation"))
 		{
@@ -105,11 +115,11 @@ void HelpGuiWindow::CleanUp()
 {
 }
 
-void LightSettingsGuiWindow::CleanUp()
+void AmbiantLightSettingsGuiWindow::CleanUp()
 {
 }
 
-void LightSettingsGuiWindow::ShowGUI(Scene* current_scene)
+void AmbiantLightSettingsGuiWindow::ShowGUI(Scene* current_scene)
 {
 	if (!this->light_source_searched)
 	{
@@ -226,5 +236,120 @@ void ArmControlSettingsGuiWindow::ShowGUI(Scene* current_scene)
 	ArmTrans->setRotation(this->ArmRotation);
 	ForarmTrans->setRotation(this->ForarmRotation);
 	HandTrans->setRotation(this->HandRotation);
+
+}
+
+void PointLightSettingsGuiWindow::CleanUp()
+{
+
+
+}
+
+void PointLightSettingsGuiWindow::ShowGUI(Scene* current_scene)
+{
+	if (!this->light_source0_searched)
+	{
+		this->light_source0_searched = true;
+		if (current_scene != nullptr)
+		{
+			auto light_source_obj = current_scene->FindObjectByName("secondery_light_source0");
+			if (light_source_obj != nullptr && light_source_obj->IsLightSource() && light_source_obj->GetLightSourceData() != nullptr)
+			{
+				this->p_light_data0 = light_source_obj->GetLightSourceData();
+				this->original_light_data0.SetData(p_light_data0);
+				this->Light0Trans = light_source_obj->GetTransform();
+				this->light_pos0 = Light0Trans->GetPosition();
+			}
+			else
+			{
+				std::cout << "LightSettingsGuiWindow: error finding point light0 in scene" << std::endl;
+			}
+		}
+	}
+	if (!this->light_source1_searched)
+	{
+		this->light_source1_searched = true;
+		if (current_scene != nullptr)
+		{
+			auto light_source_obj = current_scene->FindObjectByName("secondery_light_source1");
+			if (light_source_obj != nullptr && light_source_obj->IsLightSource() && light_source_obj->GetLightSourceData() != nullptr)
+			{
+				this->p_light_data1 = light_source_obj->GetLightSourceData();
+				this->original_light_data1.SetData(p_light_data1);
+				this->Light1Trans = light_source_obj->GetTransform();
+				this->light_pos1 = Light1Trans->GetPosition();
+			}
+			else
+			{
+				std::cout << "LightSettingsGuiWindow: error finding point light1 in scene" << std::endl;
+			}
+		}
+	}
+
+	//check what happend last frame
+	if (quit_clicked)
+	{
+		current_scene->RemoveGuiWindow(this);
+		this->quit_clicked = false;
+		return;
+	}
+
+	if (reset_light0_clicked)
+	{
+		this->p_light_data0->SetData(&original_light_data0);
+		this->reset_light0_clicked = false;
+	}
+
+	if (reset_light1_clicked)
+	{
+		this->p_light_data1->SetData(&original_light_data1);
+		this->reset_light0_clicked = false;
+	}
+
+	//run frame
+	ImGui::Begin("Point lights settings");
+	{
+		if (this->p_light_data0 != nullptr)
+		{
+			ImGui::Text("Please set the following values for the point light sources of the scene");
+			ImGui::SliderFloat3("Ambiant R|G|B 0", (float*)&(this->p_light_data0->_light_ambient), 0.0, 1.0f);
+			ImGui::SliderFloat3("diffuse R|G|B 0", (float*)&(this->p_light_data0->_light_diffuse), 0.0, 1.0f);
+			ImGui::SliderFloat3("specular R|G|B 0", (float*)&(this->p_light_data0->_light_specular), 0.0, 1.0f);
+			ImGui::SliderFloat3("Spot Location X|Y|Z 0", (float*)&(light_pos0), -100, 100.0f);
+			ImGui::SliderFloat3("Spot Direction X|Y|Z 0", (float*)&(this->p_light_data0->_spot_direction), 0.0, 100.0f);
+
+			reset_light0_clicked = ImGui::Button("reset light 0");
+		}
+		else
+			ImGui::Text("Couldnt find the ambiant light object 0, so this ui part is now just an error memssage");
+
+		if (this->p_light_data1 != nullptr)
+		{
+			ImGui::Text("Please set the following values for the point light sources of the scene");
+			ImGui::SliderFloat3("Ambiant R|G|B 1", (float*)&(this->p_light_data1->_light_ambient), 0.0, 1.0f);
+			ImGui::SliderFloat3("diffuse R|G|B 1", (float*)&(this->p_light_data1->_light_diffuse), 0.0, 1.0f);
+			ImGui::SliderFloat3("specular R|G|B 1", (float*)&(this->p_light_data1->_light_specular), 0.0, 1.0f);
+			ImGui::SliderFloat3("Spot Location X|Y|Z 1", (float*)&(light_pos1), -100, 100.0f);
+			ImGui::SliderFloat3("Spot Direction X|Y|Z 1", (float*)&(this->p_light_data1->_spot_direction), 0.0, 100.0f);
+
+			reset_light1_clicked = ImGui::Button("reset light 1");
+			quit_clicked = ImGui::Button("OK!");
+		}
+		else
+		{
+			ImGui::Text("Couldnt find the ambiant light object 1, so this ui part is now just an error memssage");
+		}
+
+		if (Light0Trans != nullptr)
+		{
+			Light0Trans->setPosition(light_pos0);
+		}
+		if (Light1Trans != nullptr)
+		{
+			Light1Trans->setPosition(light_pos1);
+		}
+	}
+
+	ImGui::End();
 
 }

@@ -7,17 +7,17 @@ Scene* GetWorldScene()
 	GameObject* LightsHolder = new GameObject(nullptr, "LightsHolder");
 	ret_scene->AddGameObjectTree(LightsHolder);
 
-	GameObject* main_light = Prefabs::GetReadyAmbiantLightSource("main_ambiant_light");
+	GameObject* main_ambiant_light = Prefabs::GetReadyAmbiantLightSource("main_ambiant_light");
 	auto diffuse_light_source_0 = Prefabs::GetReadyDiffuseLightSource("secondery_light_source0");
 	auto diffuse_light_source_1 = Prefabs::GetReadyDiffuseLightSource("secondery_light_source1");
 
-	LightsHolder->AddChildObject(main_light);
+	LightsHolder->AddChildObject(main_ambiant_light);
 	LightsHolder->AddChildObject(diffuse_light_source_0);
 	LightsHolder->AddChildObject(diffuse_light_source_1);
 
-	main_light->GetTransform()->setPosition(0, 1, 1);
+	main_ambiant_light->GetTransform()->setPosition(0, 1, 1);
 
-	diffuse_light_source_0->GetTransform()->setPosition(10, 10, 10);
+	diffuse_light_source_0->GetTransform()->setPosition(6, 6, 6);
 	diffuse_light_source_0->GetLightSourceData()->_spot_direction = { 1,0,1 };
 	diffuse_light_source_0->GetLightSourceData()->_light_specular = { 0.35,0.35,0.35,1 };
 	diffuse_light_source_0->GetLightSourceData()->_exponent = 5;
@@ -71,8 +71,8 @@ Scene* GetWorldScene()
 	//add mushrooms
 	for (int i = 0; i < 500; i++)//add mushrooms for each tree
 	{
-		int randomXoffset = (rand() % 300) - 150;//pick tree bark
-		int randoZoffset = (rand() % 300) - 150;//pick tree bark
+		int randomXoffset = (rand() % 300) - 150;
+		int randoZoffset = (rand() % 300) - 150;
 
 		auto mush = Prefabs::GetNewMushroom("mushy" + i);
 		mush->GetTransform()->setPosition(randomXoffset, 0, randoZoffset);
@@ -95,9 +95,9 @@ Scene* GetWorldScene()
 
 	for (int i = 0; i < 50; i++)
 	{
-		int randomXoffset = (rand() % 150) - 75;//pick tree bark
-		int randomZoffset = (rand() % 150) - 75;//pick tree bark
-		int randomYoffset = (rand() % 20) + 20;//pick tree bark
+		int randomXoffset = (rand() % 150) - 75;
+		int randomZoffset = (rand() % 150) - 75;
+		int randomYoffset = (rand() % 20) + 20;
 		auto rotaty = Prefabs::GetNewRotatingteapot("teapot" + i);
 		rotaty->GetTransform()->setPosition(randomXoffset, randomYoffset, randomZoffset);
 		ret_scene->AddGameObjectTree(rotaty);

@@ -19,6 +19,14 @@ public:
 	DrawSphere();
 };
 
+class DrawLightSphere :public GODrawable
+{
+
+public:
+	void DrawObject();
+	DrawLightSphere();
+};
+
 class DrawWheel :public GODrawable
 {
 	bool texture_loaded = false;

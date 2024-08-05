@@ -208,7 +208,7 @@ GameObject* Prefabs::GetReadySunLightSource(std::string name)
 	ldata->_light_diffuse = { 0.8,0.8,0.8,1 };
 	ldata->_light_specular = { 1,1,1,1 };
 	ldata->_spot_direction = {-1,-1,-1};
-	ldata->_GL_SPOT_CUTOFF = {180};
+	ldata->_spotlight_cuttoff = {180};
 	ldata->_shininess = 64;
 	return ret;
 }
@@ -221,7 +221,10 @@ GameObject* Prefabs::GetReadyDiffuseLightSource(std::string name)
 	auto ldata = ret->GetLightSourceData();
 	ldata->_light_ambient = { 0,0,0,1 };
 	ldata->_light_diffuse = { 0.3,0.3,0.3,1 };
-	ldata->_light_specular = { 0,0,0,1 };
+	ldata->_light_specular = { 0.3,0.3,0.3,1 };
+
+	auto light_sphere = new GameObject(ret,"light_sphere");
+	light_sphere->AttachDrawable(new DrawLightSphere());
 	return ret;
 }
 
@@ -249,7 +252,7 @@ GameObject* Prefabs::GetReadyLightSource(std::string name)
 	ldata->_light_ambient = { 0.4,0.4,0.4,1 };
 	ldata->_light_diffuse = { 0,0.6,0.6,1 };
 	ldata->_light_specular = { 0.5,0.5,0.5,1 };
-	ldata->_GL_SPOT_CUTOFF = 180;
+	ldata->_spotlight_cuttoff = 180;
 	ldata->_shininess = 1;
 	ldata->_spot_direction = { 0,-10,0 };
 	ldata->_exponent = 5;

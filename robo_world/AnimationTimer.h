@@ -7,6 +7,7 @@ private:
 	float _AnimationStartValue;
 	float _AnimationEndValue;
 	float _AnimationSpeed;//(Delta animationValue)/sec
+	float _ProgressPoint;//(Delta animationValue)/sec
 	std::chrono::steady_clock::time_point StartTime;
 	std::chrono::steady_clock::time_point SamplePoint;
 

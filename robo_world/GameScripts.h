@@ -22,7 +22,6 @@ class BasicAxisRotateScript :public GOScript
 {
 private:
 	AnimationTimer* rotate_timer;
-	AnimationTimer* color_timer;
 	float speed = 1;
 	axis _rotation_axis = axis_x;
 	//virtual inherited
@@ -34,7 +33,6 @@ public:
 	void SetSpeed(float speed);
 	void SetRotationAxis(axis a);
 };
-
 
 /// <summary>
 /// used in the CameraControllerScript
@@ -71,6 +69,7 @@ private:
 	GOTransform* MoveObjectTrans;
 	GOTransform* MoveVecStartTrans;
 	GOTransform* MoveVecEndTrans;
+	GOTransform* RobotHeadTrans;
 
 	DynamicSurfaceScript* CurrDynamicSurfaceScript;
 

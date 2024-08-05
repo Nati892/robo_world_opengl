@@ -4,9 +4,7 @@
 void BasicAxisRotateScript::SSetup(Scene* CurrScene)
 {
 	rotate_timer = new AnimationTimer(10, 0, 360);
-	color_timer = new AnimationTimer(5, 1, 255);
 	rotate_timer->StartTimer();
-	color_timer->StartTimer();
 	GameObject* my_go = this->GetGameObject();
 	if (my_go->GetName() == "child2")
 	{
@@ -17,17 +15,9 @@ void BasicAxisRotateScript::SSetup(Scene* CurrScene)
 void BasicAxisRotateScript::SLoop()
 {
 	auto val = rotate_timer->GetCurrentAnimationValue();
-	auto val2 = color_timer->GetCurrentAnimationValue();
 	GameObject* my_go = this->GetGameObject();
 	GODrawable* my_draw = my_go->GetDrawableObject();
 	GOTransform* my_trans = my_go->GetTransform();
-	if (my_draw != nullptr)
-	{
-		float curr_new_red_val = (((float)val2) / (255.0f));
-		auto curr_diff = my_draw->getDiffuseColor();
-		auto curr_ambiant = my_draw->getAmbientColor();
-		my_draw->setDiffuseColor(curr_new_red_val, 0, 0, curr_diff.z);
-	}
 
 	if (my_trans != nullptr)
 	{
@@ -53,7 +43,6 @@ void BasicAxisRotateScript::SLoop()
 void BasicAxisRotateScript::SCleanUp()
 {
 	delete this->rotate_timer;
-	delete this->color_timer;
 }
 
 void BasicAxisRotateScript::SetSpeed(float speed)
@@ -139,7 +128,10 @@ void CameraControllerScript::SSetup(Scene* CurrScene)
 	{
 		MoveVecEndTrans = MoveVecEnd->GetTransform();
 	}
-
+	if (this->RobotHeadObject != nullptr)
+	{
+		RobotHeadTrans = RobotHeadObject->GetTransform();
+	}
 	//fps
 	this->FirstPersonCamHeadTransfrom.setPosition(-1, 0, 0);
 	this->FirstPersonCamHeadTransfrom.setRotation(0, 0, 0);
@@ -240,10 +232,38 @@ void CameraControllerScript::SLoop()
 		MoveObjectTrans->setRotation(MoveObjectTrans->GetRotation() + glm::vec3(0, rotation_speed * this_scene->GetDeltaTime() * -1, 0));
 	}
 
-
+	//I know theres the gimble lock problem and I need to solve this with qunaternions, but this is just toomuch now...
 	switch (this->curr_cam_mode)
 	{
 	case cam_mode_fps:
+		if (mouse_x_movement != 0)
+		{
+			auto new_rot = RobotHeadTrans->GetRotation();
+			new_rot.y -= mouse_x_movement / 10.0f;
+			if (new_rot.y > 40)
+			{
+				new_rot.y = 40;
+			}
+			if (new_rot.y < -40)
+			{
+				new_rot.y = -40;
+			}
+			this->RobotHeadTrans->setRotation(new_rot);
+		}
+		if (mouse_y_movement != 0)
+		{
+			auto new_rot = RobotHeadTrans->GetRotation();
+			new_rot.z += mouse_y_movement / 10.0f;
+			if (new_rot.z > 30)
+			{
+				new_rot.z = 30;
+			}
+			if (new_rot.z < -30)
+			{
+				new_rot.z = -30;
+			}
+			this->RobotHeadTrans->setRotation(new_rot);
+		}
 		break;
 
 	case cam_mode_tps:
@@ -268,14 +288,14 @@ void CameraControllerScript::SLoop()
 			auto in_sqrt_res = 5 - powf(new_pos.y, 2);
 			if (in_sqrt_res <= 0)
 			{
-				new_pos.x = 0.1;
+				new_pos.x = 0.001;
 				new_pos.y = old_pos.y;
 			}
 			else
 			{
 				new_pos.x = sqrtf(in_sqrt_res);
 			}
-			
+
 			this->CamObjectTrans->setPosition(new_pos);
 		}
 		break;

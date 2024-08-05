@@ -105,6 +105,9 @@
     <ClCompile Include="GameGUI.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="GOLightSourceData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glut.h">

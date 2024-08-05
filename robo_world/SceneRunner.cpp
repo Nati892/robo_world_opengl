@@ -47,8 +47,8 @@ void SceneRunner::LoopScene()
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplGLUT_NewFrame();
 	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize.x = 1600;
-	io.DisplaySize.y = 900;
+	io.DisplaySize.x = CurrentSceneWidth;
+	io.DisplaySize.y = CurrentSceneHeight;
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -97,7 +97,6 @@ void SceneRunner::LoopScene()
 				CamPos.x = pos.x;
 				CamPos.y = pos.y;
 				CamPos.z = pos.z;
-				std::cout << "cam vec:" << CamPos.x << "|" << CamPos.y << "|" << CamPos.z << std::endl;
 				break;
 
 			case GOCamLookAtPoint:
@@ -105,7 +104,6 @@ void SceneRunner::LoopScene()
 				LookAtCenter.x = pos.x;
 				LookAtCenter.y = pos.y;
 				LookAtCenter.z = pos.z;
-				std::cout << "lookat vec:" << LookAtCenter.x << "|" << LookAtCenter.y << "|" << LookAtCenter.z << std::endl;
 				break;
 			}
 		}
@@ -170,7 +168,7 @@ void SceneRunner::LoopScene()
 				in_arr[3] = specular.w;
 				glLightfv(curr_light_source_num, GL_SPECULAR, in_arr);
 
-				GLfloat param[1] = { ls_data->_GL_SPOT_CUTOFF };
+				GLfloat param[1] = { ls_data->_spotlight_cuttoff };
 				glLightfv(curr_light_source_num, GL_SPOT_CUTOFF, param);
 
 				param[0] = ls_data->_exponent;
@@ -194,9 +192,8 @@ void SceneRunner::LoopScene()
 	GLenum err;
 	if ((err = glGetError()) != GL_NO_ERROR)
 	{
-		std::cout << "err:" << err << std::endl;
+		//std::cout << "err:" << err << std::endl;
 	}
-
 
 	//draw gui
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
@@ -287,7 +284,7 @@ void SceneRunner::MousePassiveMotionCallback(int x, int y)
 
 	if (!lock_mouse_to_scene)
 		return;
-	
+
 	int x_motion = x - CurrentRegisteredSceneRunner->currentWindowWidth / 2;
 
 	int y_motion = y - CurrentRegisteredSceneRunner->currentWindowHeight / 2;
@@ -327,7 +324,7 @@ void SceneRunner::KeyboardEventCallback(unsigned char c, int x, int y)
 	if (CurrentRegisteredSceneRunner == nullptr)
 		return;
 
-	
+
 	CurrentRegisteredSceneRunner->currentScene->GetSceneInputSystem()->EnterCharInput(c, true);
 }
 
@@ -353,7 +350,6 @@ SceneRunner::~SceneRunner()
 
 void SceneRunner::SceneRunnerInit(int argc, char** argv)
 {
-
 	//call init on glut
 	glutInit(&argc, argv);
 
@@ -371,7 +367,7 @@ void SceneRunner::SceneRunnerInit(int argc, char** argv)
 	//imgui init
 	if (!IMGUI_CHECKVERSION())
 	{
-		std::cout << "imgui is not supported! for some reason..." << std::endl;
+		std::cout << "ERROR! imgui is not supported! for some reason..." << std::endl;
 		return;
 	}
 	ImGui::CreateContext();
